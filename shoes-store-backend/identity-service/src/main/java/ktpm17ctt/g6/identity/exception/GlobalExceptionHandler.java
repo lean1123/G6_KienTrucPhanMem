@@ -1,7 +1,7 @@
 package ktpm17ctt.g6.identity.exception;
 
 import jakarta.validation.ConstraintViolation;
-import ktpm17ctt.g6.identity.dto.response.ApiResponse;
+import ktpm17ctt.g6.identity.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
 
     private static final String MIN_ATTRIBUTE = "min";
 
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(value = RuntimeException.class)
     ResponseEntity<ApiResponse> handlingRuntimeException(RuntimeException exception) {
         log.error("Exception: ", exception);
         ApiResponse apiResponse = new ApiResponse();
@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
             log.info(attributes.toString());
 
         } catch (IllegalArgumentException e) {
-
+            throw new AppException(ErrorCode.INVALID_KEY);
         }
 
         ApiResponse apiResponse = new ApiResponse();
