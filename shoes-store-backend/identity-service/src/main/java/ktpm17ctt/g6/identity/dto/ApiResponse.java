@@ -1,4 +1,4 @@
-package ktpm17ctt.g6.identity.dto.response;
+package ktpm17ctt.g6.identity.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
