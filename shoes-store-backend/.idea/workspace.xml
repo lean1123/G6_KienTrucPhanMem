@@ -4,36 +4,68 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5c3eede0-1b0a-47bc-840c-8c35757a44d9" name="Changes" comment="docs: additional .idea">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shoes-store-backend.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/AuthenticationFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/WebClientConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/dto/ApiResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/dto/request/IntrospectRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/dto/response/IntrospectResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/repository/IdentityClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/service/IdentityService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/controller/AuthenticationController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/controller/PermissionController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/controller/RoleController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="5c3eede0-1b0a-47bc-840c-8c35757a44d9" name="Changes" comment="feat(gateway): connect identity service">
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/configuration/MongoConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/BrandController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/CategoryController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/ColorController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/ProductCollectionController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/ProductController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/ProductItemController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/ApiResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/request/BrandRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/request/CategoryRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/request/ColorRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/request/ProductCollectionRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/request/ProductItemRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/request/ProductRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/response/BrandResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/response/CategoryResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/response/ColorResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/response/ProductCollectionResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/response/ProductItemResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/response/ProductResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/entity/Brand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/entity/Category.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/entity/Color.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/entity/Product.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/entity/ProductCollection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/entity/ProductItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/entity/QuantityOfSize.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/entity/enums/Gender.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/entity/enums/Size.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/entity/enums/Status.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/exception/AppException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/exception/ErrorCode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/mapper/BrandMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/mapper/CategoryMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/mapper/ColorMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/mapper/ProductCollectionMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/mapper/ProductItemMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/mapper/ProductMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/repository/BrandRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/repository/CategoryRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/repository/ColorRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/repository/ProductCollectionRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/repository/ProductItemRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/repository/ProductRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/BrandService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/CategoryService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/ColorService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/ProductCollectionService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/ProductItemService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/ProductService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/BrandServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/CategoryServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ColorServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductCollectionServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductItemServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/IdentityServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/IdentityServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/ApplicationInitConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/ApplicationInitConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/JwtAuthenticationEntryPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/JwtAuthenticationEntryPoint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/response/ApiResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/ApiResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/mapper/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/mapper/UserMapper.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +75,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Enum" />
         <option value="Interface" />
         <option value="Class" />
       </list>
@@ -51,7 +84,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="feature/identity/initialize" />
+        <entry key="$PROJECT_DIR$/.." value="feature/api-gateway/initialize" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -86,29 +119,52 @@
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.ApiGatewayApplication.executor": "Run",
     "Spring Boot.IdentityServiceApplication.executor": "Run",
-    "git-widget-placeholder": "feature/api-gateway/initialize",
+    "Spring Boot.ProductServiceApplication.executor": "Run",
+    "git-widget-placeholder": "feature/product/initialize",
     "jdk.selected.JAVA_MODULE": "22",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/G6_KienTrucPhanMem/shoes-store-backend",
+    "last_opened_file_path": "D:/G6_KienTrucPhanMem/shoes-store-backend/product-service/src/main/java/ktpm17ctt/g6/product/exception",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\G6_KienTrucPhanMem\shoes-store-backend\product-service\src\main\java\ktpm17ctt\g6\product\exception" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\G6_KienTrucPhanMem\shoes-store-backend\product-service" />
+      <recent name="D:\G6_KienTrucPhanMem\shoes-store-backend\product-service\src\main\resources" />
+      <recent name="D:\G6_KienTrucPhanMem\shoes-store-backend" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="ktpm17ctt.g6.product.dto" />
       <recent name="ktpm17ctt.g6.gateway.dto.response" />
       <recent name="ktpm17ctt.g6.gateway.dto.request" />
       <recent name="ktpm17ctt.g6.gateway.dto" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.ApiGatewayApplication">
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="KtorApplicationConfigurationType" />
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.ProductServiceApplication">
     <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="api-gateway" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.gateway.ApiGatewayApplication" />
@@ -123,12 +179,29 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ProductServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" activateToolWindowBeforeRun="false" nameIsGenerated="true">
+      <envs>
+        <env name="MONGO_USERNAME" value="hhglorious" />
+        <env name="MONGO_PASSWORD" value="eDXWxIAwnWJkxBTH" />
+      </envs>
+      <option name="INCLUDE_PROVIDED_SCOPE" value="false" />
+      <module name="product-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.product.ProductServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Spring Boot.ApiGatewayApplication" />
+      <item itemvalue="Spring Boot.IdentityServiceApplication" />
+      <item itemvalue="Spring Boot.ProductServiceApplication" />
+    </list>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.24807.4" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.24807.4" />
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.24978.46" />
+        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-IU-243.24978.46" />
       </set>
     </attachedChunks>
   </component>
@@ -141,7 +214,13 @@
       <option name="presentableId" value="Default" />
       <updated>1739276519238</updated>
       <workItem from="1739276520356" duration="8237000" />
-      <workItem from="1739340240565" duration="345000" />
+      <workItem from="1739340240565" duration="13845000" />
+      <workItem from="1739513905110" duration="568000" />
+      <workItem from="1739514612007" duration="1025000" />
+      <workItem from="1739520778955" duration="10650000" />
+      <workItem from="1739544304789" duration="1190000" />
+      <workItem from="1739545526206" duration="518000" />
+      <workItem from="1739546375894" duration="7229000" />
     </task>
     <task id="LOCAL-00001" summary="docs: additional .idea">
       <option name="closed" value="true" />
@@ -151,7 +230,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739276675755</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat(gateway): connect identity service">
+      <option name="closed" value="true" />
+      <created>1739340902999</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1739340902999</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -170,6 +257,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="docs: additional .idea" />
-    <option name="LAST_COMMIT_MESSAGE" value="docs: additional .idea" />
+    <MESSAGE value="feat(gateway): connect identity service" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(gateway): connect identity service" />
   </component>
 </project>
