@@ -1,0 +1,13 @@
+server:
+  port: 8083
+  servlet:
+    context-path: /product
+
+app:
+  mongodb:
+    username: ${MONGO_USERNAME}
+    password: ${MONGO_PASSWORD}
+
+spring:
+  application:
+    name: product-service
