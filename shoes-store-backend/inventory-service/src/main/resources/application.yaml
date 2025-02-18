@@ -1,0 +1,10 @@
+server:
+  port: 8083
+  servlet:
+    context-path: /inventory
+spring:
+  application:
+    name: inventory-service
+  data:
+    mongodb:
+      uri: mongodb://root:root@localhost:27017/inventory-service?authSource=admin
