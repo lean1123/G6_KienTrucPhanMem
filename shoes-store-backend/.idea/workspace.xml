@@ -5,50 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5c3eede0-1b0a-47bc-840c-8c35757a44d9" name="Changes" comment="docs: additional .idea">
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/ApiResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/QuantityOfSize.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/requests/BrandRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/requests/CategoryRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/requests/ColorRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/requests/ProductCollectionRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/requests/ProductItemRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/requests/ProductRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/responses/BrandResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/responses/CategoryResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/responses/ColorResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/responses/ProductCollectionResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/responses/ProductItemResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/responses/ProductResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/enums/Gender.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/enums/Size.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/enums/Status.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/controllers/OrderController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/request/OrderCreationRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/request/OrderDetailRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/request/OrderRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/response/OrderDetailResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/response/OrderResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/entities/Order.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/entities/OrderDetail.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/entities/OrderStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/entities/PaymentMethod.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/mapper/OrderDetailMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/mapper/OrderMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/repositories/OrderDetailRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/repositories/OrderRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/repositories/httpClients/ProductItemClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/OrderDetailService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/OrderService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderDetailServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/internal/ProductItemInternalController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/OrderServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/OrderServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +71,7 @@
     "Spring Boot.OrderServiceApplication (1).executor": "Run",
     "Spring Boot.OrderServiceApplication.executor": "Run",
     "Spring Boot.ProductServiceApplication.executor": "Run",
-    "git-widget-placeholder": "feature/order/initialize",
+    "git-widget-placeholder": "feature/payment/initialize",
     "ignore.virus.scanning.warn.message": "true",
     "jdk.selected.JAVA_MODULE": "22",
     "kotlin-language-version-configured": "true",
@@ -228,6 +188,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="PaymentServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="payment-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="java.ktpm17ctt.g6.paymentservice.PaymentServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ProductServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="product-service" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.product.ProductServiceApplication" />
@@ -236,6 +204,7 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Spring Boot.PaymentServiceApplication" />
       <item itemvalue="Spring Boot.CommonDtoApplication" />
       <item itemvalue="Spring Boot.ProductServiceApplication" />
       <item itemvalue="Spring Boot.OrderServiceApplication (1)" />
@@ -269,7 +238,7 @@
       <workItem from="1739773674567" duration="7658000" />
       <workItem from="1739864149847" duration="4662000" />
       <workItem from="1739868840502" duration="1239000" />
-      <workItem from="1739876934211" duration="2052000" />
+      <workItem from="1739876934211" duration="2364000" />
     </task>
     <task id="LOCAL-00001" summary="docs: additional .idea">
       <option name="closed" value="true" />
