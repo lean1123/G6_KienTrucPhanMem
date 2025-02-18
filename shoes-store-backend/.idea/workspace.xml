@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5c3eede0-1b0a-47bc-840c-8c35757a44d9" name="Changes" comment="docs: additional .idea" />
+    <list default="true" id="5c3eede0-1b0a-47bc-840c-8c35757a44d9" name="Changes" comment="docs: additional .idea">
+      <change afterPath="$PROJECT_DIR$/user-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -58,16 +63,18 @@
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.ApiGatewayApplication.executor": "Run",
     "Spring Boot.IdentityServiceApplication.executor": "Run",
     "Spring Boot.OrderServiceApplication (1).executor": "Run",
     "Spring Boot.OrderServiceApplication.executor": "Run",
-    "git-widget-placeholder": "feature/order/initialize",
+    "Spring Boot.ProductServiceApplication.executor": "Run",
+    "git-widget-placeholder": "feature/user/initialize",
     "ignore.virus.scanning.warn.message": "true",
     "jdk.selected.JAVA_MODULE": "22",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/21136181_MicroService_WS/subject-project/G6_KienTrucPhanMem/shoes-store-backend/product-service",
+    "last_opened_file_path": "C:/Users/Admin/OneDrive - Industrial University of HoChiMinh City/Desktop/KTPM/G6_KienTrucPhanMem/shoes-store-backend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -76,6 +83,7 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
+    "run.configurations.included.in.services": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -91,14 +99,17 @@
       <set>
         <option value="Application" />
         <option value="CompoundRunConfigurationType" />
+        <option value="KtorApplicationConfigurationType" />
         <option value="MavenRunConfiguration" />
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
         <option value="SpringBootApplicationConfigurationType" />
       </set>
     </option>
   </component>
   <component name="RunManager" selected="Spring Boot.ProductServiceApplication">
     <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="C:/Program Files/Java/jdk-22" />
+      <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../../../../../../Program Files/Java/jdk-22" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <module name="api-gateway" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.gateway.ApiGatewayApplication" />
@@ -117,7 +128,7 @@
       </method>
     </configuration>
     <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="C:/Program Files/Java/jdk-22" />
+      <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../../../../../../Program Files/Java/jdk-22" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <module name="api-gateway" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.gateway.ApiGatewayApplication" />
@@ -219,8 +230,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.24807.4" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.24807.4" />
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
       </set>
     </attachedChunks>
   </component>
@@ -239,6 +250,7 @@
       <workItem from="1739597177591" duration="312000" />
       <workItem from="1739692028385" duration="1772000" />
       <workItem from="1739695040515" duration="1047000" />
+      <workItem from="1739880129707" duration="660000" />
     </task>
     <task id="LOCAL-00001" summary="docs: additional .idea">
       <option name="closed" value="true" />
