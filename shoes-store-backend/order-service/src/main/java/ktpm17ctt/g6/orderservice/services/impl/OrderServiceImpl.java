@@ -7,12 +7,14 @@ import ktpm17ctt.g6.orderservice.entities.Order;
 import ktpm17ctt.g6.orderservice.entities.OrderStatus;
 import ktpm17ctt.g6.orderservice.mapper.OrderMapper;
 import ktpm17ctt.g6.orderservice.repositories.OrderRepository;
+import ktpm17ctt.g6.orderservice.services.OrderDetailService;
 import ktpm17ctt.g6.orderservice.services.OrderService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
@@ -25,22 +27,38 @@ import java.util.Optional;
 public class OrderServiceImpl implements OrderService {
     OrderRepository orderRepository;
     OrderMapper orderMapper;
+    OrderDetailService orderDetailService;
+
 
     @Override
-    public OrderResponse save(OrderCreationRequest request) {
+    @Transactional
+    public OrderResponse save(OrderCreationRequest request) throws Exception {
+
+//        Tim user dat hang
 
         Order entity = Order.builder()
                 .total(request.getTotal())
+//                Lay id cua user tra ve
                 .userId(request.getUserId())
                 .paymentMethod(request.getPaymentMethod())
                 .status(OrderStatus.PENDING)
                 .createdDate(Instant.now())
-                .paymentMethod(request.getPaymentMethod())
                 .build();
+
+        entity = orderRepository.save(entity);
 
         List<OrderDetailRequest> orderDetails = request.getOrderDetails();
 
-        return orderMapper.orderToOrderResponse(orderRepository.save(entity));
+        try {
+            for (OrderDetailRequest orderDetail : orderDetails) {
+                orderDetailService.save(orderDetail, entity);
+            }
+        } catch (Exception e) {
+            log.error("Error while saving order details", e);
+            throw new Exception("Error while saving order details");
+        }
+
+        return orderMapper.orderToOrderResponse(entity);
     }
 
     public Optional<Order> findById(String s) {

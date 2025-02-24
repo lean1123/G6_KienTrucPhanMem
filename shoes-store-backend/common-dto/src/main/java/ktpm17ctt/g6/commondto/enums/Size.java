@@ -1,4 +1,4 @@
-package java.ktpm17ctt.g6.commondto.enums;
+package ktpm17ctt.g6.commondto.enums;
 
 public enum Size {
     SIZE_30(30),

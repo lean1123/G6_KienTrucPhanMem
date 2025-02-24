@@ -1,4 +1,4 @@
-package java.ktpm17ctt.g6.commondto.dtos.requests;
+package ktpm17ctt.g6.commondto.dtos.responses;
 
 import lombok.experimental.FieldDefaults;
 import lombok.*;
@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryRequest {
+public class CategoryResponse {
+    String id;
     String name;
 }

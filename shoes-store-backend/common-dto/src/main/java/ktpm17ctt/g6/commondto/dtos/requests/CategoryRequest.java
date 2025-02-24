@@ -1,14 +1,13 @@
-package java.ktpm17ctt.g6.commondto.dtos.requests;
+package ktpm17ctt.g6.commondto.dtos.requests;
 
-import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.*;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductCollectionRequest {
+public class CategoryRequest {
     String name;
-    String brandId;
 }

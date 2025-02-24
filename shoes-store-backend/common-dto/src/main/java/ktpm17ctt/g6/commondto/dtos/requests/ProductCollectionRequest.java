@@ -1,17 +1,14 @@
-package java.ktpm17ctt.g6.commondto.dtos.responses;
-
+package ktpm17ctt.g6.commondto.dtos.requests;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductCollectionResponse {
-    String id;
+public class ProductCollectionRequest {
     String name;
-    BrandResponse brand;
+    String brandId;
 }

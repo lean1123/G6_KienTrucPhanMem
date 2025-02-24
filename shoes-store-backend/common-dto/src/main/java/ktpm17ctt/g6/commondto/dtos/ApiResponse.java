@@ -1,4 +1,4 @@
-package java.ktpm17ctt.g6.commondto.dtos;
+package ktpm17ctt.g6.commondto.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

@@ -1,4 +1,4 @@
-package java.ktpm17ctt.g6.commondto;
+package ktpm17ctt.g6.commondto;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

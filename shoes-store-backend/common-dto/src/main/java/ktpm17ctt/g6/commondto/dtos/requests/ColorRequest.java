@@ -1,5 +1,6 @@
-package java.ktpm17ctt.g6.commondto.dtos.responses;
+package ktpm17ctt.g6.commondto.dtos.requests;
 
+import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.*;
 
@@ -8,8 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ColorResponse {
-    String id;
+public class ColorRequest {
     String name;
     String code;
 }
