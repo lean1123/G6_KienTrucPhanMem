@@ -6,7 +6,7 @@ import ktpm17ctt.g6.identity.dto.response.UserResponse;
 
 import java.util.List;
 
-public interface UserService {
+public interface AccountService {
     UserResponse createUser(UserCreationRequest request);
     UserResponse getMyInfo();
     UserResponse updateUser(String userId, UserUpdateRequest request);

@@ -12,5 +12,5 @@ public interface ColorService {
     void delete(String id);
     Optional<ColorResponse> findById(String id);
     List<ColorResponse> findAll();
-    List<ColorResponse> findByName(String name);
+    List<ColorResponse> search(String keyword);
 }
