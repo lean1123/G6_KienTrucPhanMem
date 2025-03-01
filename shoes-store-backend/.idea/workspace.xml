@@ -4,39 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5c3eede0-1b0a-47bc-840c-8c35757a44d9" name="Changes" comment="docs: additional .idea">
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/ktpm17ctt/g6/commondto/dtos/responses/OrderDetailResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/ktpm17ctt/g6/commondto/dtos/responses/OrderResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/ktpm17ctt/g6/commondto/enums/OrderStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/ktpm17ctt/g6/commondto/enums/PaymentMethod.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/controllers/internal/OrderInternalController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/repositories/httpClients/PaymentClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payment-service/.envrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/configurations/VNPayConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/controllers/PaymentController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/controllers/internals/PaymentInternalController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/dtos/requests/PaymentRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/dtos/responses/PaymentResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/entities/PaymentStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/mappers/PaymentMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/repositories/PaymentRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/repositories/httpClients/OrderClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/services/PaymentService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/services/impl/PaymentServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+    <list default="true" id="5c3eede0-1b0a-47bc-840c-8c35757a44d9" name="Changes" comment="feature/order/save-new-order: commit before pull code from main">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/configurations/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/configurations/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/controllers/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/controllers/OrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/request/OrderDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/request/OrderDetailRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/response/OrderResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/response/OrderResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/repositories/OrderDetailRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/repositories/OrderDetailRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/OrderDetailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/OrderDetailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/OrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderDetailServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderDetailServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/java/ktpm17ctt/g6/paymentservice/PaymentServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/PaymentServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,6 +45,9 @@
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -369,7 +341,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739598111748</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="feature/order/save-new-order: commit before pull code from main">
+      <option name="closed" value="true" />
+      <created>1740846137159</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1740846137159</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -422,6 +402,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="docs: additional .idea" />
-    <option name="LAST_COMMIT_MESSAGE" value="docs: additional .idea" />
+    <MESSAGE value="feature/order/save-new-order: commit before pull code from main" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature/order/save-new-order: commit before pull code from main" />
   </component>
 </project>
