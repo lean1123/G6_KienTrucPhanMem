@@ -63,8 +63,8 @@ public class ColorServiceImpl implements ColorService {
     }
 
     @Override
-    public List<ColorResponse> search(String keyword) {
-        var colors = colorRepository.searchByNameOrCode(keyword);
+    public List<ColorResponse> findByName(String name) {
+        var colors = colorRepository.findByName(name);
         return colors.stream().map(colorMapper::toColorResponse).toList();
     }
 }

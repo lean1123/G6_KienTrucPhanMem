@@ -1,13 +1,8 @@
 package ktpm17ctt.g6.product.entity.enums;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import lombok.Getter;
-
-@Getter
 public enum Status {
-    IN_STOCK("In stock"),
-    OUT_OF_STOCK("Out of stock");
+    INSTOCK("In stock"),
+    OUTOFSTOCK("Out of stock");
 
     private final String status;
 
@@ -15,18 +10,7 @@ public enum Status {
         this.status = status;
     }
 
-    @JsonValue
-    public String getValue() {
+    public String getStatus() {
         return status;
-    }
-
-    @JsonCreator
-    public static Status fromValue(String value) {
-        for (Status status : Status.values()) {
-            if (status.status.equalsIgnoreCase(value) || status.name().equalsIgnoreCase(value)) {
-                return status;
-            }
-        }
-        throw new IllegalArgumentException("STATUS_INVALID: " + value);
     }
 }

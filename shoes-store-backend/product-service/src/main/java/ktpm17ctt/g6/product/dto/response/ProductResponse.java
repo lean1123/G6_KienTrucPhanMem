@@ -1,6 +1,6 @@
 package ktpm17ctt.g6.product.dto.response;
 
-import ktpm17ctt.g6.product.entity.enums.Type;
+import ktpm17ctt.g6.product.entity.enums.Gender;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,8 +16,9 @@ public class ProductResponse {
     String name;
     String description;
     double rating;
-    Type type;
-    CategoryResponse category;
     Instant createdDate;
     Instant modifiedDate;
+    Gender gender;
+    ProductCollectionResponse collection;
+    CategoryResponse category;
 }

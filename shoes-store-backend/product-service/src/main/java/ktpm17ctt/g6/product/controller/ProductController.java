@@ -63,12 +63,4 @@ public class ProductController {
                 .result(productService.findAll())
                 .build();
     }
-
-    @GetMapping("/search")
-    ApiResponse<List<ProductResponse>> searchProducts(@RequestParam String keyword) {
-        log.info("Search products");
-        return ApiResponse.<List<ProductResponse>>builder()
-                .result(productService.search(keyword))
-                .build();
-    }
 }
