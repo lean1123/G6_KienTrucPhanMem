@@ -1,6 +1,5 @@
-package ktpm17ctt.g6.orderservice.dto.request;
+package ktpm17ctt.g6.commondto.dtos.responses;
 
-import jakarta.annotation.Nullable;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,10 +8,10 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderDetailRequest {
-    String productItemId;
+public class OrderDetailResponse {
+    String id;
     int quantity;
     double price;
-    @Nullable
+    String productItemId;
     String orderId;
 }

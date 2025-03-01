@@ -1,12 +1,15 @@
 package ktpm17ctt.g6.orderservice.services.impl;
 
+import jakarta.servlet.http.HttpServletRequest;
 import ktpm17ctt.g6.orderservice.dto.request.OrderCreationRequest;
 import ktpm17ctt.g6.orderservice.dto.request.OrderDetailRequest;
 import ktpm17ctt.g6.orderservice.dto.response.OrderResponse;
 import ktpm17ctt.g6.orderservice.entities.Order;
 import ktpm17ctt.g6.orderservice.entities.OrderStatus;
+import ktpm17ctt.g6.orderservice.entities.PaymentMethod;
 import ktpm17ctt.g6.orderservice.mapper.OrderMapper;
 import ktpm17ctt.g6.orderservice.repositories.OrderRepository;
+import ktpm17ctt.g6.orderservice.repositories.httpClients.PaymentClient;
 import ktpm17ctt.g6.orderservice.services.OrderDetailService;
 import ktpm17ctt.g6.orderservice.services.OrderService;
 import lombok.AccessLevel;
@@ -18,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,13 +30,18 @@ public class OrderServiceImpl implements OrderService {
     OrderRepository orderRepository;
     OrderMapper orderMapper;
     OrderDetailService orderDetailService;
+    PaymentClient paymentClient;
 
 
     @Override
     @Transactional
-    public OrderResponse save(OrderCreationRequest request) throws Exception {
+    public OrderResponse save(OrderCreationRequest request, HttpServletRequest req) throws Exception {
 
-//        Tim user dat hang
+        List<OrderDetailRequest> orderDetails = request.getOrderDetails();
+        double total = orderDetails.stream().mapToDouble(OrderDetailRequest::getPrice).sum();
+
+//        Check user dat hang
+
 
         Order entity = Order.builder()
                 .total(request.getTotal())
@@ -43,11 +50,11 @@ public class OrderServiceImpl implements OrderService {
                 .paymentMethod(request.getPaymentMethod())
                 .status(OrderStatus.PENDING)
                 .createdDate(Instant.now())
+                .total(total)
                 .build();
 
         entity = orderRepository.save(entity);
 
-        List<OrderDetailRequest> orderDetails = request.getOrderDetails();
 
         try {
             for (OrderDetailRequest orderDetail : orderDetails) {
@@ -58,11 +65,26 @@ public class OrderServiceImpl implements OrderService {
             throw new Exception("Error while saving order details");
         }
 
-        return orderMapper.orderToOrderResponse(entity);
+        if (entity.getPaymentMethod().equals(PaymentMethod.VNPAY)) {
+            var paymentRes = paymentClient.createNewPayment(entity.getId(), String.valueOf(entity.getTotal()), req);
+        }
+
+        return OrderResponse.builder()
+                .id(entity.getId())
+                .createdDate(entity.getCreatedDate())
+                .userId(entity.getUserId())
+                .paymentMethod(entity.getPaymentMethod())
+                .status(entity.getStatus())
+                .orderDetails(orderDetailService.findOrderDetailByOrder_Id(entity.getId()))
+                .total(entity.getTotal())
+                .build();
     }
 
-    public Optional<Order> findById(String s) {
-        return orderRepository.findById(s);
+    @Override
+    public OrderResponse findById(String s) throws Exception {
+        return orderRepository.findById(s)
+                .map(orderMapper::orderToOrderResponse)
+                .orElseThrow(() -> new Exception("Order not found"));
     }
 
     public void deleteById(String s) {

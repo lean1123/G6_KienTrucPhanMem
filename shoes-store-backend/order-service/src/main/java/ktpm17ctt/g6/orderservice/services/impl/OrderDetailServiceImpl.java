@@ -33,7 +33,6 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    @Transactional
     public OrderDetailResponse save(OrderDetailRequest request, Order order) throws Exception {
 
         ProductItemResponse productItemResponse = productItemClient.getProductItem(request.getProductItemId()).getResult();
@@ -49,14 +48,6 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                 .order(order)
                 .build());
 
-//        return OrderDetailResponse.builder()
-//                .orderId(orderDetailResponse.getOrder().getId())
-//                .productItemId(orderDetailResponse.getProductItemId())
-//                .quantity(orderDetailResponse.getQuantity())
-//                .price(orderDetailResponse.getPrice())
-//                .id(orderDetailResponse.getId())
-//                .build();
-
         return orderDetailMapper.orderDetailToOrderDetailResponse(orderDetailResponse);
     }
 
@@ -66,5 +57,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     public void deleteById(String s) {
         orderDetailRepository.deleteById(s);
+    }
+
+    @Override
+    public List<OrderDetailResponse> findOrderDetailByOrder_Id(String orderId) {
+        return orderDetailRepository.findOrderDetailByOrder_Id(orderId)
+                .stream()
+                .map(orderDetailMapper::orderDetailToOrderDetailResponse).toList();
     }
 }

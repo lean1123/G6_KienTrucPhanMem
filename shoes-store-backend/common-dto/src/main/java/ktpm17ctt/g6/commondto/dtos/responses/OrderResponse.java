@@ -1,7 +1,7 @@
-package ktpm17ctt.g6.orderservice.dto.response;
+package ktpm17ctt.g6.commondto.dtos.responses;
 
-import ktpm17ctt.g6.orderservice.entities.OrderStatus;
-import ktpm17ctt.g6.orderservice.entities.PaymentMethod;
+import ktpm17ctt.g6.commondto.enums.OrderStatus;
+import ktpm17ctt.g6.commondto.enums.PaymentMethod;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -21,5 +21,4 @@ public class OrderResponse {
     String userId;
     PaymentMethod paymentMethod;
     List<OrderDetailResponse> orderDetails;
-    String paymentUrl;
 }
