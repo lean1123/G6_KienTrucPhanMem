@@ -38,7 +38,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     @NonFinal
     private String[] publicEndpoints = new String[] {
             "/identity/auth/.*",
-            "/identity/users/registration",
+            "/identity/accounts/registration",
             "/notification/email/send",
     };
 
@@ -65,6 +65,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         String cachedToken = redisTemplate.opsForValue().get("token:"+token);
         if (Objects.nonNull(cachedToken) && cachedToken.equals("valid")) {
+            log.info("Token is cached");
             return chain.filter(exchange);
         }
 
@@ -74,6 +75,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                 redisTemplate.opsForValue().set("token:"+token, "valid", Duration.ofMinutes(10));
                 return chain.filter(exchange);
             }
+
             return unauthorized(exchange.getResponse());
         }).onErrorResume(e -> unauthorized(exchange.getResponse()));
     }

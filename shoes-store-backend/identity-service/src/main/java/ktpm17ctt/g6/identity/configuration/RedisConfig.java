@@ -1,4 +1,4 @@
-package ktpm17ctt.g6.gateway.configuration;
+package ktpm17ctt.g6.identity.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
