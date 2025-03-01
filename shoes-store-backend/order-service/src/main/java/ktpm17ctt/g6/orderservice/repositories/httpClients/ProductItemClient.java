@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.ktpm17ctt.g6.commondto.dtos.ApiResponse;
-import java.ktpm17ctt.g6.commondto.dtos.requests.ProductItemRequest;
-import java.ktpm17ctt.g6.commondto.dtos.responses.ProductItemResponse;
+import ktpm17ctt.g6.commondto.dtos.ApiResponse;
+import ktpm17ctt.g6.commondto.dtos.requests.ProductItemRequest;
+import ktpm17ctt.g6.commondto.dtos.responses.ProductItemResponse;
 
 @FeignClient(name = "product-service", url = "http://localhost:8083/product/item")
 public interface ProductItemClient {

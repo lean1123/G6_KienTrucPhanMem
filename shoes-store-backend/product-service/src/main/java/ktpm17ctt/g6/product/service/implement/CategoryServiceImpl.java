@@ -64,6 +64,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryResponse> search(String keyword) {
-        return categoryRepository.findByNameContainingIgnoreCase(keyword).stream().map(categoryMapper::toCategoryResponse).toList();
+        return List.of();
     }
 }

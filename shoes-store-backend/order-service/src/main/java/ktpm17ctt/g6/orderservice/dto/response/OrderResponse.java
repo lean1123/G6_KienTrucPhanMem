@@ -21,4 +21,5 @@ public class OrderResponse {
     String userId;
     PaymentMethod paymentMethod;
     List<OrderDetailResponse> orderDetails;
+    String paymentUrl;
 }
