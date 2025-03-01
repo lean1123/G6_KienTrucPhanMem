@@ -5,7 +5,7 @@ import ktpm17ctt.g6.identity.dto.ApiResponse;
 import ktpm17ctt.g6.identity.dto.request.UserCreationRequest;
 import ktpm17ctt.g6.identity.dto.request.UserUpdateRequest;
 import ktpm17ctt.g6.identity.dto.response.UserResponse;
-import ktpm17ctt.g6.identity.service.UserService;
+import ktpm17ctt.g6.identity.service.AccountService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,8 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class UserController {
-    UserService userService;
+public class AccountController {
+    AccountService userService;
 
     @PostMapping("/registration")
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {

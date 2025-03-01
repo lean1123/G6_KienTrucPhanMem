@@ -4,51 +4,6 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5c3eede0-1b0a-47bc-840c-8c35757a44d9" name="Changes" comment="docs: additional .idea">
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/ApiResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/QuantityOfSize.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/requests/BrandRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/requests/CategoryRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/requests/ColorRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/requests/ProductCollectionRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/requests/ProductItemRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/requests/ProductRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/responses/BrandResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/responses/CategoryResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/responses/ColorResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/responses/ProductCollectionResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/responses/ProductItemResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/dtos/responses/ProductResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/enums/Gender.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/enums/Size.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/enums/Status.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/controllers/OrderController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/request/OrderCreationRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/request/OrderDetailRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/request/OrderRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/response/OrderDetailResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/response/OrderResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/entities/Order.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/entities/OrderDetail.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/entities/OrderStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/entities/PaymentMethod.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/mapper/OrderDetailMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/mapper/OrderMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/repositories/OrderDetailRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/repositories/OrderRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/repositories/httpClients/ProductItemClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/OrderDetailService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/OrderService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderDetailServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/internal/ProductItemInternalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/OrderServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/OrderServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,7 +36,6 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/HoangHuy-23/G6_KienTrucPhanMem.git&quot;,
-    &quot;accountId&quot;: &quot;56a56a03-9515-4f6c-bc7a-b4882c2a8486&quot;
   }
 }</component>
   <component name="KubernetesApiPersistence">{}</component>
@@ -95,39 +49,8 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Notification.DisplayName-DoNotAsk-Database detector": "Database detector",
-    "Notification.DoNotAsk-Database detector": "true",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.ApiGatewayApplication.executor": "Run",
-    "Spring Boot.IdentityServiceApplication.executor": "Run",
-    "Spring Boot.OrderServiceApplication (1).executor": "Run",
-    "Spring Boot.OrderServiceApplication.executor": "Run",
-    "Spring Boot.ProductServiceApplication.executor": "Run",
-    "git-widget-placeholder": "feature/order/initialize",
-    "ignore.virus.scanning.warn.message": "true",
-    "jdk.selected.JAVA_MODULE": "22",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/21136181_MicroService_WS/subject-project/G6_KienTrucPhanMem/shoes-store-backend/common-dto/src/main/java/java/ktpm17ctt/g6/commondto/enums",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\21136181_MicroService_WS\subject-project\G6_KienTrucPhanMem\shoes-store-backend\common-dto\src\main\java\java\ktpm17ctt\g6\commondto\enums" />
@@ -246,12 +169,15 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.24978.46" />
-        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-IU-243.24978.46" />
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.39" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.39" />
       </set>
     </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="StructureViewState">
+    <option name="selectedTab" value="Logical" />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="5c3eede0-1b0a-47bc-840c-8c35757a44d9" name="Changes" comment="" />
@@ -260,16 +186,6 @@
       <option name="presentableId" value="Default" />
       <updated>1739276519238</updated>
       <workItem from="1739276520356" duration="8237000" />
-      <workItem from="1739340240565" duration="345000" />
-      <workItem from="1739428460114" duration="2867000" />
-      <workItem from="1739544843483" duration="287000" />
-      <workItem from="1739597177591" duration="312000" />
-      <workItem from="1739692028385" duration="1772000" />
-      <workItem from="1739695040515" duration="2048000" />
-      <workItem from="1739773674567" duration="7658000" />
-      <workItem from="1739864149847" duration="4662000" />
-      <workItem from="1739868840502" duration="1239000" />
-      <workItem from="1739876934211" duration="2052000" />
     </task>
     <task id="LOCAL-00001" summary="docs: additional .idea">
       <option name="closed" value="true" />
@@ -287,7 +203,6 @@
       <option name="project" value="LOCAL" />
       <updated>1739598111748</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -340,6 +255,5 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="docs: additional .idea" />
-    <option name="LAST_COMMIT_MESSAGE" value="docs: additional .idea" />
   </component>
 </project>

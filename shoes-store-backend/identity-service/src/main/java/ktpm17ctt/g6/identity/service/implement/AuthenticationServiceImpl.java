@@ -11,12 +11,12 @@ import ktpm17ctt.g6.identity.dto.request.LogoutRequest;
 import ktpm17ctt.g6.identity.dto.request.RefreshRequest;
 import ktpm17ctt.g6.identity.dto.response.AuthenticationResponse;
 import ktpm17ctt.g6.identity.dto.response.IntrospectResponse;
+import ktpm17ctt.g6.identity.entity.Account;
 import ktpm17ctt.g6.identity.entity.InvalidatedToken;
-import ktpm17ctt.g6.identity.entity.User;
 import ktpm17ctt.g6.identity.exception.AppException;
 import ktpm17ctt.g6.identity.exception.ErrorCode;
 import ktpm17ctt.g6.identity.repository.InvalidatedTokenRepository;
-import ktpm17ctt.g6.identity.repository.UserRepository;
+import ktpm17ctt.g6.identity.repository.AccountRepository;
 import ktpm17ctt.g6.identity.service.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ import java.util.UUID;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationServiceImpl implements AuthenticationService {
-    UserRepository userRepository;
+    AccountRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
 
     @NonFinal
@@ -121,7 +121,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
-    private TokenInfo generateToken(User user) {
+    private TokenInfo generateToken(Account user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         Date issueTime = new Date();
@@ -166,7 +166,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return signedJWT;
     }
 
-    private String buildScope(User user) {
+    private String buildScope(Account user) {
         StringJoiner joiner = new StringJoiner(" ");
 
         if (!CollectionUtils.isEmpty(user.getRoles())) {

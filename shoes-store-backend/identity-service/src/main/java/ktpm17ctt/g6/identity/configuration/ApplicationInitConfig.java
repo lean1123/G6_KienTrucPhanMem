@@ -1,10 +1,10 @@
 package ktpm17ctt.g6.identity.configuration;
 
 import ktpm17ctt.g6.identity.constant.PredefinedRole;
+import ktpm17ctt.g6.identity.entity.Account;
 import ktpm17ctt.g6.identity.entity.Role;
-import ktpm17ctt.g6.identity.entity.User;
 import ktpm17ctt.g6.identity.repository.RoleRepository;
-import ktpm17ctt.g6.identity.repository.UserRepository;
+import ktpm17ctt.g6.identity.repository.AccountRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -36,7 +36,7 @@ public class ApplicationInitConfig {
             prefix = "spring",
             value = "datasource.driverClassName",
             havingValue = "org.mariadb.jdbc.Driver")
-    ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
+    ApplicationRunner applicationRunner(AccountRepository userRepository, RoleRepository roleRepository) {
         log.info("Initializing application.....");
         return args -> {
             if (userRepository.findByUsername(ADMIN_USER_NAME).isEmpty()) {
@@ -53,7 +53,7 @@ public class ApplicationInitConfig {
                 var roles = new HashSet<Role>();
                 roles.add(adminRole);
 
-                User user = User.builder()
+                Account user = Account.builder()
                         .username(ADMIN_USER_NAME)
                         .password(passwordEncoder.encode(ADMIN_PASSWORD))
                         .roles(roles)
