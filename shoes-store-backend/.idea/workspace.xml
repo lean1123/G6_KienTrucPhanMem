@@ -163,6 +163,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="CommonDtoApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="common-dto" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.commondto.CommonDtoApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="CommonDtoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="common-dto" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="java.ktpm17ctt.g6.commondto.CommonDtoApplication" />
@@ -280,6 +287,7 @@
     </configuration>
     <list>
       <item itemvalue="Application.OrderServiceApplication" />
+      <item itemvalue="Spring Boot.CommonDtoApplication (1)" />
       <item itemvalue="Spring Boot.OrderServiceApplication (1)" />
       <item itemvalue="Spring Boot.CommonDtoApplication" />
       <item itemvalue="Spring Boot.PaymentServiceApplication" />
