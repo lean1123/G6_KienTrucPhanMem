@@ -4,13 +4,11 @@ import jakarta.validation.Valid;
 import ktpm17ctt.g6.product.dto.ApiResponse;
 import ktpm17ctt.g6.product.dto.request.ProductItemRequest;
 import ktpm17ctt.g6.product.dto.response.ProductItemResponse;
-import ktpm17ctt.g6.product.entity.enums.Type;
 import ktpm17ctt.g6.product.service.ProductItemService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,22 +60,6 @@ public class ProductItemController {
         log.info("Get product items by product id: {}", productId);
         return ApiResponse.<List<ProductItemResponse>>builder()
                 .result(productItemService.findByProductId(productId))
-                .build();
-    }
-
-    @GetMapping("/search")
-    ApiResponse<Page<ProductItemResponse>> searchProductItems(@RequestParam(defaultValue = "1") int page,
-                                                              @RequestParam(required = false) String productName,
-                                                              @RequestParam(required = false) Type type,
-                                                              @RequestParam(required = false) String categoryName,
-                                                              @RequestParam(required = false) String colorName,
-                                                              @RequestParam(required = false) int size,
-                                                              @RequestParam(required = false) Double minPrice,
-                                                              @RequestParam(required = false) Double maxPrice) {
-        log.info("Search product items: productName={}, type={}, categoryName={}, colorName={}, size={}, minPrice={}, maxPrice={}",
-                productName, type, categoryName, colorName, size, minPrice, maxPrice);
-        return ApiResponse.<Page<ProductItemResponse>>builder()
-                .result(productItemService.search(page, productName, type, categoryName, colorName, size, minPrice, maxPrice))
                 .build();
     }
 }

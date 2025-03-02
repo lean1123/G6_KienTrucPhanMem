@@ -23,11 +23,11 @@ public class ProductItem {
     String id;
     double price;
     List<String> images;
-    @Field("color")
+    @DBRef
     Color color;
     @Field("quantityOfSize")
     List<QuantityOfSize> quantityOfSize;
-    @Field("product")
+    @DBRef
     Product product;
     @Field("status")
     Status status;
