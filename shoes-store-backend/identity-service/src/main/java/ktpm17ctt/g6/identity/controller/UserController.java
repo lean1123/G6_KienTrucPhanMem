@@ -2,10 +2,10 @@ package ktpm17ctt.g6.identity.controller;
 
 import jakarta.validation.Valid;
 import ktpm17ctt.g6.identity.dto.ApiResponse;
-import ktpm17ctt.g6.identity.dto.request.UserCreationRequest;
-import ktpm17ctt.g6.identity.dto.request.UserUpdateRequest;
-import ktpm17ctt.g6.identity.dto.response.UserResponse;
-import ktpm17ctt.g6.identity.service.UserService;
+import ktpm17ctt.g6.identity.dto.request.RegistrationRequest;
+import ktpm17ctt.g6.identity.dto.request.AccountUpdateRequest;
+import ktpm17ctt.g6.identity.dto.response.AccountResponse;
+import ktpm17ctt.g6.identity.service.AccountService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,51 +15,57 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/accounts")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class UserController {
-    UserService userService;
+public class AccountController {
+    AccountService accountService;
 
     @PostMapping("/registration")
-    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.createUser(request))
+    ApiResponse<AccountResponse> createUser(@RequestBody @Valid RegistrationRequest request) {
+        return ApiResponse.<AccountResponse>builder()
+                .result(accountService.createAccount(request))
                 .build();
     }
 
     @GetMapping
-    ApiResponse<List<UserResponse>> getUsers() {
-        return ApiResponse.<List<UserResponse>>builder()
-                .result(userService.getUsers())
+    ApiResponse<List<AccountResponse>> getAccounts() {
+        return ApiResponse.<List<AccountResponse>>builder()
+                .result(accountService.getAccounts())
                 .build();
     }
 
-    @GetMapping("/{userId}")
-    ApiResponse<UserResponse> getUser(@PathVariable("userId") String userId) {
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.getUser(userId))
+    @GetMapping("/{accountId}")
+    ApiResponse<AccountResponse> getAccount(@PathVariable("accountId") String accountId) {
+        return ApiResponse.<AccountResponse>builder()
+                .result(accountService.getAccount(accountId))
                 .build();
     }
 
-    @GetMapping("/my-info")
-    ApiResponse<UserResponse> getMyInfo() {
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.getMyInfo())
+    @GetMapping("/my-account")
+    ApiResponse<AccountResponse> getMyInfo() {
+        return ApiResponse.<AccountResponse>builder()
+                .result(accountService.getMyInfo())
                 .build();
     }
 
-    @DeleteMapping("/{userId}")
-    ApiResponse<String> deleteUser(@PathVariable String userId) {
-        userService.deleteUser(userId);
+    @DeleteMapping("/{accountId}")
+    ApiResponse<String> deleteAccount(@PathVariable String accountId) {
+        accountService.deleteAccount(accountId);
         return ApiResponse.<String>builder().result("User has been deleted").build();
     }
 
-    @PutMapping("/{userId}")
-    ApiResponse<UserResponse> updateUser(@PathVariable String userId, @RequestBody @Valid UserUpdateRequest request) {
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.updateUser(userId, request))
+    @PutMapping("/{accountId}")
+    ApiResponse<AccountResponse> updateAccount(@PathVariable String accountId, @RequestBody @Valid AccountUpdateRequest request) {
+        return ApiResponse.<AccountResponse>builder()
+                .result(accountService.updateAccount(accountId, request))
                 .build();
+    }
+
+    @PatchMapping("/{accountId}/change-password")
+    ApiResponse<String> changePassword(@PathVariable String accountId, @RequestBody String newPassword) {
+        accountService.changePassword(accountId, newPassword);
+        return ApiResponse.<String>builder().result("Password has been changed").build();
     }
 }
