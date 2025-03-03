@@ -11,3 +11,9 @@ app:
 spring:
   application:
     name: product-service
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
