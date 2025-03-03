@@ -93,11 +93,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <scope>annotationProcessor</scope>
-        </dependency>
 
     </dependencies>
 
@@ -112,17 +107,32 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
     <build>
         <plugins>
             <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                            <version>${projectlombok-lombok.version}</version>
                         </path>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -162,10 +172,10 @@
                 </executions>
                 <configuration>
                     <excludes>
-                        <exclude>ktpm17ctt/orderservice/dtos/**</exclude>
-                        <exclude>ktpm17ctt/orderservice/entities/**</exclude>
+                        <exclude>ktpm17ctt/orderservice/dto/**</exclude>
+                        <exclude>ktpm17ctt/orderservice/entity/**</exclude>
                         <exclude>ktpm17ctt/orderservice/mapper/**</exclude>
-                        <exclude>ktpm17ctt/orderservice/configurations/**</exclude>
+                        <exclude>ktpm17ctt/orderservice/configuration/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

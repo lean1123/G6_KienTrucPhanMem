@@ -17,7 +17,8 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping("/add-new-order")
-    public ResponseEntity<?> addNewOrder(@RequestBody OrderCreationRequest request, HttpServletRequest httpServletRequest){
+    public ResponseEntity<?> addNewOrder(@RequestBody OrderCreationRequest request,
+                                         HttpServletRequest httpServletRequest){
         try {
             return ResponseEntity.ok(orderService.save(request, httpServletRequest));
         } catch (Exception e) {

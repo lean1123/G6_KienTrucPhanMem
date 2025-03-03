@@ -6,19 +6,15 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserUpdateRequest {
+public class AccountUpdateRequest {
     String password;
-    String firstName;
-    String lastName;
-
-    @DobConstraint(min = 18, message = "INVALID_DOB")
-    LocalDate dob;
-
-    List<String> roles;
+    String passwordConfirm;
+    Set<String> roles;
 }

@@ -1,4 +1,4 @@
-package ktpm17ctt.g6.paymentservice.dtos.responses;
+package ktpm17ctt.g6.commondto.dtos.responses;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentResponse {
     String orderId;
-    long amount;
+    double amount;
     String status;
     String transactionId;
     String paymentUrl;

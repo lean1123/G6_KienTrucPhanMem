@@ -1,10 +1,11 @@
 package ktpm17ctt.g6.commondto.dtos.responses;
 
+import ktpm17ctt.g6.commondto.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import ktpm17ctt.g6.commondto.dtos.QuantityOfSize;
-import ktpm17ctt.g6.commondto.enums.Status;
+
 import java.util.List;
 
 @Data

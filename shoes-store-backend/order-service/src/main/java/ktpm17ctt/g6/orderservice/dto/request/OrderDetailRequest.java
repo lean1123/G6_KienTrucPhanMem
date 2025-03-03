@@ -1,8 +1,8 @@
 package ktpm17ctt.g6.orderservice.dto.request;
 
-import jakarta.annotation.Nullable;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.lang.Nullable;
 
 @Data
 @Builder

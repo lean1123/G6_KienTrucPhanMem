@@ -1,10 +1,10 @@
 package ktpm17ctt.g6.identity.configuration;
 
 import ktpm17ctt.g6.identity.constant.PredefinedRole;
+import ktpm17ctt.g6.identity.entity.Account;
 import ktpm17ctt.g6.identity.entity.Role;
-import ktpm17ctt.g6.identity.entity.User;
 import ktpm17ctt.g6.identity.repository.RoleRepository;
-import ktpm17ctt.g6.identity.repository.UserRepository;
+import ktpm17ctt.g6.identity.repository.AccountRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,7 +26,7 @@ public class ApplicationInitConfig {
     PasswordEncoder passwordEncoder;
 
     @NonFinal
-    static final String ADMIN_USER_NAME = "admin";
+    static final String ADMIN_EMAIL = "admin@admin.com";
 
     @NonFinal
     static final String ADMIN_PASSWORD = "admin";
@@ -36,10 +36,10 @@ public class ApplicationInitConfig {
             prefix = "spring",
             value = "datasource.driverClassName",
             havingValue = "org.mariadb.jdbc.Driver")
-    ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
+    ApplicationRunner applicationRunner(AccountRepository accountRepository, RoleRepository roleRepository) {
         log.info("Initializing application.....");
         return args -> {
-            if (userRepository.findByUsername(ADMIN_USER_NAME).isEmpty()) {
+            if (accountRepository.findByEmail(ADMIN_EMAIL).isEmpty()) {
                 roleRepository.save(Role.builder()
                         .name(PredefinedRole.USER_ROLE)
                         .description("User role")
@@ -53,14 +53,14 @@ public class ApplicationInitConfig {
                 var roles = new HashSet<Role>();
                 roles.add(adminRole);
 
-                User user = User.builder()
-                        .username(ADMIN_USER_NAME)
+                Account account = Account.builder()
+                        .email(ADMIN_EMAIL)
                         .password(passwordEncoder.encode(ADMIN_PASSWORD))
                         .roles(roles)
                         .build();
 
-                userRepository.save(user);
-                log.info("Admin user created successfully");
+                accountRepository.save(account);
+                log.info("Admin account created successfully");
             }
             log.info("Application initialized successfully");
         };
