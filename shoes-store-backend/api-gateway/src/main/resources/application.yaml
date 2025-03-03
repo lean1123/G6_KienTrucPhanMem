@@ -2,7 +2,7 @@ server:
   port: 8888
 
 app:
-  api-prefix: /api
+  api-prefix: /api/v1
 
 spring:
   application:

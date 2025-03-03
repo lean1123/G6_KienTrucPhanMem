@@ -5,38 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ade53b54-df78-4b7c-bf04-73db81ed36f9" name="Changes" comment="feat(gateway): add route, rate limit, circuit fallback, cache tokens in Redis to avoid repeated authentication for the same token">
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/controller/RedisController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/service/RedisService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/RedisConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/SwaggerConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/RegistrationRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/RateLimiterConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/RedisConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/AuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/AuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/RedisConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/RedisConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/WebClientConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/WebClientConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/controller/FallbackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/controller/FallbackController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/ApplicationInitConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/ApplicationInitConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/CustomJwtDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/CustomJwtDecoder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/controller/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/controller/AccountController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/AuthenticationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/AuthenticationRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/ProfileCreationRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/UserCreationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/UserCreationRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/UserUpdateRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/AccountUpdateRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/response/UserResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/response/AccountResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/Account.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/mapper/AccountMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/mapper/AccountMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/mapper/ProfileMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/mapper/UserMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/repository/AccountRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/repository/AccountRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/AccountService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/AccountServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/AccountServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/AuthenticationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/AuthenticationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +27,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="feature/api-gateway/route" />
+        <entry key="$PROJECT_DIR$/.." value="fix/identity/integrated-with-gateway" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -94,8 +67,9 @@
     "Spring Boot.ApiGatewayApplication.executor": "Run",
     "Spring Boot.IdentityServiceApplication.executor": "Run",
     "Spring Boot.ProductServiceApplication.executor": "Run",
-    "git-widget-placeholder": "fix/identity/integrated-with-gateway",
+    "git-widget-placeholder": "feature/product/integrated-with-gateway",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/G6_KienTrucPhanMem/shoes-store-backend/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -104,8 +78,11 @@
     "run.configurations.included.in.services": "true",
     "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\G6_KienTrucPhanMem\shoes-store-backend\api-gateway\src\main\java\ktpm17ctt\g6\gateway\configuration" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="ktpm17ctt.g6.identity.configuration" />
     </key>
@@ -120,7 +97,21 @@
       </set>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Spring Boot.ProductServiceApplication">
+    <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="api-gateway" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.gateway.ApiGatewayApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CommonDtoApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="common-dto" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.commondto.CommonDtoApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="CommonDtoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="common-dto" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="java.ktpm17ctt.g6.commondto.CommonDtoApplication" />
@@ -143,20 +134,25 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="PaymentServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="payment-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.paymentservice.PaymentServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ProductServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <option name="envFilePaths">
-        <option value="$PROJECT_DIR$/product-service/.env.properties" />
-      </option>
       <module name="product-service" />
-      <selectedOptions>
-        <option name="environmentVariables" />
-      </selectedOptions>
       <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.product.ProductServiceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <list>
+      <item itemvalue="Spring Boot.CommonDtoApplication (1)" />
+      <item itemvalue="Spring Boot.PaymentServiceApplication" />
+      <item itemvalue="Spring Boot.ApiGatewayApplication" />
       <item itemvalue="Spring Boot.CommonDtoApplication" />
       <item itemvalue="Spring Boot.IdentityServiceApplication" />
       <item itemvalue="Spring Boot.OrderServiceApplication" />
