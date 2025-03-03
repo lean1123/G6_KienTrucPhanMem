@@ -38,7 +38,7 @@ public class WebClientConfiguration {
     @Bean
     WebClient productWebClient() {
         return WebClient.builder()
-                .baseUrl("http://localhost:8080/product")
+                .baseUrl("http://localhost:8082/product")
                 .exchangeStrategies(ExchangeStrategies.builder()
                         .codecs(configure -> configure.defaultCodecs().maxInMemorySize(16 * 1024 * 1024))
                         .build())

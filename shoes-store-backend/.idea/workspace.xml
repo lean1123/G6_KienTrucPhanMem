@@ -4,25 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ade53b54-df78-4b7c-bf04-73db81ed36f9" name="Changes" comment="feat(gateway): add route, rate limit, circuit fallback, cache tokens in Redis to avoid repeated authentication for the same token">
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/RateLimiterConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/RedisConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+    <list default="true" id="0d1c3a83-a38e-4d24-9cf3-b317d05e5733" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/WebClientConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/WebClientConfiguration.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-        <option value="Interface" />
-      </list>
-    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -32,67 +21,25 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;HoangHuy-23&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/HoangHuy-23/G6_KienTrucPhanMem.git&quot;,
-    &quot;accountId&quot;: &quot;d0b09c5d-ea1f-429b-83d6-9bd0357a1946&quot;
-  }
-}</component>
-  <component name="KubernetesApiPersistence">{}</component>
-  <component name="KubernetesApiProvider">{
-  &quot;isMigrated&quot;: true
-}</component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 4
-}</component>
-  <component name="ProjectId" id="2thz8eVauhGsbGRyX9Srl4RI5b7" />
-  <component name="ProjectViewState">
-    <option name="showLibraryContents" value="true" />
-  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Maven.identity-service [clean].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
     "Spring Boot.ApiGatewayApplication.executor": "Run",
     "Spring Boot.IdentityServiceApplication.executor": "Run",
     "Spring Boot.ProductServiceApplication.executor": "Run",
     "git-widget-placeholder": "feature/product/integrated-with-gateway",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/G6_KienTrucPhanMem/shoes-store-backend/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.configurations.included.in.services": "true",
-    "vue.rearranger.settings.migration": "true"
+    "node.js.selected.package.tslint": "(autodetect)"
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\G6_KienTrucPhanMem\shoes-store-backend\api-gateway\src\main\java\ktpm17ctt\g6\gateway\configuration" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="ktpm17ctt.g6.identity.configuration" />
-    </key>
-  </component>
   <component name="RunDashboard">
     <option name="configurationTypes">
       <set>
-        <option value="KtorApplicationConfigurationType" />
-        <option value="MicronautRunConfigurationType" />
-        <option value="QuarkusRunConfigurationType" />
         <option value="SpringBootApplicationConfigurationType" />
       </set>
     </option>
@@ -108,13 +55,6 @@
     <configuration name="CommonDtoApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="common-dto" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.commondto.CommonDtoApplication" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CommonDtoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="common-dto" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="java.ktpm17ctt.g6.commondto.CommonDtoApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -143,68 +83,28 @@
       </method>
     </configuration>
     <configuration name="ProductServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="envFilePaths">
+        <option value="$PROJECT_DIR$/product-service/.env.properties" />
+      </option>
       <module name="product-service" />
+      <selectedOptions>
+        <option name="environmentVariables" />
+      </selectedOptions>
       <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.product.ProductServiceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <list>
+      <item itemvalue="Spring Boot.ApiGatewayApplication" />
       <item itemvalue="Spring Boot.CommonDtoApplication (1)" />
       <item itemvalue="Spring Boot.PaymentServiceApplication" />
-      <item itemvalue="Spring Boot.ApiGatewayApplication" />
-      <item itemvalue="Spring Boot.CommonDtoApplication" />
       <item itemvalue="Spring Boot.IdentityServiceApplication" />
       <item itemvalue="Spring Boot.OrderServiceApplication" />
       <item itemvalue="Spring Boot.ProductServiceApplication" />
     </list>
   </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.39" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.39" />
-      </set>
-    </attachedChunks>
-  </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="ade53b54-df78-4b7c-bf04-73db81ed36f9" name="Changes" comment="" />
-      <created>1740818939145</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1740818939145</updated>
-      <workItem from="1740818940462" duration="6057000" />
-      <workItem from="1740825277427" duration="23279000" />
-    </task>
-    <task id="LOCAL-00001" summary="feat(gateway): add route, rate limit, circuit fallback, cache tokens in Redis to avoid repeated authentication for the same token">
-      <option name="closed" value="true" />
-      <created>1740823707181</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1740823707181</updated>
-    </task>
-    <option name="localTasksCounter" value="2" />
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat(gateway): add route, rate limit, circuit fallback, cache tokens in Redis to avoid repeated authentication for the same token" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(gateway): add route, rate limit, circuit fallback, cache tokens in Redis to avoid repeated authentication for the same token" />
   </component>
 </project>
