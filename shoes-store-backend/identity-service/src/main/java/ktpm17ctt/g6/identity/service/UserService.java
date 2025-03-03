@@ -1,17 +1,16 @@
 package ktpm17ctt.g6.identity.service;
 
-import ktpm17ctt.g6.identity.dto.request.RegistrationRequest;
-import ktpm17ctt.g6.identity.dto.request.AccountUpdateRequest;
-import ktpm17ctt.g6.identity.dto.response.AccountResponse;
+import ktpm17ctt.g6.identity.dto.request.UserCreationRequest;
+import ktpm17ctt.g6.identity.dto.request.UserUpdateRequest;
+import ktpm17ctt.g6.identity.dto.response.UserResponse;
 
 import java.util.List;
 
-public interface AccountService {
-    AccountResponse createAccount(RegistrationRequest request);
-    AccountResponse getMyInfo();
-    AccountResponse updateAccount(String userId, AccountUpdateRequest request);
-    void deleteAccount(String accountId);
-    List<AccountResponse> getAccounts();
-    AccountResponse getAccount(String accountId);
-    void changePassword(String accountId, String newPassword);
+public interface UserService {
+    UserResponse createUser(UserCreationRequest request);
+    UserResponse getMyInfo();
+    UserResponse updateUser(String userId, UserUpdateRequest request);
+    void deleteUser(String userId);
+    List<UserResponse> getUsers();
+    UserResponse getUser(String userId);
 }

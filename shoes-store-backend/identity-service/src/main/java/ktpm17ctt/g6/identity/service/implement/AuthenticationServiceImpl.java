@@ -11,12 +11,12 @@ import ktpm17ctt.g6.identity.dto.request.LogoutRequest;
 import ktpm17ctt.g6.identity.dto.request.RefreshRequest;
 import ktpm17ctt.g6.identity.dto.response.AuthenticationResponse;
 import ktpm17ctt.g6.identity.dto.response.IntrospectResponse;
-import ktpm17ctt.g6.identity.entity.Account;
 import ktpm17ctt.g6.identity.entity.InvalidatedToken;
+import ktpm17ctt.g6.identity.entity.User;
 import ktpm17ctt.g6.identity.exception.AppException;
 import ktpm17ctt.g6.identity.exception.ErrorCode;
 import ktpm17ctt.g6.identity.repository.InvalidatedTokenRepository;
-import ktpm17ctt.g6.identity.repository.AccountRepository;
+import ktpm17ctt.g6.identity.repository.UserRepository;
 import ktpm17ctt.g6.identity.service.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,9 +41,8 @@ import java.util.UUID;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationServiceImpl implements AuthenticationService {
-    AccountRepository accountRepository;
+    UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
-    StringRedisTemplate redisTemplate;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -66,14 +64,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        var account = accountRepository.findByEmail(request.getEmail())
+        var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        boolean authenticated = passwordEncoder.matches(request.getPassword(), account.getPassword());
+        boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
         if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        var token = generateToken(account);
+        var token = generateToken(user);
 
         return AuthenticationResponse.builder()
                 .token(token.token())
@@ -93,7 +91,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .expiryTime(expiryTime)
                 .build();
 
-        redisTemplate.delete("token:" + request.getToken());
         invalidatedTokenRepository.save(invalidatedToken);
     }
 
@@ -111,12 +108,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         invalidatedTokenRepository.save(invalidatedToken);
 
-        var email = signedJWT.getJWTClaimsSet().getSubject();
+        var username = signedJWT.getJWTClaimsSet().getSubject();
 
-        var account = accountRepository.findByEmail(email)
+        var user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
-        var token = generateToken(account);
+        var token = generateToken(user);
 
         return AuthenticationResponse.builder()
                 .token(token.token())
@@ -124,20 +121,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
-    private TokenInfo generateToken(Account account) {
+    private TokenInfo generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         Date issueTime = new Date();
         Date expiryTime = new Date(Instant.ofEpochMilli(issueTime.getTime()).plus(1, ChronoUnit.HOURS).toEpochMilli());
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject(account.getEmail())
+                .subject(user.getId())
                 .issuer("identity-service")
                 .issueTime(issueTime)
                 .expirationTime(expiryTime)
                 .jwtID(UUID.randomUUID().toString())
-                .claim("scope", buildScope(account))
-                .claim("accountId", account.getId())
+                .claim("scope", buildScope(user))
+                .claim("userId", user.getId())
                 .build();
 
         Payload payload = new Payload(claimsSet.toJSONObject());
@@ -169,11 +166,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return signedJWT;
     }
 
-    private String buildScope(Account account) {
+    private String buildScope(User user) {
         StringJoiner joiner = new StringJoiner(" ");
 
-        if (!CollectionUtils.isEmpty(account.getRoles())) {
-            account.getRoles().forEach(role -> {
+        if (!CollectionUtils.isEmpty(user.getRoles())) {
+            user.getRoles().forEach(role -> {
                 joiner.add("ROLE_" + role.getName());
                 if (!CollectionUtils.isEmpty(role.getPermissions())) {
                     role.getPermissions().forEach(permission -> joiner.add(permission.getName()));

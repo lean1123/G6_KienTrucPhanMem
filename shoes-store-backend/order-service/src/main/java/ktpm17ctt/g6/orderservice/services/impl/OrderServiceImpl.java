@@ -69,9 +69,11 @@ public class OrderServiceImpl implements OrderService {
         String paymentUrl = "";
         if (entity.getPaymentMethod().equals(PaymentMethod.VNPAY)) {
             paymentUrl = paymentClient
-                    .createNewPayment(entity.getId(), String.valueOf(Long.valueOf((long) entity.getTotal())), GetIpAddress.getIpAddress(req))
+                    .createNewPayment(entity.getId(), String.valueOf(Long.valueOf((long) 1000000)), GetIpAddress.getIpAddress(req))
                     .getBody().getPaymentUrl();
         }
+
+
 
         return OrderResponse.builder()
                 .id(entity.getId())

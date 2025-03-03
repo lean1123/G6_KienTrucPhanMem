@@ -18,6 +18,7 @@ public class Payment {
     private String id;
     private String transactionId;
     private String orderId;
+    private long amount;
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 }

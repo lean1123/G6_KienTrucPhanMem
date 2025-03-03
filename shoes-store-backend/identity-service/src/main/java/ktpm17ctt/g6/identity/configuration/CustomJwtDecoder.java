@@ -1,11 +1,13 @@
 package ktpm17ctt.g6.identity.configuration;
 
 import com.nimbusds.jwt.SignedJWT;
+import jakarta.validation.Valid;
 import ktpm17ctt.g6.identity.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;

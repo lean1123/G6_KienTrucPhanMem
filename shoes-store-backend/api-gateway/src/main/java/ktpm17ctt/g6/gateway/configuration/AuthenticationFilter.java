@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -21,10 +20,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @Component
 @Slf4j
@@ -33,16 +30,13 @@ import java.util.Objects;
 public class AuthenticationFilter implements GlobalFilter, Ordered {
     IdentityService identityService;
     ObjectMapper objectMapper;
-    StringRedisTemplate redisTemplate;
 
     @NonFinal
     private String[] publicEndpoints = new String[] {
-            "/identity/auth/.*",
-            "/identity/accounts/registration",
-            "/notification/email/send",
+        "/identity/auth/.*",
+        "/identity/users/registration",
+        "/notification/email/send"
     };
-
-
 
     @Value("${app.api-prefix}")
     @NonFinal
@@ -63,19 +57,10 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         String token = authHeader.get(0).replace("Bearer ", "");
 
-        String cachedToken = redisTemplate.opsForValue().get("token:"+token);
-        if (Objects.nonNull(cachedToken) && cachedToken.equals("valid")) {
-            log.info("Token is cached");
-            return chain.filter(exchange);
-        }
-
-
         return identityService.introspectToken(token).flatMap(response -> {
             if (response.getResult().isValid()) {
-                redisTemplate.opsForValue().set("token:"+token, "valid", Duration.ofMinutes(10));
                 return chain.filter(exchange);
             }
-
             return unauthorized(exchange.getResponse());
         }).onErrorResume(e -> unauthorized(exchange.getResponse()));
     }
@@ -89,21 +74,17 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         return Arrays.stream(publicEndpoints).anyMatch(endpoint -> request.getURI().getPath().matches(apiPrefix + endpoint));
     }
 
-    private Mono<Void> unauthorized(ServerHttpResponse response) {
+    Mono<Void> unauthorized(ServerHttpResponse response) {
+        ApiResponse<?> apiResponse = ApiResponse.builder().code(1401).message("Unauthorized").build();
+        String body = null;
         try {
-            ApiResponse<?> apiResponse = ApiResponse.builder()
-                    .code(1401)
-                    .message("Unauthorized")
-                    .build();
-
-            String body = objectMapper.writeValueAsString(apiResponse);
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
-            return response.writeWith(Mono.just(response.bufferFactory().wrap(body.getBytes())));
+            body = objectMapper.writeValueAsString(apiResponse);
         } catch (Exception e) {
             log.error("Error while writing response", e);
-            response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-            return response.setComplete();
+            throw new RuntimeException("Error while writing response");
         }
+        response.setStatusCode(HttpStatus.UNAUTHORIZED);
+        response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
+        return response.writeWith(Mono.just(response.bufferFactory().wrap(body.getBytes())));
     }
 }
