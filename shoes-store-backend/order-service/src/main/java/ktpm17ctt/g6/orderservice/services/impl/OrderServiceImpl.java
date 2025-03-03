@@ -1,6 +1,7 @@
 package ktpm17ctt.g6.orderservice.services.impl;
 
 import jakarta.servlet.http.HttpServletRequest;
+import ktpm17ctt.g6.commondto.utils.GetIpAddress;
 import ktpm17ctt.g6.orderservice.dto.request.OrderCreationRequest;
 import ktpm17ctt.g6.orderservice.dto.request.OrderDetailRequest;
 import ktpm17ctt.g6.orderservice.dto.response.OrderResponse;
@@ -65,8 +66,11 @@ public class OrderServiceImpl implements OrderService {
             throw new Exception("Error while saving order details");
         }
 
+        String paymentUrl = "";
         if (entity.getPaymentMethod().equals(PaymentMethod.VNPAY)) {
-            var paymentRes = paymentClient.createNewPayment(entity.getId(), String.valueOf(entity.getTotal()), req);
+            paymentUrl = paymentClient
+                    .createNewPayment(entity.getId(), String.valueOf(Long.valueOf((long) entity.getTotal())), GetIpAddress.getIpAddress(req))
+                    .getBody().getPaymentUrl();
         }
 
         return OrderResponse.builder()
@@ -77,6 +81,7 @@ public class OrderServiceImpl implements OrderService {
                 .status(entity.getStatus())
                 .orderDetails(orderDetailService.findOrderDetailByOrder_Id(entity.getId()))
                 .total(entity.getTotal())
+                .paymentUrl(paymentUrl)
                 .build();
     }
 

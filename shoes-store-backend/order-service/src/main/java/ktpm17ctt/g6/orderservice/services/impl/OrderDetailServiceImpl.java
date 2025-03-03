@@ -35,16 +35,19 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Override
     public OrderDetailResponse save(OrderDetailRequest request, Order order) throws Exception {
 
-        ProductItemResponse productItemResponse = productItemClient.getProductItem(request.getProductItemId()).getResult();
+//        ProductItemResponse productItemResponse = productItemClient.getProductItem(request.getProductItemId())
+//                .getResult();
 
-        if(productItemResponse == null) {
-            throw new Exception("Product item not found");
-        }
+//        if(productItemResponse == null) {
+//            throw new Exception("Product item not found");
+//        }
 
         OrderDetail orderDetailResponse = orderDetailRepository.save(OrderDetail.builder()
                 .quantity(request.getQuantity())
-                .price(productItemResponse.getPrice())
-                .productItemId(productItemResponse.getId())
+//                .price(productItemResponse.getPrice())
+//                .productItemId(productItemResponse.getId())
+                        .price(100000)
+                        .productItemId("01010101")
                 .order(order)
                 .build());
 

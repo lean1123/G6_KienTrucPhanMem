@@ -11,6 +11,7 @@ import ktpm17ctt.g6.identity.mapper.UserMapper;
 import ktpm17ctt.g6.identity.mapper.AccountMapper;
 import ktpm17ctt.g6.identity.repository.RoleRepository;
 import ktpm17ctt.g6.identity.repository.AccountRepository;
+import ktpm17ctt.g6.identity.repository.UserRepository;
 import ktpm17ctt.g6.identity.service.AccountService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +30,11 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class AccountServiceImpl implements AccountService {
-    AccountRepository accountRepository;
+    UserRepository userRepository;
     RoleRepository roleRepository;
-    AccountMapper accountMapper;
-    PasswordEncoder passwordEncoder;
     UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
+    ProfileMap
 
 
     @Override

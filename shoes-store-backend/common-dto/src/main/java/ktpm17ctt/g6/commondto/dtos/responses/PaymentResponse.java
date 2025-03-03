@@ -1,4 +1,4 @@
-package ktpm17ctt.g6.paymentservice.dtos.responses;
+package ktpm17ctt.g6.commondto.dtos.responses;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

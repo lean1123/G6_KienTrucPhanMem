@@ -1,10 +1,8 @@
 package ktpm17ctt.g6.paymentservice.controllers.internals;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import ktpm17ctt.g6.paymentservice.configurations.VNPayConfig;
-import ktpm17ctt.g6.paymentservice.controllers.PaymentController;
-import org.springframework.beans.factory.annotation.Autowired;
+import ktpm17ctt.g6.paymentservice.dtos.responses.PaymentResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,18 +19,21 @@ import java.util.*;
 public class PaymentInternalController {
 
     @PostMapping("/create")
-    public ResponseEntity<?> createNewPayment(@RequestParam(required = true) String orderId,
-                                              @RequestParam(required = true) String total,
-                                              HttpServletRequest req) throws Exception {
+    public PaymentResponse createNewPayment(@RequestParam(required = true) String orderId,
+                                            @RequestParam(required = true) String total,
+                                            @RequestParam(required = true) String ipAddress,
+                                            @RequestParam (required = false) String bankCode,
+                                            @RequestParam (required = false) String language
+                                            ) throws Exception {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
 
         long amount = Long.parseLong(total) * 100L;
 
-        String bankCode = req.getParameter("bankCode");
+//        String bankCode = req.getParameter("bankCode");
         String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
-        String vnp_IpAddr = VNPayConfig.getIpAddress(req);
+//        String vnp_IpAddr = VNPayConfig.getIpAddress(req);
 
         String vnp_TmnCode = VNPayConfig.getVnpTmnCode();
 
@@ -50,14 +51,14 @@ public class PaymentInternalController {
         vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
         vnp_Params.put("vnp_OrderType", orderType);
 
-        String locate = req.getParameter("language");
-        if (locate != null && !locate.isEmpty()) {
-            vnp_Params.put("vnp_Locale", locate);
+//        String locate = req.getParameter("language");
+        if (language != null && !language.isEmpty()) {
+            vnp_Params.put("vnp_Locale", language);
         } else {
             vnp_Params.put("vnp_Locale", "vn");
         }
         vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
-        vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
+        vnp_Params.put("vnp_IpAddr", ipAddress);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -102,6 +103,8 @@ public class PaymentInternalController {
         paymentResult.put("message", "success");
         paymentResult.put("data", paymentUrl);
 
-        return ResponseEntity.ok(paymentResult);
+        PaymentResponse paymentRes = new PaymentResponse();
+        paymentRes.setPaymentUrl(paymentUrl);
+        return paymentRes;
     }
 }

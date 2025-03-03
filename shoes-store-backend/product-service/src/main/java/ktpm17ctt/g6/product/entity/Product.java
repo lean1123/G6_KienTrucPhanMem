@@ -1,6 +1,6 @@
 package ktpm17ctt.g6.product.entity;
 
-import ktpm17ctt.g6.product.entity.enums.Gender;
+import ktpm17ctt.g6.product.entity.enums.Type;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,12 +24,10 @@ public class Product {
     String name;
     String description;
     double rating;
+    @Field("type")
+    Type type;
+    @Field("category")
+    Category category;
     Instant createdDate;
     Instant modifiedDate;
-    @Field("gender")
-    Gender gender;
-    @DBRef
-    ProductCollection collection;
-    @DBRef
-    Category category;
 }
