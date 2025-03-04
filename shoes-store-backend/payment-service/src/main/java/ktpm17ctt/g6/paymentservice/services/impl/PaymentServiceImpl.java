@@ -18,12 +18,13 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Transactional
     @Override
-    public PaymentResponse save(String orderId, String transactionId, String responseCode, String amount) {
+    public PaymentResponse save(String orderId, String transactionId, String responseCode, String amount, String transDate) {
         Payment paymentEntity = Payment.builder()
                 .orderId(orderId)
                 .transactionId(transactionId)
                 .status(responseCode.equals("00") ? PaymentStatus.SUCCESS : PaymentStatus.FAILED)
                 .amount(Long.parseLong(amount))
+                .transactionDate(transDate)
                 .build();
 
         paymentEntity = paymentRepository.save(paymentEntity);
