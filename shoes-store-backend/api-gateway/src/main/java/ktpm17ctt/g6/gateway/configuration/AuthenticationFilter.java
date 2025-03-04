@@ -38,8 +38,10 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     @NonFinal
     private String[] publicEndpoints = new String[] {
             "/identity/auth/.*",
-            "/identity/users/registration",
+            "/identity/accounts/registration",
             "/notification/email/send",
+            "/product/item/search.*",
+            "/product/external/.*",
     };
 
 
@@ -53,6 +55,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         log.info("Entering authentication filter");
 
         if (isPublicEndpoint(exchange.getRequest())) {
+            log.info("Public endpoint");
             return chain.filter(exchange);
         }
 
@@ -65,6 +68,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         String cachedToken = redisTemplate.opsForValue().get("token:"+token);
         if (Objects.nonNull(cachedToken) && cachedToken.equals("valid")) {
+            log.info("Token is cached");
             return chain.filter(exchange);
         }
 
@@ -74,6 +78,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                 redisTemplate.opsForValue().set("token:"+token, "valid", Duration.ofMinutes(10));
                 return chain.filter(exchange);
             }
+            log.info("Token is invalid");
             return unauthorized(exchange.getResponse());
         }).onErrorResume(e -> unauthorized(exchange.getResponse()));
     }
@@ -89,6 +94,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     private Mono<Void> unauthorized(ServerHttpResponse response) {
         try {
+            log.info("Unauthorized access");
             ApiResponse<?> apiResponse = ApiResponse.builder()
                     .code(1401)
                     .message("Unauthorized")

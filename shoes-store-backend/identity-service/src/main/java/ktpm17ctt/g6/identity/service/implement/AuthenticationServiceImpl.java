@@ -24,6 +24,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,8 +42,9 @@ import java.util.UUID;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationServiceImpl implements AuthenticationService {
-    AccountRepository userRepository;
+    AccountRepository accountRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
+    StringRedisTemplate redisTemplate;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -64,14 +66,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        var user = userRepository.findByUsername(request.getUsername())
+        var account = accountRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        boolean authenticated = passwordEncoder.matches(request.getPassword(), account.getPassword());
 
         if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        var token = generateToken(user);
+        var token = generateToken(account);
 
         return AuthenticationResponse.builder()
                 .token(token.token())
@@ -91,6 +93,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .expiryTime(expiryTime)
                 .build();
 
+        redisTemplate.delete("token:" + request.getToken());
         invalidatedTokenRepository.save(invalidatedToken);
     }
 
@@ -108,12 +111,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         invalidatedTokenRepository.save(invalidatedToken);
 
-        var username = signedJWT.getJWTClaimsSet().getSubject();
+        var email = signedJWT.getJWTClaimsSet().getSubject();
 
-        var user = userRepository.findByUsername(username)
+        var account = accountRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
-        var token = generateToken(user);
+        var token = generateToken(account);
 
         return AuthenticationResponse.builder()
                 .token(token.token())
@@ -121,20 +124,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
-    private TokenInfo generateToken(Account user) {
+    private TokenInfo generateToken(Account account) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         Date issueTime = new Date();
         Date expiryTime = new Date(Instant.ofEpochMilli(issueTime.getTime()).plus(1, ChronoUnit.HOURS).toEpochMilli());
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getId())
+                .subject(account.getEmail())
                 .issuer("identity-service")
                 .issueTime(issueTime)
                 .expirationTime(expiryTime)
                 .jwtID(UUID.randomUUID().toString())
-                .claim("scope", buildScope(user))
-                .claim("userId", user.getId())
+                .claim("scope", buildScope(account))
+                .claim("accountId", account.getId())
                 .build();
 
         Payload payload = new Payload(claimsSet.toJSONObject());
@@ -166,11 +169,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return signedJWT;
     }
 
-    private String buildScope(Account user) {
+    private String buildScope(Account account) {
         StringJoiner joiner = new StringJoiner(" ");
 
-        if (!CollectionUtils.isEmpty(user.getRoles())) {
-            user.getRoles().forEach(role -> {
+        if (!CollectionUtils.isEmpty(account.getRoles())) {
+            account.getRoles().forEach(role -> {
                 joiner.add("ROLE_" + role.getName());
                 if (!CollectionUtils.isEmpty(role.getPermissions())) {
                     role.getPermissions().forEach(permission -> joiner.add(permission.getName()));

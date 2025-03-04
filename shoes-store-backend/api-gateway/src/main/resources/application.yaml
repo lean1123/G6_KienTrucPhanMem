@@ -2,25 +2,60 @@ server:
   port: 8888
 
 app:
-  api-prefix: /api
+  api-prefix: /api/v1
   cors:
     allowed-origins: "https://myapp.com, https://admin.myapp.com"
 
 resilience4j:
   circuitbreaker:
     instances:
+      identityServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
       userServiceCircuitBreaker:
-        failureRateThreshold: 50       # Khi 50% request bị lỗi, Circuit Breaker mở
-        minimumNumberOfCalls: 5        # Ít nhất 5 request để tính toán tỷ lệ lỗi
-        slidingWindowSize: 10          # Xét lỗi trên 10 request gần nhất
-        waitDurationInOpenState: 10s   # Chờ 10 giây trước khi thử lại request
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
+      productServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
+      orderServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
+      paymentServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
+      cartServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
+      notificationServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
+      reviewServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
 
 spring:
   application:
     name: api-gateway
   data:
     redis:
-      host: localhost
+      host: 127.0.0.1
       port: 6379
       password: ""
       timeout: 6000ms
@@ -33,7 +68,7 @@ spring:
           predicates:
             - Path=${app.api-prefix}/identity/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
             - name: CircuitBreaker
               args:
                 name: identityServiceCircuitBreaker
@@ -43,7 +78,7 @@ spring:
           predicates:
             - Path=${app.api-prefix}/user/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
             - name: RequestRateLimiter
               args:
                 key-resolver: "#{@ipKeyResolver}"
@@ -58,7 +93,7 @@ spring:
           predicates:
             - Path=${app.api-prefix}/product/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
             - name: RequestRateLimiter
               args:
                 key-resolver: "#{@ipKeyResolver}"
@@ -73,7 +108,7 @@ spring:
           predicates:
             - Path=${app.api-prefix}/order/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
             - name: RequestRateLimiter
               args:
                 key-resolver: "#{@ipKeyResolver}"
@@ -88,7 +123,7 @@ spring:
           predicates:
             - Path=${app.api-prefix}/payment/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
             - name: RequestRateLimiter
               args:
                 key-resolver: "#{@ipKeyResolver}"
@@ -103,7 +138,7 @@ spring:
           predicates:
             - Path=${app.api-prefix}/cart/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
             - name: RequestRateLimiter
               args:
                 key-resolver: "#{@ipKeyResolver}"
@@ -118,7 +153,7 @@ spring:
           predicates:
             - Path=${app.api-prefix}/notification/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
             - name: RequestRateLimiter
               args:
                 key-resolver: "#{@ipKeyResolver}"
@@ -133,7 +168,7 @@ spring:
           predicates:
             - Path=${app.api-prefix}/review/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
             - name: RequestRateLimiter
               args:
                 key-resolver: "#{@ipKeyResolver}"

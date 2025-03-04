@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class ProductController {
     ProductService productService;
 
     @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<ProductResponse> createProduct(@RequestBody @Valid ProductRequest productRequest) {
         log.info("Create product");
         ProductResponse productResponse = productService.save(productRequest);
@@ -31,6 +33,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<ProductResponse> updateProduct(@PathVariable String id, @RequestBody @Valid ProductRequest productRequest) {
         log.info("Update product");
         ProductResponse productResponse = productService.update(id, productRequest);
@@ -40,6 +43,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<Void> deleteProduct(@PathVariable String id) {
         log.info("Delete product");
         productService.delete(id);
