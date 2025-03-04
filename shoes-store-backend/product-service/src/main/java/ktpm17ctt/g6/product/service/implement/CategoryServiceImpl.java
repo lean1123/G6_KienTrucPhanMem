@@ -34,7 +34,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponse save(CategoryRequest categoryRequest) {
         Category category = categoryMapper.toCategory(categoryRequest);
         category = categoryRepository.save(category);
@@ -54,7 +53,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     public void deleteById(String id) {
         categoryRepository.deleteById(id);
     }

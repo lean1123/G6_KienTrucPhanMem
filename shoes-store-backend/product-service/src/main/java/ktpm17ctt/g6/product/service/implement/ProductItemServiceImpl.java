@@ -1,5 +1,6 @@
 package ktpm17ctt.g6.product.service.implement;
 
+import ktpm17ctt.g6.product.dto.PageResponse;
 import ktpm17ctt.g6.product.dto.request.ProductItemRequest;
 import ktpm17ctt.g6.product.dto.response.ProductItemResponse;
 import ktpm17ctt.g6.product.entity.ProductItem;
@@ -96,10 +97,23 @@ public class ProductItemServiceImpl implements ProductItemService {
     }
 
     @Override
-    public Page<ProductItemResponse> search(Integer page, String productName, Type type, String categoryName, String colorName, int size, Double minPrice, Double maxPrice) {
-        Pageable pageable = PageRequest.of(page-1, 10);
-        return productItemRepository.search(productName, type, categoryName, colorName, size, minPrice, maxPrice, pageable).map(productItemMapper::toProductItemResponse);
+    public PageResponse<ProductItemResponse> search(Integer page, String productName, Type type, String categoryName, String colorName, Integer size, Double minPrice, Double maxPrice) {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        var itemPage = productItemRepository.search(productName, type, categoryName, colorName, size, minPrice, maxPrice, pageable);
+
+        List<ProductItemResponse> itemList = itemPage.getContent().stream()
+                .map(productItemMapper::toProductItemResponse)
+                .toList();
+
+        return PageResponse.<ProductItemResponse>builder()
+                .currentPage(page)
+                .pageSize(10)
+                .totalPages(itemPage.getTotalPages())
+                .totalElements(itemPage.getTotalElements())
+                .data(itemList)
+                .build();
     }
+
 
 
 }

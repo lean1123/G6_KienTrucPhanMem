@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
     private static final String[] PUBLIC_ENDPOINTS = {
-        "/item/search", "/categories", "/colors"
+        "/item/search", "/external/**"
     };
 
     private final CustomJwtDecoder customJwtDecoder;
