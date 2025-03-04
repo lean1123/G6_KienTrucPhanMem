@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class AccountController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<List<AccountResponse>> getAccounts() {
         return ApiResponse.<List<AccountResponse>>builder()
                 .result(accountService.getAccounts())
@@ -37,6 +39,7 @@ public class AccountController {
     }
 
     @GetMapping("/{accountId}")
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<AccountResponse> getAccount(@PathVariable("accountId") String accountId) {
         return ApiResponse.<AccountResponse>builder()
                 .result(accountService.getAccount(accountId))
@@ -51,12 +54,14 @@ public class AccountController {
     }
 
     @DeleteMapping("/{accountId}")
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<String> deleteAccount(@PathVariable String accountId) {
         accountService.deleteAccount(accountId);
         return ApiResponse.<String>builder().result("User has been deleted").build();
     }
 
     @PutMapping("/{accountId}")
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<AccountResponse> updateAccount(@PathVariable String accountId, @RequestBody @Valid AccountUpdateRequest request) {
         return ApiResponse.<AccountResponse>builder()
                 .result(accountService.updateAccount(accountId, request))
