@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,12 +22,7 @@ import java.util.List;
 public class CategoryController {
     CategoryService categoryService;
 
-    @GetMapping()
-    ApiResponse<List<CategoryResponse>> getAllCategories() {
-        return ApiResponse.<List<CategoryResponse>>builder()
-                .result(categoryService.findAll())
-                .build();
-    }
+
 
     @GetMapping("/{id}")
     ApiResponse<CategoryResponse> getCategoryById(@PathVariable String id) {
@@ -36,6 +32,7 @@ public class CategoryController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest request) {
         return ApiResponse.<CategoryResponse>builder()
                 .result(categoryService.save(request))
@@ -43,6 +40,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<CategoryResponse> updateCategory(@PathVariable @Valid String id, @RequestBody @Valid CategoryRequest request) {
         return ApiResponse.<CategoryResponse>builder()
                 .result(categoryService.update(id, request))
@@ -50,12 +48,14 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<Void> deleteCategory(@PathVariable String id) {
         categoryService.deleteById(id);
         return ApiResponse.<Void>builder().build();
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<List<CategoryResponse>> searchCategory(@RequestParam String keyword) {
         return ApiResponse.<List<CategoryResponse>>builder()
                 .result(categoryService.search(keyword))

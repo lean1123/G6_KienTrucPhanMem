@@ -72,7 +72,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     public AccountResponse updateAccount(String accountId, AccountUpdateRequest request) {
         Account account = accountRepository.findById(accountId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -86,26 +85,22 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     public void deleteAccount(String accountId) {
         accountRepository.deleteById(accountId);
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     public List<AccountResponse> getAccounts() {
         log.info("In method get Accounts");
         return accountRepository.findAll().stream().map(accountMapper::toAccountResponse).toList();
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     public AccountResponse getAccount(String accountId) {
         return accountMapper.toAccountResponse(accountRepository.findById(accountId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
     }
 
     @Override
-    @PreAuthorize("hasRole('USER')")
     public void changePassword(String accountId, String newPassword) {
         Account account = accountRepository.findById(accountId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         account.setPassword(passwordEncoder.encode(newPassword));
