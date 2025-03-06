@@ -1,0 +1,180 @@
+server:
+  port: 8888
+
+app:
+  api-prefix: /api/v1
+  cors:
+    allowed-origins: "https://myapp.com, https://admin.myapp.com"
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      identityServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
+      userServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
+      productServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
+      orderServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
+      paymentServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
+      cartServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
+      notificationServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
+      reviewServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 10
+        waitDurationInOpenState: 10s
+
+spring:
+  application:
+    name: api-gateway
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: ""
+      timeout: 6000ms
+      client-type: lettuce
+  cloud:
+    gateway:
+      routes:
+        - id: identity-service
+          uri: http://localhost:8080
+          predicates:
+            - Path=${app.api-prefix}/identity/**
+          filters:
+            - StripPrefix=2
+            - name: CircuitBreaker
+              args:
+                name: identityServiceCircuitBreaker
+                fallbackUri: forward:/fallback/identity
+        - id: user-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=${app.api-prefix}/user/**
+          filters:
+            - StripPrefix=2
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+            - name: CircuitBreaker
+              args:
+                name: userServiceCircuitBreaker
+                fallbackUri: forward:/fallback/user
+        - id: product-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=${app.api-prefix}/product/**
+          filters:
+            - StripPrefix=2
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+            - name: CircuitBreaker
+              args:
+                name: productServiceCircuitBreaker
+                fallbackUri: forward:/fallback/product
+        - id: order-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=${app.api-prefix}/order/**
+          filters:
+            - StripPrefix=2
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+            - name: CircuitBreaker
+              args:
+                name: orderServiceCircuitBreaker
+                fallbackUri: forward:/fallback/order
+        - id: payment-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=${app.api-prefix}/payment/**
+          filters:
+            - StripPrefix=2
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+            - name: CircuitBreaker
+              args:
+                name: paymentServiceCircuitBreaker
+                fallbackUri: forward:/fallback/payment
+        - id: cart-service
+          uri: http://localhost:8085
+          predicates:
+            - Path=${app.api-prefix}/cart/**
+          filters:
+            - StripPrefix=2
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+            - name: CircuitBreaker
+              args:
+                name: cartServiceCircuitBreaker
+                fallbackUri: forward:/fallback/cart
+        - id: notification-service
+          uri: http://localhost:8086
+          predicates:
+            - Path=${app.api-prefix}/notification/**
+          filters:
+            - StripPrefix=2
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+            - name: CircuitBreaker
+              args:
+                name: notificationServiceCircuitBreaker
+                fallbackUri: forward:/fallback/notification
+        - id: review-service
+          uri: http://localhost:8087
+          predicates:
+            - Path=${app.api-prefix}/review/**
+          filters:
+            - StripPrefix=2
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+            - name: CircuitBreaker
+              args:
+                name: reviewServiceCircuitBreaker
+                fallbackUri: forward:/fallback/review

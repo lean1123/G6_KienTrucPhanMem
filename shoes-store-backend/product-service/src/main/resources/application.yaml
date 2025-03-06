@@ -1,0 +1,19 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /product
+
+app:
+  mongodb:
+    username: ${MONGO_USERNAME}
+    password: ${MONGO_PASSWORD}
+
+spring:
+  application:
+    name: product-service
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
