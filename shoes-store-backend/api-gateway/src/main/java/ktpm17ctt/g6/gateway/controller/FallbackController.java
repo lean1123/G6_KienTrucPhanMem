@@ -1,60 +1,78 @@
 package ktpm17ctt.g6.gateway.controller;
 
+import ktpm17ctt.g6.gateway.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/fallback")
 public class FallbackController {
 
-    @GetMapping("/identity")
-    public ResponseEntity<String> identityFallback() {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body("Identity Service is temporarily unavailable. Please try again later.");
+    @RequestMapping(value="/identity")
+    public ApiResponse identityFallback() {
+        return ApiResponse.builder()
+                .code(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .message("Identity Service is temporarily unavailable. Please try again later.")
+                .build();
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<String> userFallback() {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body("User Service is temporarily unavailable. Please try again later.");
+    @RequestMapping("/user")
+    public ApiResponse userFallback() {
+        return ApiResponse.builder()
+                .code(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .message("User Service is temporarily unavailable. Please try again later.")
+                .build();
     }
 
-    @GetMapping("/product")
-    public ResponseEntity<String> productFallback() {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body("Product Service is temporarily unavailable. Please try again later.");
+    @RequestMapping("/product")
+    public ApiResponse productFallback() {
+        return ApiResponse.builder()
+                .code(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .message("Product Service is temporarily unavailable. Please try again later.")
+                .build();
     }
 
-    @GetMapping("/order")
-    public ResponseEntity<String> orderFallback() {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body("Order Service is temporarily unavailable. Please try again later.");
+    @RequestMapping("/order")
+    public ApiResponse orderFallback() {
+        return ApiResponse.builder()
+                .code(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .message("Order Service is temporarily unavailable. Please try again later.")
+                .build();
     }
 
-    @GetMapping("/payment")
-    public ResponseEntity<String> paymentFallback() {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body("Payment Service is temporarily unavailable. Please try again later.");
+    @RequestMapping("/payment")
+    public ApiResponse paymentFallback() {
+        return ApiResponse.builder()
+                .code(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .message("Payment Service is temporarily unavailable. Please try again later.")
+                .build();
     }
 
-    @GetMapping("/cart")
-    public ResponseEntity<String> cartFallback() {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body("Cart Service is temporarily unavailable. Please try again later.");
+    @RequestMapping("/cart")
+    public ApiResponse cartFallback() {
+        return ApiResponse.builder()
+                .code(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .message("Cart Service is temporarily unavailable. Please try again later.")
+                .build();
     }
 
-    @GetMapping("/notification")
-    public ResponseEntity<String> notificationFallback() {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body("Notification Service is temporarily unavailable. Please try again later.");
+    @RequestMapping("/notification")
+    public ApiResponse notificationFallback() {
+        return ApiResponse.builder()
+                .code(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .message("Notification Service is temporarily unavailable. Please try again later.")
+                .build();
     }
 
-    @GetMapping("/review")
-    public ResponseEntity<String> reviewFallback() {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body("Review Service is temporarily unavailable. Please try again later.");
+    @RequestMapping("/review")
+    public ApiResponse reviewFallback() {
+        return ApiResponse.builder()
+                .code(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .message("Review Service is temporarily unavailable. Please try again later.")
+                .build();
     }
 }
