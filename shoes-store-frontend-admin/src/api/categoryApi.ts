@@ -2,24 +2,24 @@ import AdminAxiosClient from "./axiosClient";
 
 const categoryApi = {
   getAll: () => {
-    return AdminAxiosClient.get("/categories");
+    return AdminAxiosClient.get("/product/external/categories");
   },
   getById: (id: any) => {
-    return AdminAxiosClient.get(`/categories/${id}`);
+    return AdminAxiosClient.get(`/product/categories/${id}`);
   },
   addNew: (categoryData: any) => {
-    return AdminAxiosClient.post("/categories", categoryData);
+    return AdminAxiosClient.post("/product/categories", categoryData);
   },
   search: (keyword: any) => {
-    return AdminAxiosClient.get(`/categories/search`, {
+    return AdminAxiosClient.get(`/product/categories/search`, {
       params: { keyword },
     });
   },
   update: (id: any, categoryData: any) => {
-    return AdminAxiosClient.put(`/categories/${id}`, categoryData);
+    return AdminAxiosClient.put(`/product/categories/${id}`, categoryData);
   },
   delete: (id: any) => {
-    return AdminAxiosClient.delete(`/categories/${id}`);
+    return AdminAxiosClient.delete(`/product/categories/${id}`);
   },
 };
 

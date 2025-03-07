@@ -2,57 +2,47 @@ import AdminAxiosClient from "./axiosClient";
 
 const productItemApi = {
   getAllProductItems: (productId: any) => {
-    return AdminAxiosClient.get(
-      `/product-items/getListProductItems/${productId}`
-    );
+    return AdminAxiosClient.get(`/product/item/product/${productId}`);
   },
 
   getProductItemById: (id: any) => {
-    return AdminAxiosClient.get(`/product-items/${id}`, {
+    return AdminAxiosClient.get(`/product/item/${id}`, {
       withCredentials: true,
     });
   },
 
   addNewProductItem: (productItemData: any) => {
-    return AdminAxiosClient.post("/product-items", productItemData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    return AdminAxiosClient.post("/product/item", productItemData, {});
   },
 
   updateProductItem: (id: any, productItemData: any) => {
-    return AdminAxiosClient.put(`/product-items/${id}`, productItemData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    return AdminAxiosClient.put(`/product/item/${id}`, productItemData, {});
   },
 
   deleteProductItem: (id: any) => {
-    return AdminAxiosClient.delete(`/product-items/${id}`);
+    return AdminAxiosClient.delete(`/product/item/${id}`);
   },
 
   getRecentProducts: () => {
-    return AdminAxiosClient.get("/product-items/recent", {
+    return AdminAxiosClient.get("/product/item/recent", {
       withCredentials: true,
     });
   },
 
   getTopSaleProductItems: (page = 0, size = 9) => {
-    return AdminAxiosClient.get("/product-items/top-sale", {
+    return AdminAxiosClient.get("/product/item/top-sale", {
       params: { page, size },
     });
   },
 
   getNewProductItems: (page = 0, size = 9) => {
-    return AdminAxiosClient.get("/product-items/new", {
+    return AdminAxiosClient.get("/product/item/new", {
       params: { page, size },
     });
   },
 
   getProductItemByColorAndSize: (productId: any, color: any, size: any) => {
-    return AdminAxiosClient.get(`/product-items/get-by-color-and-size`, {
+    return AdminAxiosClient.get(`/product/items/get-by-color-and-size`, {
       params: {
         productId,
         color,

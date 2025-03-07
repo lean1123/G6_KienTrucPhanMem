@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router-dom"; // Sử dụng useParams từ react-router-dom
 import { CircularProgress } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
-import brandApi from "../api/brandApi";
+import brandApi from "../api/colorApi";
 import Breadcrumb from "../components/Breadcrumbs/Breadcrumb";
 import collectionApi from "../api/collectionApi";
 

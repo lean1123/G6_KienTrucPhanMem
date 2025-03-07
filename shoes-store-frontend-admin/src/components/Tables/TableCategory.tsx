@@ -23,7 +23,7 @@ const TableCategory = () => {
     try {
       const response = await categoryApi.getAll();
       console.log(response.data);
-      setCategories(response.data);
+      setCategories(response.data.result);
     } catch (error) {
       console.error("Failed to fetch category:", error);
     } finally {
@@ -36,7 +36,7 @@ const TableCategory = () => {
     try {
       const response = await categoryApi.search(keyword);
       console.log(response.data);
-      setCategories(response.data);
+      setCategories(response.data.result);
     } catch (error) {
       console.error("Failed to fetch category:", error);
     } finally {
@@ -91,24 +91,24 @@ const TableCategory = () => {
             Search
           </button>
         </div>
-        <button
+        {/* <button
           className="bg-gray-500 text-white px-6 py-2 rounded-md"
           onClick={() => {
             navigate(-1);
           }}
         >
           Back
-        </button>
+        </button> */}
       </div>
 
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">
           <thead>
             <tr className="bg-gray-2 text-left">
-              <th className="min-w-[220px] py-2 px-4 font-medium text-black xl:pl-11">
+              <th className="min-w-[220px] py-2 px-4 font-semibold text-black xl:pl-11">
                 Category Name
               </th>
-              <th className="py-2 px-4 font-medium text-black">Actions</th>
+              <th className="py-2 px-4 font-semibold text-black">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -138,7 +138,7 @@ const TableCategory = () => {
                       <button
                         className="hover:text-yellow-500"
                         onClick={() => {
-                          navigate(`/admin/categories/${categoryItem.id}/edit`);
+                          navigate(`/categories/${categoryItem.id}/edit`);
                         }}
                       >
                         <EditOutlined className="w-5 h-5" />

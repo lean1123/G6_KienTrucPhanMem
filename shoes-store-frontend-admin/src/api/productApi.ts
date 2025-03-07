@@ -1,38 +1,32 @@
 import AdminAxiosClient from "./axiosClient";
 
+const prefix = "/product";
+
 const productApi = {
   getAll: () => {
-    const url = "/products";
+    const url = prefix + "/products";
     return AdminAxiosClient.get(url);
   },
   getById: (id: any) => {
-    const url = `/products/${id}`;
+    const url = prefix + `/products/${id}`;
     return AdminAxiosClient.get(url);
   },
   addNew: (productData: any) => {
-    const url = "/products";
-    return AdminAxiosClient.post(url, productData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const url = prefix + "/products";
+    return AdminAxiosClient.post(url, productData, {});
   },
   update: (id: any, productData: any) => {
-    const url = `/products/${id}`;
-    return AdminAxiosClient.put(url, productData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const url = prefix + `/products/${id}`;
+    return AdminAxiosClient.put(url, productData, {});
   },
-  searchByKeyword: (keyword: any) => {
-    const url = `/products/searchByKeyword`;
+  search: (keyword: any) => {
+    const url = prefix + `/products/search`;
     return AdminAxiosClient.get(url, {
       params: { keyword },
     });
   },
   delete: (id: any) => {
-    const url = `/products/${id}`;
+    const url = prefix + `/products/${id}`;
     return AdminAxiosClient.delete(url);
   },
 };

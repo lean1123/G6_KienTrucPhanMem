@@ -8,7 +8,6 @@ import { EditOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import productApi from "../../api/productApi";
-import brandApi from "../../api/brandApi";
 
 interface Product {
   id?: string;
@@ -17,18 +16,11 @@ interface Product {
   category: {
     id: string;
     name: string;
-    description: string;
   };
-  collection: {
-    id: string;
-    name: string;
-    brandId: string;
-  };
-  gender: string;
+  type: string;
   createDate?: Date;
+  modifiedDate?: Date;
   rating: number;
-  brand?: string;
-  image?: string;
 }
 
 const TableProduct = () => {
@@ -41,29 +33,8 @@ const TableProduct = () => {
     try {
       const response = await productApi.getAll();
       console.log(response.data);
-      const products = response.data;
-
-      const productsWithBrand = await Promise.all(
-        products.map(async (product: Product) => {
-          if (product.collection && product.collection.brandId) {
-            const brandResponse = await brandApi.getBrandById(
-              product.collection.brandId
-            );
-            return {
-              ...product,
-              brand: brandResponse.data.brandName,
-            };
-          } else {
-            // If no collection or brandId exists, handle accordingly (e.g., return product as is)
-            return {
-              ...product,
-              brand: "Unknown", // Or any fallback value
-            };
-          }
-        })
-      );
-
-      setProductData(productsWithBrand);
+      const products = response.data.result;
+      setProductData(products);
     } catch (error) {
       console.error("Failed to fetch product:", error);
     } finally {
@@ -74,31 +45,10 @@ const TableProduct = () => {
   const filterProduct = async () => {
     setLoading(true);
     try {
-      const response = await productApi.searchByKeyword(keyword);
+      const response = await productApi.search(keyword);
       console.log(response.data);
-      const products = response.data;
-
-      const productsWithBrand = await Promise.all(
-        products.map(async (product: Product) => {
-          if (product.collection && product.collection.brandId) {
-            const brandResponse = await brandApi.getBrandById(
-              product.collection.brandId
-            );
-            return {
-              ...product,
-              brand: brandResponse.data.brandName,
-            };
-          } else {
-            // If no collection or brandId exists, handle accordingly (e.g., return product as is)
-            return {
-              ...product,
-              brand: "Unknown", // Or any fallback value
-            };
-          }
-        })
-      );
-
-      setProductData(productsWithBrand);
+      const products = response.data.result;
+      setProductData(products);
     } catch (error) {
       console.error("Failed to fetch product:", error);
     } finally {
@@ -151,25 +101,22 @@ const TableProduct = () => {
         <table className="w-full table-auto">
           <thead>
             <tr className="bg-gray-2 text-left">
-              <th className="min-w-[220px] py-2 px-4 font-medium text-black xl:pl-11">
+              <th className="min-w-[200px] py-2 px-4 font-semibold text-black xl:pl-11">
                 Product Name
               </th>
-              <th className="min-w-[120px] py-2 px-4 font-medium text-black">
+              <th className="min-w-[120px] py-2 px-4 font-semibold text-black">
                 Description
               </th>
-              <th className="min-w-[150px] py-2 px-4 font-medium text-black">
-                Brand
-              </th>
-              <th className="min-w-[120px] py-2 px-4 font-medium text-black">
+              <th className="min-w-[120px] py-2 px-4 font-semibold text-black">
                 Category
               </th>
-              <th className="min-w-[120px] py-2 px-4 font-medium text-black">
-                Collection
+              <th className="min-w-[120px] py-2 px-4 font-semibold text-black">
+                Type
               </th>
-              <th className="min-w-[120px] py-2 px-4 font-medium text-black">
+              <th className="min-w-[120px] py-2 px-4 font-semibold text-black">
                 Rating
               </th>
-              <th className="py-2 px-4 font-medium text-black">Actions</th>
+              <th className="py-2 px-4 font-semibold text-black">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -180,7 +127,6 @@ const TableProduct = () => {
                     <div className="h-12 w-16 rounded-md">
                       <img
                         src={
-                          productItem?.image ||
                           "https://th.bing.com/th/id/R.b1edc35f0fa63d0e0b3c9bc5537de942?rik=CZKF5DOfyXPxig&pid=ImgRaw&r=0"
                         }
                         alt="Product"
@@ -191,34 +137,29 @@ const TableProduct = () => {
                   </div>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4">
-                  <p className="text-black dark:text-white">
+                  <p className="text-black ">
                     {productItem.description.length > 15
                       ? productItem.description.substring(0, 15) + "..."
                       : productItem.description}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4">
-                  <p className="text-black dark:text-white">
-                    {productItem.brand}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4">
-                  <p className="text-black dark:text-white">
+                  <p className="text-black ">
                     {productItem.category
                       ? productItem.category.name
                       : "Unknown"}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4">
-                  <p className="text-black dark:text-white">
-                    {productItem.collection
-                      ? productItem.collection.name
-                      : "Unknown"}
+                  <p className="text-black ">
+                    {productItem.type ? productItem.type : "Unknown"}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4">
-                  <p className="text-black dark:text-white">
-                    {productItem.rating}⭐
+                  <p className="text-black ">
+                    {productItem.rating == 0
+                      ? "Not yet rating"
+                      : productItem.rating + "⭐"}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4">
@@ -228,9 +169,7 @@ const TableProduct = () => {
                       <button
                         className="hover:text-blue-500"
                         onClick={() =>
-                          navigate(
-                            `/admin/products/${productItem.id}/list-item`
-                          )
+                          navigate(`/products/${productItem.id}/list-item`)
                         }
                       >
                         <VisibilityOutlined className="w-5 h-5" />
@@ -245,7 +184,7 @@ const TableProduct = () => {
                       <button
                         className="hover:text-green-500"
                         onClick={() =>
-                          navigate(`/admin/products/${productItem.id}/add-item`)
+                          navigate(`/products/${productItem.id}/add-item`)
                         }
                       >
                         <Add className="w-5 h-5" />
@@ -260,7 +199,7 @@ const TableProduct = () => {
                       <button
                         className="hover:text-yellow-500"
                         onClick={() =>
-                          navigate(`/admin/products/edit/${productItem.id}`)
+                          navigate(`/products/edit/${productItem.id}`)
                         }
                       >
                         <EditOutlined className="w-5 h-5" />

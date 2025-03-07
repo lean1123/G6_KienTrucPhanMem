@@ -23,6 +23,7 @@ AdminAxiosClient.interceptors.request.use(
     const publicEndpoints: PublicEndpoint[] = [
       { urlPattern: /\/identity\/auth\/token/, methods: ["POST"] }, // POST /auth/login
       { urlPattern: /\/identity\/auth\/refresh-token/, methods: ["POST"] }, // POST /auth/refreshToken
+      { urlPattern: /\/identity\/auth\/introspect/, methods: ["POST"] },
     ];
 
     console.log("Request URL:", config.url);

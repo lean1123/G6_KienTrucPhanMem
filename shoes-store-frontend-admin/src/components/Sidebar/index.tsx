@@ -1,5 +1,6 @@
 import {
   Category,
+  ColorLens,
   ContactPage,
   Dashboard,
   Group,
@@ -193,10 +194,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </SidebarLinkGroup>
               {/* <!-- Menu Item Product --> */}
 
-              {/* <!-- Menu Item Brands --> */}
+              {/* <!-- Menu Item colors --> */}
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === "/brands" || pathname.includes("brands")
+                  pathname === "/colors" || pathname.includes("colors")
                 }
               >
                 {(handleClick, open) => {
@@ -205,8 +206,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-slate-300 duration-300 ease-in-out hover:bg-gray-800 ${
-                          (pathname === "/brands" ||
-                            pathname.includes("brands")) &&
+                          (pathname === "/colors" ||
+                            pathname.includes("colors")) &&
                           "bg-gray-800 border-l-[2px] border-orange-600"
                         }`}
                         onClick={(e) => {
@@ -216,12 +217,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             : setSidebarExpanded(true);
                         }}
                       >
-                        <ContactPage
+                        <ColorLens
                           className={`w-5 h-5 ${
-                            pathname.includes("/brands") && "text-orange-600"
+                            pathname.includes("/colors") && "text-orange-600"
                           }`}
                         />
-                        Brand
+                        Color
                         <KeyboardArrowDown className="right-0 absolute mr-3" />
                       </NavLink>
                       {/* <!-- Dropdown Menu Start --> */}
@@ -233,7 +234,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="mt-2 mb-5.5 flex flex-col gap-2.5 pl-6">
                           <li>
                             <NavLink
-                              to="/brands/list"
+                              to="/colors/list"
                               className={({ isActive }) =>
                                 "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-gray-400 duration-300 ease-in-out hover:text-white " +
                                 (isActive && "!text-white")
@@ -244,7 +245,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           <li>
                             <NavLink
-                              to="/brands/add"
+                              to="/colors/add"
                               className={({ isActive }) =>
                                 "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-gray-400 duration-300 ease-in-out hover:text-white " +
                                 (isActive && "!text-white")

@@ -2,39 +2,27 @@ import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Breadcrumb from "../components/Breadcrumbs/Breadcrumb";
-import { useNavigate, useParams } from "react-router";
-import brandApi from "../api/brandApi";
+import { useNavigate, useParams } from "react-router-dom";
+import brandApi from "../api/colorApi";
 import collectionApi from "../api/collectionApi";
 import categoryApi from "../api/categoryApi";
 import productApi from "../api/productApi";
 import { enqueueSnackbar } from "notistack";
 
-interface Brand {
-  id: string;
-  brandName: string;
-  avatar: string;
-}
-
-interface Collection {
-  id: string;
-  name: string;
-  brandId: string;
-}
-
 interface Category {
-  id: number;
+  id: string;
   name: string;
-  description: string;
 }
 
 interface Product {
   id?: string;
   name: string;
   description: string;
-  category: string;
-  collection: string;
-  gender: string;
-  createDate?: Date;
+  rating?: number;
+  category: Category;
+  type: string;
+  createdDate?: Date;
+  modifiedDate?: Date;
 }
 
 function EditProduct() {
@@ -42,9 +30,6 @@ function EditProduct() {
   const { id } = useParams();
 
   const [loading, setLoading] = React.useState(false);
-  const [brands, setBrands] = React.useState<Brand[]>([]);
-  const [selectedBrand, setSelectedBrand] = React.useState<Brand>();
-  const [collections, setCollections] = React.useState<Collection[]>([]);
   const [categories, setCategories] = React.useState<Category[]>([]);
 
   const fetchProduct = async () => {
@@ -52,50 +37,16 @@ function EditProduct() {
     try {
       const response = await productApi.getById(id); // Gọi API lấy thông tin sản phẩm theo id
       console.log(response.data);
-      const product = response.data;
-      // brand
-      const brandResponse = await brandApi.getBrandById(
-        product.collection.brandId
-      );
-      setSelectedBrand(brandResponse.data);
+      const product = response.data.result;
       formik.setValues({
         name: product.name || "",
         description: product.description || "",
-        category: product.category.id || "", // Thay đổi để khớp với định dạng của API
-        collection: product.collection.id || "", // Thay đổi để khớp với định dạng của API
-        gender: product.gender || "",
+        category: product.category || { id: "", name: "" },
+        type: product.type || "",
       });
     } catch (error) {
       console.error("Failed to fetch product:", error);
       alert("Failed to load product data");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchBrands = async () => {
-    setLoading(true);
-    try {
-      const response = await brandApi.getAllBrands();
-      console.log(response.data);
-      setBrands(response.data);
-    } catch (error) {
-      console.error("Failed to fetch brands:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchCollections = async () => {
-    setLoading(true);
-    try {
-      const response = await collectionApi.getCollectionByBrand(
-        selectedBrand?.id
-      );
-      console.log(response.data);
-      setCollections(response.data);
-    } catch (error) {
-      console.error("Failed to fetch brands:", error);
     } finally {
       setLoading(false);
     }
@@ -106,7 +57,7 @@ function EditProduct() {
     try {
       const response = await categoryApi.getAll();
       console.log(response.data);
-      setCategories(response.data);
+      setCategories(response.data.result);
     } catch (error) {
       console.error("Failed to fetch brands:", error);
     } finally {
@@ -126,9 +77,8 @@ function EditProduct() {
     initialValues: {
       name: "",
       description: "",
-      category: "",
-      collection: "",
-      gender: "",
+      category: { id: "", name: "" },
+      type: "",
     },
     validationSchema,
     onSubmit: (values) => {
@@ -138,21 +88,8 @@ function EditProduct() {
 
   useEffect(() => {
     fetchProduct();
-    fetchBrands();
     fetchCategories();
   }, []);
-
-  useEffect(() => {
-    if (brands.length > 0) {
-      setSelectedBrand(brands[0]);
-    }
-  }, [brands]);
-
-  useEffect(() => {
-    if (selectedBrand) {
-      fetchCollections();
-    }
-  }, [selectedBrand]);
 
   const handleSubmit = async (values: Product) => {
     console.log("Form data:", values);
@@ -161,12 +98,11 @@ function EditProduct() {
       const formData = new FormData();
       formData.append("name", values.name);
       formData.append("description", values.description);
-      formData.append("category", values.category);
-      formData.append("collection", values.collection);
-      formData.append("gender", values.gender);
+      formData.append("categoryId", values.category.id);
+      formData.append("type", values.type);
+      formData.append("modifiedDate", new Date().toISOString());
       const response = await productApi.update(id, formData);
       console.log(response);
-
       enqueueSnackbar("Edit product successfully", { variant: "success" });
     } catch (error) {
       console.error("Failed to edit product:", error);
@@ -229,42 +165,6 @@ function EditProduct() {
             </div>
 
             <div>
-              <label className="text-black" htmlFor="brand">
-                Brand
-              </label>
-              <select
-                id="brand"
-                name="brand"
-                className="w-full rounded-md border border-gray-300 p-2"
-                value={
-                  brands.find((brand) => brand.id === selectedBrand?.id)?.id
-                }
-                onChange={(e) => {
-                  const selectedBrand = brands.find(
-                    (brand) => brand.id === e.target.value
-                  );
-                  setSelectedBrand(selectedBrand);
-                }}
-                // onBlur={formik.handleBlur}
-              >
-                {brands.map((brand) => (
-                  <option
-                    key={brand.id}
-                    value={brand.id}
-                    label={brand.brandName}
-                  />
-                ))}
-                {/* <option value='' label='Select Brand' />
-								<option value='Nike' label='Nike' />
-								<option value='Adidas' label='Adidas' />
-								<option value='Puma' label='Puma' /> */}
-              </select>
-              {/* {formik.touched.brand && formik.errors.brand ? (
-								<p className='text-red-500 text-sm'>{formik.errors.brand}</p>
-							) : null} */}
-            </div>
-
-            <div>
               <label className="text-black" htmlFor="category">
                 Category
               </label>
@@ -272,8 +172,16 @@ function EditProduct() {
                 id="category"
                 name="category"
                 className="w-full rounded-md border border-gray-300 p-2"
-                value={formik.values.category}
-                onChange={formik.handleChange}
+                value={formik.values.category.id}
+                onChange={(e) => {
+                  const selectedCategory = categories.find(
+                    (category) => category.id === e.target.value
+                  );
+                  formik.setFieldValue(
+                    "category",
+                    selectedCategory || { id: "", name: "" }
+                  );
+                }}
                 onBlur={formik.handleBlur}
               >
                 <option value="" label="Select category" />
@@ -286,57 +194,31 @@ function EditProduct() {
                 ))}
               </select>
               {formik.touched.category && formik.errors.category ? (
-                <p className="text-red-500 text-sm">{formik.errors.category}</p>
-              ) : null}
-            </div>
-
-            <div>
-              <label className="text-black" htmlFor="collection">
-                Collection
-              </label>
-              <select
-                id="collection"
-                name="collection"
-                className="w-full rounded-md border border-gray-300 p-2"
-                value={formik.values.collection}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              >
-                <option value="" label="Select collection" />
-                {collections.map((collection) => (
-                  <option
-                    key={collection.id}
-                    value={collection.id}
-                    label={collection.name}
-                  />
-                ))}
-              </select>
-              {formik.touched.collection && formik.errors.collection ? (
                 <p className="text-red-500 text-sm">
-                  {formik.errors.collection}
+                  {formik.errors.category.name}
                 </p>
               ) : null}
             </div>
 
             <div>
-              <label className="text-black" htmlFor="gender">
-                Gender
+              <label className="text-black" htmlFor="type">
+                Type
               </label>
               <select
-                id="gender"
-                name="gender"
+                id="type"
+                name="type"
                 className="w-full rounded-md border border-gray-300 p-2"
-                value={formik.values.gender}
+                value={formik.values.type}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
-                <option value="" label="Select gender" />
-                <option value="MEN" label="MEN" />
-                <option value="WOMAN" label="WOMAN" />
-                <option value="UNISEX" label="UNISEX" />
+                <option value="" label="Select type" />
+                <option value="MALE" label="Male" />
+                <option value="FEMALE" label="Female" />
+                <option value="CHILDREN" label="Children" />
               </select>
-              {formik.touched.gender && formik.errors.gender ? (
-                <p className="text-red-500 text-sm">{formik.errors.gender}</p>
+              {formik.touched.type && formik.errors.type ? (
+                <p className="text-red-500 text-sm">{formik.errors.type}</p>
               ) : null}
             </div>
 
@@ -351,9 +233,7 @@ function EditProduct() {
               <button
                 type="submit"
                 className="w-full bg-primary text-white rounded-md py-2"
-                onClick={
-                  () => console.log("clicked") // () => navigate('/admin/products')
-                }
+                onClick={() => handleSubmit(formik.values)}
                 disabled={loading}
               >
                 {loading ? "Loading..." : "Edit Product"}

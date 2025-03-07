@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router-dom";
 import categoryApi from "../api/categoryApi";
 import { CircularProgress } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
@@ -27,7 +27,7 @@ function EditCategory() {
     setLoading(true);
     try {
       const response = await categoryApi.getById(id);
-      setCategory(response.data);
+      setCategory(response.data.result);
     } catch (error) {
       console.error("Failed to fetch category:", error);
     } finally {
@@ -89,6 +89,9 @@ function EditCategory() {
       >
         {() => (
           <Form className="grid grid-cols-12 gap-4 p-3 rounded-md shadow-md bg-white">
+            <h2 className="text-black text-xl font-medium col-span-12">
+              ID: {id}
+            </h2>
             {/* Category Name */}
             <div className="col-span-12">
               <label className="text-black" htmlFor="name">
@@ -108,7 +111,7 @@ function EditCategory() {
             </div>
 
             {/* Submit button */}
-            <div className="col-span-2">
+            <div className="col-span-12 flex gap-4">
               <button
                 type="submit"
                 disabled={loading}
@@ -116,9 +119,7 @@ function EditCategory() {
               >
                 {loading ? <CircularProgress size={20} /> : "Update Category"}
               </button>
-            </div>
 
-            <div className="col-span-2">
               <button
                 type="button"
                 disabled={loading}

@@ -22,6 +22,11 @@ const AuthAPI = {
     const url = "/identity/auth/logout";
     return AdminAxiosClient.post(url, { token }, { withCredentials: true });
   },
+
+  introspectToken: (token: string) => {
+    const url = "/identity/auth/introspect";
+    return AdminAxiosClient.post(url, { token }, { withCredentials: true });
+  },
 };
 
 export default AuthAPI;

@@ -48,6 +48,25 @@ export const logout = createAsyncThunk(
   }
 );
 
+export const introspectToken = createAsyncThunk(
+  "/introspectToken",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await AuthAPI.introspectToken(token as string);
+
+      if (response.status.valueOf() !== 200) {
+        return rejectWithValue(response.data);
+      }
+
+      return response.data.result.valid;
+    } catch (error) {
+      console.error("Error in introspectToken", error);
+      return rejectWithValue(error);
+    }
+  }
+);
+
 const AuthSlice = createSlice({
   name: "auth",
   initialState: {
@@ -71,6 +90,14 @@ const AuthSlice = createSlice({
       .addCase(logout.rejected, (state, action) => {
         state.accessToken = null;
         console.error("Error in logout", action.payload);
+      })
+      .addCase(introspectToken.fulfilled, (state, action) => {
+        state.isAuthenticated = action.payload;
+      })
+      .addCase(introspectToken.rejected, (state, action) => {
+        state.accessToken = null;
+        state.isAuthenticated = false;
+        console.error("Error in introspectToken", action.payload);
       });
   },
 });

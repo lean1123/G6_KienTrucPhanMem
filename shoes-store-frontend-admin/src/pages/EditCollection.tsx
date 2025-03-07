@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 import { useNavigate, useParams } from "react-router-dom";
-import brandApi from "../api/brandApi";
+import brandApi from "../api/colorApi";
 import collectionApi from "../api/collectionApi";
 import { CircularProgress } from "@mui/material";
 import { enqueueSnackbar } from "notistack";

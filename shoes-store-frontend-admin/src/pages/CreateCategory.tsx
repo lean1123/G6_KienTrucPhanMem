@@ -23,7 +23,6 @@ function CreateCategory() {
     try {
       const response = await categoryApi.addNew({
         name: values.name,
-        description: "Description",
       });
       if (response.status === 200) {
         enqueueSnackbar("Category created successfully!", {
@@ -53,7 +52,7 @@ function CreateCategory() {
             {/* Category Name */}
             <div className="col-span-12">
               <label className="text-black" htmlFor="name">
-                Category Name
+                Name
               </label>
               <Field
                 type="text"
@@ -69,7 +68,7 @@ function CreateCategory() {
             </div>
 
             {/* Submit button */}
-            <div className="col-span-2">
+            <div className="col-span-12 flex gap-4">
               <button
                 type="submit"
                 disabled={loading}
@@ -77,9 +76,6 @@ function CreateCategory() {
               >
                 {loading ? <CircularProgress size={20} /> : "Create Category"}
               </button>
-            </div>
-
-            <div className="col-span-2">
               <button
                 type="button"
                 disabled={loading}

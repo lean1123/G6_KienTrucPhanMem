@@ -1,32 +1,40 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import AdminLayout from "./components/AdminLayout";
+import LoginForm from "./components/LoginForm";
+import { introspectToken } from "./hooks/auth/authSlice";
+import { AppDispatch } from "./hooks/redux/store";
 import AddCollection from "./pages/AddCollection";
 import AddProductItem from "./pages/AddProductItem";
-import CreateBrand from "./pages/CreateBrand";
 import CreateCategory from "./pages/CreateCategory";
+import CreateColor from "./pages/CreateColor";
 import CreateProduct from "./pages/CreateProduct";
 import Dashboard from "./pages/Dashboard";
-import EditBrand from "./pages/EditBrand";
 import EditCategory from "./pages/EditCategory";
 import EditCollection from "./pages/EditCollection";
+import EditColor from "./pages/EditColor";
 import EditProduct from "./pages/EditProduct";
 import EditProductItem from "./pages/EditProductItem";
 import EditUser from "./pages/EditUser";
-import ListBrand from "./pages/ListBrand";
 import ListCategory from "./pages/ListCategory";
 import ListCollection from "./pages/ListCollection";
+import ListColor from "./pages/ListColor";
 import ListOrder from "./pages/ListOrder";
 import ListProduct from "./pages/ListProduct";
 import ListProductItem from "./pages/ListProductItem";
 import ListUser from "./pages/ListUser";
 import OrderDetail from "./pages/OrderDetail";
 import UserDetail from "./pages/UserDetail";
-import LoginForm from "./components/LoginForm";
-import { useSelector } from "react-redux";
 
 function App() {
   const { isAuthenticated } = useSelector((state: any) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(introspectToken());
+  }, []);
 
   if (!isAuthenticated) {
     return (
@@ -56,10 +64,10 @@ function App() {
           path="/products/:id/list-item/:itemId/edit"
           element={<EditProductItem />}
         />
-        <Route path="/brands/list" element={<ListBrand />} />
-        <Route path="/brands/add" element={<CreateBrand />} />
-        <Route path="/brands/:id/edit" element={<EditBrand />} />
-        <Route path="/brands/add-collection/:id" element={<AddCollection />} />
+        <Route path="/colors/list" element={<ListColor />} />
+        <Route path="/colors/add" element={<CreateColor />} />
+        <Route path="/colors/:id/edit" element={<EditColor />} />
+        <Route path="/colors/add-collection/:id" element={<AddCollection />} />
         <Route
           path="/brands/view-collection/:id"
           element={<ListCollection />}
