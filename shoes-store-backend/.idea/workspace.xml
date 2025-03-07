@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="0d1c3a83-a38e-4d24-9cf3-b317d05e5733" name="Changes" comment="feat(product): add external url for getall">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/controller/FallbackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/controller/FallbackController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shoes-store-frontend-admin/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../shoes-store-frontend-admin/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shoes-store-frontend-admin/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../shoes-store-frontend-admin/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +24,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="fix/identity/integrated-with-gateway" />
+        <entry key="$PROJECT_DIR$/.." value="feature/fe/admin/initialize" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -73,7 +74,7 @@
     "Spring Boot.ApiGatewayApplication.executor": "Run",
     "Spring Boot.IdentityServiceApplication.executor": "Run",
     "Spring Boot.ProductServiceApplication.executor": "Run",
-    "git-widget-placeholder": "feature/product/integrated-with-gateway",
+    "git-widget-placeholder": "feature/fe/admin/connect-api",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/HK2-năm cuối/Kiến trúc phần mềm/Creational-Design-Patterns",
     "node.js.detected.package.eslint": "true",
@@ -100,7 +101,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.ProductServiceApplication">
+  <component name="RunManager" selected="Spring Boot.ApiGatewayApplication">
     <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="api-gateway" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.gateway.ApiGatewayApplication" />
@@ -187,6 +188,8 @@
       <workItem from="1741063981845" duration="4725000" />
       <workItem from="1741068816380" duration="2559000" />
       <workItem from="1741087676681" duration="1998000" />
+      <workItem from="1741267264063" duration="4434000" />
+      <workItem from="1741323545719" duration="6120000" />
     </task>
     <task id="LOCAL-00002" summary="feat(product): add external url for getall">
       <option name="closed" value="true" />
