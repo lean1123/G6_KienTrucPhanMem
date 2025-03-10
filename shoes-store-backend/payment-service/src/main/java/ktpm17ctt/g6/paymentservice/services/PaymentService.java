@@ -8,4 +8,14 @@ public interface PaymentService {
     PaymentResponse save(String orderId, String transactionId, String responseCode, String amount, String transDate);
 
     PaymentResponse getPaymentByOrderId(String orderId);
+
+    PaymentResponse refundPayment(
+            String orderId,
+            String transactionType,
+            String amountRequest,
+            String user,
+            String transDate,
+            String ipAddress,
+            String transactionNo
+    ) throws Exception;
 }

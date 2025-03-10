@@ -1,6 +1,8 @@
 package ktpm17ctt.g6.orderservice.services.impl;
 
 import jakarta.servlet.http.HttpServletRequest;
+import ktpm17ctt.g6.commondto.dtos.responses.PaymentResponse;
+import ktpm17ctt.g6.commondto.enums.PaymentStatus;
 import ktpm17ctt.g6.commondto.utils.GetIpAddress;
 import ktpm17ctt.g6.orderservice.dto.request.OrderCreationRequest;
 import ktpm17ctt.g6.orderservice.dto.request.OrderDetailRequest;
@@ -92,6 +94,45 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findById(s)
                 .map(orderMapper::orderToOrderResponse)
                 .orElseThrow(() -> new Exception("Order not found"));
+    }
+
+    @Transactional
+    @Override
+    public OrderResponse canclingOrder(String orderId, HttpServletRequest request) throws Exception {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new Exception("Order not found"));
+
+        if(order.getStatus().equals(OrderStatus.PENDING)){
+            order.setStatus(OrderStatus.CANCELLED);
+
+            PaymentResponse paymentResponse = paymentClient.getPaymentByOrderId(orderId).getBody();
+
+            log.info("Payment response: {}", paymentResponse);
+            assert paymentResponse != null;
+            log.info("Payment status: {}", paymentResponse.getStatus());
+
+                if(paymentResponse != null && paymentResponse.getStatus().toUpperCase().equalsIgnoreCase("SUCCESS")){
+                    log.info("Refunding payment");
+                    try {
+                        paymentClient.refundPayment(
+                                order.getId(),
+                                "02",
+                                String.valueOf((long) paymentResponse.getAmount() / 100),
+                                "merchant",
+                                paymentResponse.getTransactionDate(),
+                                GetIpAddress.getIpAddress(request),
+                                paymentResponse.getTransactionId()
+                        );
+                    }catch (Exception e){
+                        log.error("Error while refunding payment", e);
+                        throw new Exception("Error while refunding payment");
+                    }
+                }
+            }
+
+        order.setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
+        return orderMapper.orderToOrderResponse(order);
     }
 
     public void deleteById(String s) {

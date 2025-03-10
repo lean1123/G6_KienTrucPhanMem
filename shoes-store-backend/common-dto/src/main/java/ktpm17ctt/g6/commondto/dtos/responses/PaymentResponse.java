@@ -14,4 +14,5 @@ public class PaymentResponse {
     String status;
     String transactionId;
     String paymentUrl;
+    String transactionDate;
 }

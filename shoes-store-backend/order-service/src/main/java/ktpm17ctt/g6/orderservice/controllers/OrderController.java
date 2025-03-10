@@ -25,4 +25,13 @@ public class OrderController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PostMapping("/canceling-order/{id}")
+    public ResponseEntity<?> cancelingOrder(@PathVariable String id, HttpServletRequest httpServletRequest){
+        try {
+            return ResponseEntity.ok(orderService.canclingOrder(id, httpServletRequest));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
