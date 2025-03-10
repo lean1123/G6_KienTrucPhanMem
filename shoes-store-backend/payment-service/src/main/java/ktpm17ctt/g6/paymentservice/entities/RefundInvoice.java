@@ -7,21 +7,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "payments")
-public class Payment {
+@Builder
+@Table(name = "refund_invoices")
+public class RefundInvoice {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String transactionId;
     private String transactionDate;
     private String transactionType;
-    private String userId;
-    private String orderId;
+    private String paymentId;
     private long amount;
     @Enumerated(EnumType.STRING)
-    private PaymentStatus status;
+    private RefundStatus status;
 }

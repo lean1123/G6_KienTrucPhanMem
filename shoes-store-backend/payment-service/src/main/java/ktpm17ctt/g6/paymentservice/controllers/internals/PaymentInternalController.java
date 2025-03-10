@@ -45,7 +45,7 @@ public class PaymentInternalController {
             @RequestParam(required = true) String vnp_TxnRef
     ) throws IOException {
         return ResponseEntity.ok(
-                paymentService.save(vnp_TxnRef, vnp_TransactionNo, vnp_ResponseCode, vnp_Amount)
+                paymentService.save(vnp_TxnRef, vnp_TransactionNo, vnp_ResponseCode, vnp_Amount, vnp_PayDate)
         );
     }
 }
