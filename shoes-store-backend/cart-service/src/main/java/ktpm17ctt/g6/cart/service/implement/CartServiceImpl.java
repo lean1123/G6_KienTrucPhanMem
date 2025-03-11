@@ -2,6 +2,7 @@ package ktpm17ctt.g6.cart.service.implement;
 
 import jakarta.servlet.http.HttpSession;
 import ktpm17ctt.g6.cart.dto.request.CartDetailRequest;
+import ktpm17ctt.g6.cart.dto.response.ApiResponse;
 import ktpm17ctt.g6.cart.dto.response.CartDetailResponse;
 import ktpm17ctt.g6.cart.dto.response.ProductItemResponse;
 import ktpm17ctt.g6.cart.enties.Cart;
@@ -71,7 +72,9 @@ public class CartServiceImpl implements CartService {
 
         return sessionCart.stream()
             .map(request -> {
-                ProductItemResponse productItem = productFeignClient.getProductItemById(request.getProductItemId());
+                ApiResponse<ProductItemResponse> response = productFeignClient.getProductItemById(request.getProductItemId());
+                ProductItemResponse productItem = response != null ? response.getResult() : null;
+
                 return CartDetailResponse.builder()
                     .cartId(null)
                     .productItemId(productItem.getId())
@@ -90,7 +93,8 @@ public class CartServiceImpl implements CartService {
 
         if (sessionCart != null) {
             for (CartDetailRequest request : sessionCart) {
-            	ProductItemResponse productItem = productFeignClient.getProductItemById(request.getProductItemId());
+                ApiResponse<ProductItemResponse> response = productFeignClient.getProductItemById(request.getProductItemId());
+                ProductItemResponse productItem = response != null ? response.getResult() : null;
             	if (productItem == null) {
             	    throw new RuntimeException("Product not found: " + request.getProductItemId());
             	}

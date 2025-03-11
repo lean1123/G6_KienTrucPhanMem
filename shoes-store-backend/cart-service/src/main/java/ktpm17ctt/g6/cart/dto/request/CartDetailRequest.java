@@ -12,4 +12,5 @@ public class CartDetailRequest {
     private String cartId; 
     private String productItemId; 
     private int quantity;
+    int size;
 }

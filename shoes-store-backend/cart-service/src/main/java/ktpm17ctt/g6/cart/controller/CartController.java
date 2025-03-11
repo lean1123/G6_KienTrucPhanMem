@@ -2,23 +2,17 @@ package ktpm17ctt.g6.cart.controller;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-//import org.springframework.security.core.context.SecurityContextHolder;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
 import ktpm17ctt.g6.cart.dto.request.CartDetailRequest;
@@ -28,7 +22,10 @@ import ktpm17ctt.g6.cart.service.CartDetailService;
 import ktpm17ctt.g6.cart.service.CartService;
 
 @RestController
-@RequestMapping("/api/cart")
+@RequestMapping("/cart")
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Slf4j
 public class CartController {
     @Autowired
     private CartService cartService;
@@ -36,65 +33,104 @@ public class CartController {
     @Autowired
     private CartDetailService cartDetailService;
 
-    @PostMapping("/addToCart")
-    public ResponseEntity<?> addToCart(HttpSession session, @RequestBody CartDetailRequest cartDetailRequest) {
-        String sessionId = session.getId();
-        Optional<CartDetailResponse> cartDetailResponse = cartDetailService.addToCart(cartDetailRequest);
-        
-        if (cartDetailResponse.isPresent()) {
-            return ResponseEntity.ok(cartDetailResponse.get());
+    /**
+     * API Thêm sản phẩm vào giỏ hàng
+     * - Nếu có userId ⇒ Lưu vào database
+     * - Nếu không có userId ⇒ Lưu vào session
+     */
+    @PostMapping("/add")
+    public ResponseEntity<?> addToCart(HttpSession session, @RequestBody CartDetailRequest cartDetailRequest,
+                                       @RequestParam(required = false) String userId) {
+        if (userId != null) {
+            // Lưu vào database
+            Optional<CartDetailResponse> cartDetailResponse = cartDetailService.addToCart(cartDetailRequest);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((String) "Error adding to cart");
+
+
+        } else {
+            // Lưu vào session
+            cartService.saveCartToSession(session.getId(), cartDetailRequest);
+            return ResponseEntity.ok("Added to session cart");
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error adding to cart");
     }
 
-    @PutMapping("/updateQuantity")
-    public ResponseEntity<?> updateQuantity(HttpSession session, @RequestBody CartDetailRequest cartDetailRequest) {
-        String cartId = session.getId(); // Lấy cartId từ session
-        Optional<CartDetailResponse> updatedCartDetail = cartDetailService.updateQuantityByCartId(
-                cartId, cartDetailRequest.getProductItemId(), cartDetailRequest.getQuantity());
+    /**
+     * API Cập nhật số lượng sản phẩm trong giỏ hàng
+     * - Nếu có userId ⇒ cập nhật database
+     * - Nếu không có userId ⇒ cập nhật session
+     */
+    @PutMapping("/update")
+    public ResponseEntity<?> updateQuantity(HttpSession session, @RequestBody CartDetailRequest cartDetailRequest,
+                                            @RequestParam(required = false) String userId) {
+        if (userId != null) {
+            Optional<CartDetailResponse> updatedCartDetail = cartDetailService.updateQuantityByCartId(
+                    userId, cartDetailRequest.getProductItemId(), cartDetailRequest.getQuantity());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((String) "Error updating quantity");
 
-        if (updatedCartDetail.isPresent()) {
-            return ResponseEntity.ok(updatedCartDetail.get());
+        } else {
+            // Cập nhật số lượng trong session
+            List<CartDetailResponse> sessionCart = cartService.getCartFromSession(session.getId());
+            sessionCart.forEach(item -> {
+                if (item.getProductItemId().equals(cartDetailRequest.getProductItemId())) {
+                    item.setQuantity(cartDetailRequest.getQuantity());
+                }
+            });
+            session.setAttribute(session.getId(), sessionCart);
+            return ResponseEntity.ok("Updated session cart quantity");
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error updating quantity");
     }
 
+    /**
+     * API Xóa sản phẩm khỏi giỏ hàng
+     * - Nếu có userId ⇒ Xóa trong database
+     * - Nếu không có userId ⇒ Xóa trong session
+     */
     @DeleteMapping("/remove")
-    public ResponseEntity<?> removeCartDetail(@RequestParam String cartId, @RequestParam String productItemId) {
-        boolean removed = cartDetailService.removeCartDetail(cartId, productItemId);
-        if (removed) {
-            return ResponseEntity.ok("Cart detail removed successfully");
+    public ResponseEntity<?> removeCartDetail(HttpSession session, @RequestParam String productItemId,
+                                              @RequestParam(required = false) String userId) {
+        if (userId != null) {
+            boolean removed = cartDetailService.removeCartDetail(userId, productItemId);
+            return removed ? ResponseEntity.ok("Item removed from cart")
+                    : ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error removing item from cart");
+        } else {
+            List<CartDetailResponse> sessionCart = cartService.getCartFromSession(session.getId());
+            sessionCart.removeIf(item -> item.getProductItemId().equals(productItemId));
+            session.setAttribute(session.getId(), sessionCart);
+            return ResponseEntity.ok("Item removed from session cart");
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error removing item from cart");
     }
 
+    /**
+     * API Xem giỏ hàng
+     * - Nếu có userId ⇒ Lấy từ database
+     * - Nếu không có userId ⇒ Lấy từ session
+     */
     @GetMapping("/view")
-    public ResponseEntity<List<CartDetailResponse>> viewCart(@RequestParam(required = false) String userId, HttpSession session) {
+    public ResponseEntity<List<CartDetailResponse>> viewCart(HttpSession session,
+                                                             @RequestParam(required = false) String userId) {
         List<CartDetailResponse> cartDetails;
         if (userId != null) {
-        	Optional<Cart> optionalCart = cartService.findCartByUser(userId);
-        	if (optionalCart.isPresent()) {
-        	    cartDetails = cartDetailService.findAllByCartId(optionalCart.get().getId());
-        	} else {
-        	    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
-        	}
+            Optional<Cart> optionalCart = cartService.findCartByUser(userId);
+            cartDetails = optionalCart.map(cart -> cartDetailService.findAllByCartId(cart.getId()))
+                    .orElse(Collections.emptyList());
         } else {
             cartDetails = cartService.getCartFromSession(session.getId());
         }
         return ResponseEntity.ok(cartDetails);
     }
-    
 
-    
-//    @PostMapping("/sync")
-//    public ResponseEntity<?> syncCartWithDatabase(HttpSession session) {
-//        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-//        UserResponse user = userService.getUserByEmail(email);
-//        if (user == null) {
-//            return ResponseEntity.badRequest().body(Map.of("status", 400, "message", "User not found"));
-//        }
-//        List<CartDetailResponse> cartDetails = cartService.getCartFromSession(session.getId());
-//        cartService.syncCartWithDatabase(user.getId(), cartDetails);
-//        return ResponseEntity.ok(Map.of("status", 200, "message", "Cart synced successfully"));
-//    }
+    /**
+     * API Merge giỏ hàng từ session vào database khi user đăng nhập
+     */
+    @PostMapping("/merge")
+    public ResponseEntity<?> mergeCart(HttpSession session, @RequestParam String userId) {
+        cartService.mergeSessionCartToDatabase(session.getId(), userId);
+        return ResponseEntity.ok("Session cart merged into database");
+    }
+
+    @GetMapping("/hehe")
+    public String hienThi(){
+        System.out.println("hehe");
+        return "hehe";
+    }
 }

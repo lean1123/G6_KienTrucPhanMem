@@ -1,6 +1,7 @@
 package ktpm17ctt.g6.cart.service.implement;
 
 import ktpm17ctt.g6.cart.dto.request.CartDetailRequest;
+import ktpm17ctt.g6.cart.dto.response.ApiResponse;
 import ktpm17ctt.g6.cart.dto.response.CartDetailResponse;
 import ktpm17ctt.g6.cart.enties.Cart;
 import ktpm17ctt.g6.cart.enties.CartDetail;
@@ -115,31 +116,63 @@ public class CartDetailServiceImpl implements CartDetailService {
 //    }
 
 
-    @Override
-    public Optional<CartDetailResponse> updateQuantityByCartId(String cartId, String productItemId, int newQuantity) {
-        CartDetailPK cartDetailPK = new CartDetailPK(cartId, productItemId);
-        Optional<CartDetail> existingCartDetail = cartDetailRepository.findById(cartDetailPK);
+//    @Override
+//    public Optional<CartDetailResponse> updateQuantityByCartId(String cartId, String productItemId, int newQuantity) {
+//        CartDetailPK cartDetailPK = new CartDetailPK(cartId, productItemId);
+//        Optional<CartDetail> existingCartDetail = cartDetailRepository.findById(cartDetailPK);
+//
+//        if (existingCartDetail.isPresent()) {
+//            CartDetail cartDetail = existingCartDetail.get();
+//
+//            // Gọi product-service để lấy danh sách tồn kho theo size
+//            List<QuantityOfSizeResponse> quantityOfSizes = productFeignClient.getQuantityOfSize(productItemId);
+//
+//            // Kiểm tra tổng tồn kho của tất cả sizes
+//            int totalStock = quantityOfSizes.stream().mapToInt(QuantityOfSizeResponse::getQuantity).sum();
+//
+//            if (totalStock < newQuantity) {
+//                throw new RuntimeException("Not enough stock available");
+//            }
+//
+//            // Cập nhật số lượng trong giỏ hàng
+//            cartDetail.setQuantity(newQuantity);
+//            cartDetailRepository.save(cartDetail);
+//            return Optional.of(toResponse(cartDetail));
+//        }
+//        return Optional.empty();
+//    }
+@Override
+public Optional<CartDetailResponse> updateQuantityByCartId(String cartId, String productItemId, int newQuantity) {
+    CartDetailPK cartDetailPK = new CartDetailPK(cartId, productItemId);
+    Optional<CartDetail> existingCartDetail = cartDetailRepository.findById(cartDetailPK);
 
-        if (existingCartDetail.isPresent()) {
-            CartDetail cartDetail = existingCartDetail.get();
+    if (existingCartDetail.isPresent()) {
+        CartDetail cartDetail = existingCartDetail.get();
 
-            // Gọi product-service để lấy danh sách tồn kho theo size
-            List<QuantityOfSizeResponse> quantityOfSizes = productFeignClient.getQuantityOfSize(productItemId);
+        // Giả sử giỏ hàng có lưu size, nếu không có thì cần thêm size vào CartDetail
+        int size = cartDetail.getSize();
 
-            // Kiểm tra tổng tồn kho của tất cả sizes
-            int totalStock = quantityOfSizes.stream().mapToInt(QuantityOfSizeResponse::getQuantity).sum();
-            
-            if (totalStock < newQuantity) {
-                throw new RuntimeException("Not enough stock available");
-            }
+        // Gọi product-service để lấy tổng tồn kho theo size
+        ApiResponse<Integer> response = productFeignClient.getTotalQuantityByProductItemAndSize(productItemId, size);
 
-            // Cập nhật số lượng trong giỏ hàng
-            cartDetail.setQuantity(newQuantity);
-            cartDetailRepository.save(cartDetail);
-            return Optional.of(toResponse(cartDetail));
+        // Kiểm tra nếu response null hoặc không có dữ liệu hợp lệ
+        if (response == null || response.getResult() == null) {
+            throw new RuntimeException("Failed to fetch stock information from product-service");
         }
-        return Optional.empty();
+
+        int totalStock = response.getResult();
+
+        if (totalStock < newQuantity) {
+            throw new RuntimeException("Not enough stock available");
+        }
+
+        // Cập nhật số lượng trong giỏ hàng
+        cartDetail.setQuantity(newQuantity);
+        cartDetailRepository.save(cartDetail);
+        return Optional.of(toResponse(cartDetail));
     }
+    return Optional.empty();
+}
 
     
     private CartDetailResponse toResponse(CartDetail cartDetail) {

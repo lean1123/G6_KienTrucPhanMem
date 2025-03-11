@@ -1,6 +1,5 @@
 package ktpm17ctt.g6.cart.enties;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 

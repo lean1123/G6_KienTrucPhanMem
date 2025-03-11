@@ -1,19 +1,29 @@
 package ktpm17ctt.g6.cart.feign;
 
+import ktpm17ctt.g6.cart.configuration.FeignClientConfig;
+import ktpm17ctt.g6.cart.dto.response.ApiResponse;
 import ktpm17ctt.g6.cart.dto.response.ProductItemResponse;
 import ktpm17ctt.g6.cart.dto.response.QuantityOfSizeResponse;
 
 import java.util.List;
 
+
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "product-service", url = "http://localhost:8083/api/product")
+@FeignClient(name = "product-service", url = "http://localhost:8082/product", configuration = FeignClientConfig.class)
 public interface ProductFeignClient {
-    @GetMapping("/{id}")
-    ProductItemResponse getProductItemById(@PathVariable("id") String productItemId);
+    @GetMapping("/item/{id}")
+    ApiResponse<ProductItemResponse> getProductItemById(@PathVariable("id") String id);
 
-    @GetMapping("/{id}/quantityOfSize")
-    List<QuantityOfSizeResponse> getQuantityOfSize(@PathVariable("id") String productItemId);
+
+
+    @GetMapping("/quantity")
+    ApiResponse<Integer> getTotalQuantityByProductItemAndSize(
+            @RequestParam("id") String id,
+            @RequestParam("size") Integer size
+    );
 }

@@ -20,7 +20,7 @@ public class CartDetail implements Serializable {
     private CartDetailPK cartDetailPK;
 
     private int quantity;
-
+    private int size;
     @ManyToOne
     @JoinColumn(name = "cart_id", insertable = false, updatable = false)
     @MapsId("cartId")
