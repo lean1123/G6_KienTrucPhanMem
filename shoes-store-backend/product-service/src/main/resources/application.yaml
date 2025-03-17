@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: 8082
   servlet:
     context-path: /product
 
@@ -7,7 +7,22 @@ app:
   mongodb:
     username: ${MONGO_USERNAME}
     password: ${MONGO_PASSWORD}
+  cloudinary:
+    cloud-name: ${CLOUDINARY_CLOUD_NAME}
+    api-key: ${CLOUDINARY_API_KEY}
+    api-secret: ${CLOUDINARY_API_SECRET}
 
 spring:
   application:
     name: product-service
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 100MB
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
