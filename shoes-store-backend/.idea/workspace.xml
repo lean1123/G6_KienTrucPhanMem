@@ -5,9 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d1c3a83-a38e-4d24-9cf3-b317d05e5733" name="Changes" comment="feat(product): add external url for getall">
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/configuration/CloudinaryConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/CloudinaryService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shoes-store-frontend-admin/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../shoes-store-frontend-admin/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shoes-store-frontend-admin/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../shoes-store-frontend-admin/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/ProductItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/ProductItemController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/request/ProductItemRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/request/ProductItemRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/exception/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/exception/ErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/mapper/ProductItemMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/mapper/ProductItemMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductItemServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductItemServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shoes-store-frontend-admin/src/api/productItemApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../shoes-store-frontend-admin/src/api/productItemApi.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shoes-store-frontend-admin/src/pages/AddProductItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../shoes-store-frontend-admin/src/pages/AddProductItem.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +34,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="feature/fe/admin/initialize" />
+        <entry key="$PROJECT_DIR$/.." value="feature/fe/admin/connect-api" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -65,6 +75,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Maven.product-service [clean].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
@@ -74,15 +85,16 @@
     "Spring Boot.ApiGatewayApplication.executor": "Run",
     "Spring Boot.IdentityServiceApplication.executor": "Run",
     "Spring Boot.ProductServiceApplication.executor": "Run",
-    "git-widget-placeholder": "feature/fe/admin/connect-api",
+    "git-widget-placeholder": "feature/product/integrated-cloudinary",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/HK2-năm cuối/Kiến trúc phần mềm/Creational-Design-Patterns",
+    "last_opened_file_path": "D:/Car4U/Car4U-BE",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "run.configurations.included.in.services": "true",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.2.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -101,7 +113,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.ApiGatewayApplication">
+  <component name="RunManager" selected="Spring Boot.ProductServiceApplication">
     <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="api-gateway" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.gateway.ApiGatewayApplication" />
@@ -189,7 +201,16 @@
       <workItem from="1741068816380" duration="2559000" />
       <workItem from="1741087676681" duration="1998000" />
       <workItem from="1741267264063" duration="4434000" />
-      <workItem from="1741323545719" duration="6120000" />
+      <workItem from="1741323545719" duration="15682000" />
+      <workItem from="1741405565697" duration="1280000" />
+      <workItem from="1741407469936" duration="3100000" />
+      <workItem from="1741535124044" duration="1352000" />
+      <workItem from="1741586505936" duration="30000" />
+      <workItem from="1741684074328" duration="861000" />
+      <workItem from="1741685340008" duration="850000" />
+      <workItem from="1741691351727" duration="4112000" />
+      <workItem from="1741793443151" duration="82000" />
+      <workItem from="1742223846786" duration="381000" />
     </task>
     <task id="LOCAL-00002" summary="feat(product): add external url for getall">
       <option name="closed" value="true" />

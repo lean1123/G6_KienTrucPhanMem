@@ -20,10 +20,12 @@ resilience4j:
         slidingWindowSize: 10
         waitDurationInOpenState: 10s
       productServiceCircuitBreaker:
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 5
-        slidingWindowSize: 10
-        waitDurationInOpenState: 10s
+        failureRateThreshold: 90
+        minimumNumberOfCalls: 20
+        slidingWindowSize: 100
+        waitDurationInOpenState: 30s
+        slow-call-duration-threshold: 120s
+        slow-call-rate-threshold: 95
       orderServiceCircuitBreaker:
         failureRateThreshold: 50
         minimumNumberOfCalls: 5
@@ -49,6 +51,17 @@ resilience4j:
         minimumNumberOfCalls: 5
         slidingWindowSize: 10
         waitDurationInOpenState: 10s
+  timelimiter:
+    instances:
+      productServiceCircuitBreaker:
+        timeoutDuration: 20s
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.cloud.gateway: DEBUG
+    io.github.resilience4j.circuitbreaker: DEBUG
+
 
 spring:
   application:
@@ -88,6 +101,7 @@ spring:
               args:
                 name: userServiceCircuitBreaker
                 fallbackUri: forward:/fallback/user
+
         - id: product-service
           uri: http://localhost:8082
           predicates:
@@ -97,8 +111,8 @@ spring:
             - name: RequestRateLimiter
               args:
                 key-resolver: "#{@ipKeyResolver}"
-                redis-rate-limiter.replenishRate: 5
-                redis-rate-limiter.burstCapacity: 10
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
             - name: CircuitBreaker
               args:
                 name: productServiceCircuitBreaker
@@ -178,3 +192,7 @@ spring:
               args:
                 name: reviewServiceCircuitBreaker
                 fallbackUri: forward:/fallback/review
+
+      httpclient:
+        connect-timeout: 15000
+        response-timeout: 120000ms
