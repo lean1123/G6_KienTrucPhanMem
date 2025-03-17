@@ -21,11 +21,11 @@ interface SizeQuantity {
   quantity: number;
 }
 
-const listImages = [
-  "https://product.hstatic.net/1000230642/product/giay-the-thao-nam-biti-s-dsm074500den-den-ld35m-color-den_976e670e055f496390b8ed30328f88b0_1024x1024.jpg",
-  "https://product.hstatic.net/1000230642/product/giay-the-thao-nam-biti-s-dsm074500den-den-ld35m-color-den_976e670e055f496390b8ed30328f88b0_1024x1024.jpg",
-  "https://product.hstatic.net/1000230642/product/giay-the-thao-nam-biti-s-dsm074500den-den-ld35m-color-den_976e670e055f496390b8ed30328f88b0_1024x1024.jpg",
-];
+// const listImages = [
+//   "https://product.hstatic.net/1000230642/product/giay-the-thao-nam-biti-s-dsm074500den-den-ld35m-color-den_976e670e055f496390b8ed30328f88b0_1024x1024.jpg",
+//   "https://product.hstatic.net/1000230642/product/giay-the-thao-nam-biti-s-dsm074500den-den-ld35m-color-den_976e670e055f496390b8ed30328f88b0_1024x1024.jpg",
+//   "https://product.hstatic.net/1000230642/product/giay-the-thao-nam-biti-s-dsm074500den-den-ld35m-color-den_976e670e055f496390b8ed30328f88b0_1024x1024.jpg",
+// ];
 
 export default function AddProductItem() {
   const [images, setImages] = useState<File[]>([]);
@@ -72,7 +72,7 @@ export default function AddProductItem() {
     color: "",
     listDetailImages: images,
     sizes: sizes,
-    status: "In Stock",
+    status: "IN_STOCK",
     product: id,
   };
 
@@ -84,17 +84,17 @@ export default function AddProductItem() {
       formData.append("price", values.price);
       formData.append("colorId", values.color);
       formData.append("status", values.status);
-      // values.listDetailImages.forEach((image: any) => {
-      //   formData.append("listDetailImages", image);
+      values.listDetailImages.forEach((image: any) => {
+        formData.append("images", image);
+      });
+      // images.forEach((image: string, index: number) => {
+      //   formData.append(`images[${index}]`, image);
       // });
-      listImages.forEach((image: string, index: number) => {
-        formData.append(`images[${index}]`, image);
-      });
-      //formData.append("quantityOfSize", JSON.stringify(values.sizes));
-      values.sizes.forEach((item: any, index: number) => {
-        formData.append(`quantityOfSize[${index}].size`, item.size);
-        formData.append(`quantityOfSize[${index}].quantity`, item.quantity);
-      });
+      formData.append("quantityOfSize", JSON.stringify(values.sizes));
+      // values.sizes.forEach((item: any, index: number) => {
+      //   formData.append(`quantityOfSize[${index}].size`, item.size);
+      //   formData.append(`quantityOfSize[${index}].quantity`, item.quantity);
+      // });
 
       formData.append("productId", id as string);
 
@@ -129,7 +129,6 @@ export default function AddProductItem() {
             useEffect(() => {
               setFieldValue("listDetailImages", images);
             }, [images, setFieldValue]);
-
             return (
               <Form>
                 <div className="grid grid-cols-12 gap-6">

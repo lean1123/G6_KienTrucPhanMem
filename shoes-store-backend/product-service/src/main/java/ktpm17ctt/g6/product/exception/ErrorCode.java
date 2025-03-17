@@ -39,6 +39,8 @@ public enum ErrorCode {
     ITEM_QUANTITY_INVALID(2019, "Item quantity must be greater than 0", HttpStatus.BAD_REQUEST),
     ITEM_PRODUCT_INVALID(2020, "Item product id must not be null", HttpStatus.BAD_REQUEST),
     ITEM_COLOR_INVALID(2021, "Item color id must not be null", HttpStatus.BAD_REQUEST),
+    ITEM_IMAGE_INVALID(2022, "Item image must not be null", HttpStatus.BAD_REQUEST),
+    ITEM_IMAGE_CANT_UPLOAD(2023, "Item image can't upload", HttpStatus.BAD_REQUEST),
 
     QUANTITY_NOT_NULL(2022, "Quantity must not be null", HttpStatus.BAD_REQUEST),
     SIZE_NOT_NULL(2023, "Size must not be null", HttpStatus.BAD_REQUEST),

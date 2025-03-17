@@ -12,11 +12,19 @@ const productItemApi = {
   },
 
   addNewProductItem: (productItemData: any) => {
-    return AdminAxiosClient.post("/product/item", productItemData, {});
+    return AdminAxiosClient.post("/product/item", productItemData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   },
 
   updateProductItem: (id: any, productItemData: any) => {
-    return AdminAxiosClient.put(`/product/item/${id}`, productItemData, {});
+    return AdminAxiosClient.put(`/product/item/${id}`, productItemData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   },
 
   deleteProductItem: (id: any) => {
