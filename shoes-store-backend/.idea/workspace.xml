@@ -4,26 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5c3eede0-1b0a-47bc-840c-8c35757a44d9" name="Changes" comment="feature(user):initialize user service">
-      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/configuration/SecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/dto/ModelMapperConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/dto/request/UserRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/dto/response/UserResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/dto/util/ValidationConstraints.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/UserServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/UserServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/entity/Account.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/entity/FeedBack.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/entity/enums/Role.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/mapper/UserMapper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/service/Impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/service/Impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/ktpm17ctt/g6/user/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" afterDir="false" />
-    </list>
+    <list default="true" id="5c3eede0-1b0a-47bc-840c-8c35757a44d9" name="Changes" comment="feature(user):initialize user service" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -288,7 +269,7 @@
       <workItem from="1741682848023" duration="6095000" />
       <workItem from="1741692922886" duration="46000" />
       <workItem from="1742143297964" duration="11764000" />
-      <workItem from="1742193677191" duration="1658000" />
+      <workItem from="1742193677191" duration="1858000" />
     </task>
     <task id="LOCAL-00001" summary="docs: additional .idea">
       <option name="closed" value="true" />
@@ -322,7 +303,15 @@
       <option name="project" value="LOCAL" />
       <updated>1741556331570</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="feature(user):initialize user service">
+      <option name="closed" value="true" />
+      <created>1742195543302</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1742195543302</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
