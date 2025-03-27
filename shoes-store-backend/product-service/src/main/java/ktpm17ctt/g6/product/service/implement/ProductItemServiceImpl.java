@@ -126,5 +126,11 @@
                     .sum();
         }
 
+        @Override
+        public List<ProductItemResponse> findAll() {
+            var list= productItemRepository.findAll();
+            return list.stream().map(productItemMapper::toProductItemResponse).toList();
+
+        }
 
     }

@@ -17,16 +17,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "cart_details")
 public class CartDetail implements Serializable {
     @EmbeddedId
-    private CartDetailPK cartDetailPK;
+    private CartDetailPK cartDetailPK; // Khóa chính phức hợp
 
-    private int quantity;
-    private int size;
     @ManyToOne
     @JoinColumn(name = "cart_id", insertable = false, updatable = false)
     @MapsId("cartId")
-	@JsonIgnore
+    @JsonIgnore
     private Cart cart;
 
-    @Column(insertable=false, updatable=false)
+    @Column(insertable = false, updatable = false)
     private String productItemId;
+
+    private int quantity; // Số lượng sản phẩm của một kích thước cụ thể
+
+    public CartDetail(CartDetailPK cartDetailPK, int quantity) {
+        this.cartDetailPK = cartDetailPK;
+        this.quantity = quantity;
+    }
 }

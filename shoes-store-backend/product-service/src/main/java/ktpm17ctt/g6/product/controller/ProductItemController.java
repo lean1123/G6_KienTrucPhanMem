@@ -97,5 +97,12 @@ public class ProductItemController {
                 .build();
     }
 
+    @GetMapping("/all")
+    ApiResponse<List<ProductItemResponse>> getAllProductItems() {
+        log.info("Get all product items");
+        return ApiResponse.<List<ProductItemResponse>>builder()
+                .result(productItemService.findAll())
+                .build();
+    }
 
 }

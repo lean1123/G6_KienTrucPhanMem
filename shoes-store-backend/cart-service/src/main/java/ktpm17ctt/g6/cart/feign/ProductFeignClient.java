@@ -3,6 +3,7 @@ package ktpm17ctt.g6.cart.feign;
 import ktpm17ctt.g6.cart.configuration.FeignClientConfig;
 import ktpm17ctt.g6.cart.dto.response.ApiResponse;
 import ktpm17ctt.g6.cart.dto.response.ProductItemResponse;
+import ktpm17ctt.g6.cart.dto.response.ProductResponse;
 import ktpm17ctt.g6.cart.dto.response.QuantityOfSizeResponse;
 
 import java.util.List;
@@ -21,9 +22,17 @@ public interface ProductFeignClient {
 
 
 
-    @GetMapping("/quantity")
+    @GetMapping("/item/quantity")
     ApiResponse<Integer> getTotalQuantityByProductItemAndSize(
             @RequestParam("id") String id,
             @RequestParam("size") Integer size
     );
+
+
+    @GetMapping("/item/all")
+    ApiResponse<List<ProductItemResponse>> getAllProductItems();
+
+    @GetMapping("/products/{id}")
+    ApiResponse<ProductResponse> getProduct(@PathVariable("id") String id);
+
 }

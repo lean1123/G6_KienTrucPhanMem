@@ -18,4 +18,5 @@ import java.io.Serializable;
 public class CartDetailPK implements Serializable {
     private String cartId;
     private String productItemId;
+    private int size;
 }

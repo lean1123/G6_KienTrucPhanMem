@@ -17,4 +17,6 @@ public interface ProductItemService {
     List<ProductItemResponse> findByProductId(String productId);
     PageResponse<ProductItemResponse> search(Integer page, String productName, Type type, String categoryName, String colorName, Integer size, Double minPrice, Double maxPrice);
     int getTotalQuantityByProductAndSize(String id, Integer size);
+
+    List<ProductItemResponse> findAll();
 }

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -25,27 +26,22 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private CartRepository cartRepository;
 
-    @Autowired
-    private CartDetailRepository cartDetailRepository;
 
     @Autowired
     private ProductFeignClient productFeignClient; // Gọi product-service
 
     @Autowired
-    private HttpSession session;
+    private CartDetailRepository cartDetailRepository;
 
     @Override
-    public Optional<Cart> findCartByUser(String userId) {
-        return cartRepository.findByUserId(userId);
+    public Cart findCartByUser(String userId) {
+        return  cartRepository.findByUserId(userId);
     }
 
     @Override
-    public Cart createCartIfNotExists(String userId) {
-        return findCartByUser(userId).orElseGet(() -> {
-            Cart newCart = new Cart();
-            newCart.setUserId(userId);
-            return cartRepository.save(newCart);
-        });
+    public Cart saveSessionItemsToDatabase(String sessionId, String userId) {
+        List<ProductItemResponse> sessionItems = getSessionItems(sessionId);
+        return null;
     }
 
     @Override
@@ -53,70 +49,32 @@ public class CartServiceImpl implements CartService {
         return cartRepository.save(entity);
     }
 
-    @Override
-    public void saveCartToSession(String sessionId, CartDetailRequest cartDetailRequest) {
-        List<CartDetailRequest> sessionCart = (List<CartDetailRequest>) session.getAttribute(sessionId);
-        if (sessionCart == null) {
-            sessionCart = new ArrayList<>();
+    private List<ProductItemResponse> getSessionItems(String sessionId) {
+        ApiResponse<List<ProductItemResponse>> response = productFeignClient.getAllProductItems();
+
+        if (response.getResult() != null) {
+            return response.getResult();
         }
-        sessionCart.add(cartDetailRequest);
-        session.setAttribute(sessionId, sessionCart);
+
+        return List.of(); // Trả về danh sách rỗng nếu không có dữ liệu
     }
 
     @Override
-    public List<CartDetailResponse> getCartFromSession(String sessionId) {
-        List<CartDetailRequest> sessionCart = (List<CartDetailRequest>) session.getAttribute(sessionId);
-        if (sessionCart == null || sessionCart.isEmpty()) {
-            return new ArrayList<>();
-        }
+    @Transactional
+    public void addToCart(String cartId, String productItemId, int size, int quantity) {
+        CartDetailPK cartDetailPK = new CartDetailPK(cartId, productItemId, size);
+        Optional<CartDetail> existingCartDetail = cartDetailRepository.findById(cartDetailPK);
 
-        return sessionCart.stream()
-            .map(request -> {
-                ApiResponse<ProductItemResponse> response = productFeignClient.getProductItemById(request.getProductItemId());
-                ProductItemResponse productItem = response != null ? response.getResult() : null;
-
-                return CartDetailResponse.builder()
-                    .cartId(null)
-                    .productItemId(productItem.getId())
-                    .quantity(request.getQuantity())
-                    .productId(null)
-                    .build();
-            })
-            .collect(Collectors.toList());
-    }
-
-
-    @Override
-    public void mergeSessionCartToDatabase(String sessionId, String userId) {
-        Cart cart = createCartIfNotExists(userId);
-        List<CartDetailRequest> sessionCart = (List<CartDetailRequest>) session.getAttribute(sessionId);
-
-        if (sessionCart != null) {
-            for (CartDetailRequest request : sessionCart) {
-                ApiResponse<ProductItemResponse> response = productFeignClient.getProductItemById(request.getProductItemId());
-                ProductItemResponse productItem = response != null ? response.getResult() : null;
-            	if (productItem == null) {
-            	    throw new RuntimeException("Product not found: " + request.getProductItemId());
-            	}
-                CartDetailPK cartDetailPK = new CartDetailPK(cart.getId(), productItem.getId());
-                Optional<CartDetail> existingCartDetail = cartDetailRepository.findById(cartDetailPK);
-
-                if (existingCartDetail.isPresent()) {
-                    CartDetail cartDetail = existingCartDetail.get();
-                    cartDetail.setQuantity(cartDetail.getQuantity() + request.getQuantity());
-                    cartDetailRepository.save(cartDetail);
-                } else {
-                	CartDetail newCartDetail = CartDetail.builder()
-                		    .cartDetailPK(cartDetailPK)
-                		    .quantity(request.getQuantity())
-                		    .productItemId(productItem.getId())
-                		    .cart(cart)
-                		    .build();
-
-                    cartDetailRepository.save(newCartDetail);
-                }
-            }
-            session.removeAttribute(sessionId); // Xóa giỏ hàng khỏi session sau khi đã lưu vào database
+        if (existingCartDetail.isPresent()) {
+            // Nếu sản phẩm đã tồn tại, cập nhật số lượng
+            CartDetail cartDetail = existingCartDetail.get();
+            cartDetail.setQuantity(cartDetail.getQuantity() + quantity);
+            cartDetailRepository.save(cartDetail);
+        } else {
+            // Nếu sản phẩm chưa có, thêm mới vào giỏ hàng
+            CartDetail newCartDetail = new CartDetail(cartDetailPK, quantity);
+            cartDetailRepository.save(newCartDetail);
         }
     }
+
 }

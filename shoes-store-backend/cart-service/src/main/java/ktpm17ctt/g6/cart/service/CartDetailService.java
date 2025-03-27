@@ -8,12 +8,15 @@ import java.util.Optional;
 
 import ktpm17ctt.g6.cart.dto.request.CartDetailRequest;
 import ktpm17ctt.g6.cart.dto.response.CartDetailResponse;
+import ktpm17ctt.g6.cart.enties.CartDetail;
+import ktpm17ctt.g6.cart.enties.CartDetailPK;
 
 public interface CartDetailService {
-    List<CartDetailResponse> findAllByCartId(String cartId);
+    List<CartDetailResponse> findAllCartDetailByCart(String cartId);
     Optional<CartDetailResponse> addToCart(CartDetailRequest cartDetailRequest);
-    void deleteByCartIdAndProductId(String cartId, String productItemId);
-    Optional<CartDetailResponse> updateQuantityByCartId(String cartId, String productItemId, int newQuantity);
-    boolean removeCartDetail(String cartId, String productItemId);
+    void deleteById(CartDetailPK cartDetailPK);
+    Optional<CartDetail> updateQuantity(CartDetailPK cartDetailPK, int newQuantity);
+    <S extends CartDetail> S save(S entity);
+    Optional<CartDetail> findById(CartDetailPK id);
 
 }

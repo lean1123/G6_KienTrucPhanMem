@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 public class CartDetailPKResponse {
     private String cartId;
     private String productItemId;
+    private int size;
 }

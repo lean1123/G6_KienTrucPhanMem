@@ -5,24 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d1c3a83-a38e-4d24-9cf3-b317d05e5733" name="Changes" comment="feat(product): add web client">
-      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/configuration/FeignClientConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/ApiResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/configuration/ObjectMapperConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/request/CartDetailPKRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/CartDetailSessionDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/ProductResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/UserResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/feign/UserFeignClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cart-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/controller/CartController.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/controller/CartController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/request/CartDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/request/CartDetailRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/CartDetailPKResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/CartDetailPKResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/CartDetailResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/CartDetailResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/enties/Cart.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/enties/Cart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/ProductItemResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/ProductItemResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/QuantityOfSizeResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/QuantityOfSizeResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/enties/CartDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/enties/CartDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/enties/CartDetailPK.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/enties/CartDetailPK.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/feign/ProductFeignClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/feign/ProductFeignClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/repository/CartDetailRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/repository/CartDetailRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/repository/CartRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/repository/CartRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/CartDetailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/CartDetailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/CartService.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/CartService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/implement/CartDetailServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/implement/CartDetailServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/implement/CartServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/implement/CartServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-dto/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-dto/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-dto/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/common-dto/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/ProductItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/ProductItemController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/ProductItemService.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/ProductItemService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductItemServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductItemServiceImpl.java" afterDir="false" />
@@ -36,6 +41,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -75,7 +81,7 @@
     &quot;Spring Boot.ApiGatewayApplication.executor&quot;: &quot;Run&quot;,
     &quot;Spring Boot.IdentityServiceApplication.executor&quot;: &quot;Run&quot;,
     &quot;Spring Boot.ProductServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/cart/connect__product&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/cart/connect__product__v2&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/HOCKY8/KIENTRUC/Project3/G6_KienTrucPhanMem/shoes-store-backend&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -103,7 +109,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.ProductServiceApplication">
     <configuration name="ProductServiceApplication" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="22" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />

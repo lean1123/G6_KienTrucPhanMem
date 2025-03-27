@@ -3,6 +3,7 @@ package ktpm17ctt.g6.cart.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
 
 import ktpm17ctt.g6.cart.enties.CartDetail;
 import ktpm17ctt.g6.cart.enties.CartDetailPK;
@@ -12,12 +13,14 @@ import java.util.Optional;
 
 @Repository
 public interface CartDetailRepository extends JpaRepository<CartDetail, CartDetailPK> {
-    // Tìm tất cả CartDetail theo cartId
-    List<CartDetail> findByCart_Id(String cartId);
+    @Query("SELECT cd FROM CartDetail cd WHERE cd.cart.id = ?1")
+    List<CartDetail> findAllByCartId(String cartId);
 
     // Tìm CartDetail theo CartDetailPK
-    Optional<CartDetail> findById(CartDetailPK cartDetailPK);
+    Optional<CartDetail> findByCartDetailPK(CartDetailPK cartDetailPK);
 
     // Xóa CartDetail theo CartDetailPK
-    void deleteById(CartDetailPK cartDetailPK);
+    void deleteByCartDetailPK(CartDetailPK cartDetailPK);
+  //  Optional<CartDetail> findByCartIdAndProductItemIdAndSize(String cartId, String productItemId, int size);
+
 }
