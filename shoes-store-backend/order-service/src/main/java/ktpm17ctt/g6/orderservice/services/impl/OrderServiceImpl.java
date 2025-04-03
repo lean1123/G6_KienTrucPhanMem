@@ -8,6 +8,7 @@ import ktpm17ctt.g6.orderservice.dto.response.OrderResponse;
 import ktpm17ctt.g6.orderservice.entities.Order;
 import ktpm17ctt.g6.orderservice.entities.OrderStatus;
 import ktpm17ctt.g6.orderservice.entities.PaymentMethod;
+import ktpm17ctt.g6.orderservice.kafka.OrderEventProducer;
 import ktpm17ctt.g6.orderservice.mapper.OrderMapper;
 import ktpm17ctt.g6.orderservice.repositories.OrderRepository;
 import ktpm17ctt.g6.orderservice.repositories.httpClients.PaymentClient;
@@ -32,6 +33,7 @@ public class OrderServiceImpl implements OrderService {
     OrderMapper orderMapper;
     OrderDetailService orderDetailService;
     PaymentClient paymentClient;
+    private final OrderEventProducer orderEventProducer;
 
 
     @Override
@@ -56,6 +58,7 @@ public class OrderServiceImpl implements OrderService {
 
         entity = orderRepository.save(entity);
 
+        orderEventProducer.sendOrderSuccessEvent(request.getUserEmail());
 
         try {
             for (OrderDetailRequest orderDetail : orderDetails) {

@@ -17,5 +17,6 @@ public class OrderCreationRequest {
     double total;
     String userId;
     PaymentMethod paymentMethod;
+    String userEmail;  // Thêm trường userEmail
     List<OrderDetailRequest> orderDetails;
 }

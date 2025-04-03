@@ -14,4 +14,6 @@ public class PaymentResponse {
     String status;
     String transactionId;
     String paymentUrl;
+    private String userEmail;  // Thêm thông tin email người dùng
+
 }

@@ -1,0 +1,33 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /notification
+
+spring:
+  application:
+    name: notification-service
+
+  data:
+    mongodb:
+      uri: mongodb://root:root@localhost:27017/notification-service?authSource=admin
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "*"
+        enable.auto.commit: false
+    listener:
+      ack-mode: manual_immediate
+
+  mail:
+    brevo:
+      api-key: ""  # Thay thế bằng API Key của bạn
+      sender-email: "tokiejame@gmail.com"  # Email người gửi
+
+logging:
+  level:
+    root: INFO
+    org.springframework.kafka: DEBUG

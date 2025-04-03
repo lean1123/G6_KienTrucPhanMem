@@ -5,19 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d1c3a83-a38e-4d24-9cf3-b317d05e5733" name="Changes" comment="feat(product): add external url for getall">
-      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/configuration/CloudinaryConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/CloudinaryService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/configuration/KafkaConsumerConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/dto/EmailRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/listener/AccountEventListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/listener/OrderEventListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/listener/PaymentEventListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/model/Notification.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/repository/NotificationRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/kafka/OrderEventProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/ProductItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/ProductItemController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/request/ProductItemRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/request/ProductItemRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/exception/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/exception/ErrorCode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/mapper/ProductItemMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/mapper/ProductItemMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductItemServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductItemServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shoes-store-frontend-admin/src/api/productItemApi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../shoes-store-frontend-admin/src/api/productItemApi.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shoes-store-frontend-admin/src/pages/AddProductItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../shoes-store-frontend-admin/src/pages/AddProductItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/request/OrderCreationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/dto/request/OrderCreationRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/controllers/internals/PaymentInternalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/controllers/internals/PaymentInternalController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/dtos/responses/PaymentResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/dtos/responses/PaymentResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/services/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/services/PaymentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/services/impl/PaymentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/services/impl/PaymentServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,19 +48,20 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
-}]]></component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2tpzoNBkE3bhfUg1Rc1c4TXWGLk" />
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.NotificationServiceApplication.executor": "Run",
     "Maven.product-service [clean].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
@@ -62,20 +72,28 @@
     "Spring Boot.ApiGatewayApplication.executor": "Run",
     "Spring Boot.IdentityServiceApplication.executor": "Run",
     "Spring Boot.ProductServiceApplication.executor": "Run",
-    "git-widget-placeholder": "feature/product/integrated-cloudinary",
+    "git-widget-placeholder": "feature/notification/initialize2",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Car4U/Car4U-BE",
+    "last_opened_file_path": "D:/HOCKY8/KIENTRUC/Project_Noti/G6_KienTrucPhanMem/shoes-store-backend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
     "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
     "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.2.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\HOCKY8\KIENTRUC\Project_Noti\G6_KienTrucPhanMem\shoes-store-backend" />
+      <recent name="D:\HOCKY8\KIENTRUC\Project_Noti\G6_KienTrucPhanMem\shoes-store-backend\notification-service\src\main\java\ktpm17ctt\g6\notification\service" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="ktpm17ctt.g6.product.dto" />
     </key>
@@ -90,7 +108,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.ProductServiceApplication">
+  <component name="RunManager">
     <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="api-gateway" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.gateway.ApiGatewayApplication" />
@@ -141,22 +159,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <list>
-      <item itemvalue="Spring Boot.ApiGatewayApplication" />
-      <item itemvalue="Spring Boot.CommonDtoApplication (1)" />
-      <item itemvalue="Spring Boot.PaymentServiceApplication" />
-      <item itemvalue="Spring Boot.IdentityServiceApplication" />
-      <item itemvalue="Spring Boot.OrderServiceApplication" />
-      <item itemvalue="Spring Boot.ProductServiceApplication" />
-    </list>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.39" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.39" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
