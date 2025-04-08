@@ -1,22 +1,26 @@
 package ktpm17ctt.g6.orderservice.services.impl;
 
 import jakarta.servlet.http.HttpServletRequest;
-import ktpm17ctt.g6.commondto.utils.GetIpAddress;
+import ktpm17ctt.g6.event.dto.PaymentUrlCreationReq;
+import ktpm17ctt.g6.event.dto.PaymentUrlResponse;
+import ktpm17ctt.g6.orderservice.dto.feinClient.payment.PaymentResponse;
+import ktpm17ctt.g6.orderservice.dto.feinClient.payment.RefundResponse;
 import ktpm17ctt.g6.orderservice.dto.request.OrderCreationRequest;
 import ktpm17ctt.g6.orderservice.dto.request.OrderDetailRequest;
 import ktpm17ctt.g6.orderservice.dto.response.OrderResponse;
 import ktpm17ctt.g6.orderservice.entities.Order;
 import ktpm17ctt.g6.orderservice.entities.OrderStatus;
-import ktpm17ctt.g6.orderservice.entities.PaymentMethod;
 import ktpm17ctt.g6.orderservice.mapper.OrderMapper;
 import ktpm17ctt.g6.orderservice.repositories.OrderRepository;
 import ktpm17ctt.g6.orderservice.repositories.httpClients.PaymentClient;
 import ktpm17ctt.g6.orderservice.services.OrderDetailService;
 import ktpm17ctt.g6.orderservice.services.OrderService;
+import ktpm17ctt.g6.orderservice.util.GetIpAddress;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,11 +36,14 @@ public class OrderServiceImpl implements OrderService {
     OrderMapper orderMapper;
     OrderDetailService orderDetailService;
     PaymentClient paymentClient;
+    KafkaTemplate<String, Object> kafkaTemplate;
+    KafkaService kafkaService;
 
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public OrderResponse save(OrderCreationRequest request, HttpServletRequest req) throws Exception {
+
 
         List<OrderDetailRequest> orderDetails = request.getOrderDetails();
         double total = orderDetails.stream().mapToDouble(OrderDetailRequest::getPrice).sum();
@@ -56,23 +63,42 @@ public class OrderServiceImpl implements OrderService {
 
         entity = orderRepository.save(entity);
 
+        for (OrderDetailRequest orderDetail : orderDetails) {
+            orderDetailService.save(orderDetail, entity);
+        }
 
-        try {
-            for (OrderDetailRequest orderDetail : orderDetails) {
-                orderDetailService.save(orderDetail, entity);
+//        String paymentUrl = "";
+//        if (entity.getPaymentMethod().equals(PaymentMethod.VNPAY)) {
+//            try {
+//                paymentUrl = paymentClient
+//                        .createNewPayment(entity.getId(), String.valueOf(Long.valueOf((long) 1000000)), GetIpAddress.getIpAddress(req))
+//                        .getBody().getPaymentUrl();
+//            }catch (Exception e){
+//                log.error("Error while creating payment" + entity.getId(), e);
+////                Cap nhat lai trang thai don hang
+//                entity.setStatus(OrderStatus.PAYMENT_FAILED);
+//                orderRepository.save(entity);
+//            }
+//        }
+
+        PaymentUrlCreationReq paymentUrlCreationReq = PaymentUrlCreationReq.builder()
+                .orderId(entity.getId())
+                .amount(String.valueOf((long) entity.getTotal()))
+                .ipAddress(GetIpAddress.getIpAddress(req))
+                .build();
+
+        kafkaTemplate.send("payment-request", paymentUrlCreationReq)
+                .whenComplete((result, ex) -> {
+            if (ex != null) {
+                log.error("Failed to send Kafka message", ex);
+                throw new RuntimeException("Payment service unavailable. Please try again.");
+            } else {
+                log.info("Kafka message sent successfully: {}", result.getProducerRecord().value());
             }
-        } catch (Exception e) {
-            log.error("Error while saving order details", e);
-            throw new Exception("Error while saving order details");
-        }
+        });
 
-        String paymentUrl = "";
-        if (entity.getPaymentMethod().equals(PaymentMethod.VNPAY)) {
-            paymentUrl = paymentClient
-                    .createNewPayment(entity.getId(), String.valueOf(Long.valueOf((long) 1000000)), GetIpAddress.getIpAddress(req))
-                    .getBody().getPaymentUrl();
-        }
-
+        PaymentUrlResponse paymentUrlResponse = kafkaService.getPaymentUrlResponse();
+        log.info("Payment URL response: {}", paymentUrlResponse);
 
 
         return OrderResponse.builder()
@@ -83,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
                 .status(entity.getStatus())
                 .orderDetails(orderDetailService.findOrderDetailByOrder_Id(entity.getId()))
                 .total(entity.getTotal())
-                .paymentUrl(paymentUrl)
+                .paymentUrl(paymentUrlResponse.getPaymentUrl())
                 .build();
     }
 
@@ -92,6 +118,46 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findById(s)
                 .map(orderMapper::orderToOrderResponse)
                 .orElseThrow(() -> new Exception("Order not found"));
+    }
+
+    @Transactional
+    @Override
+    public OrderResponse canclingOrder(String orderId, HttpServletRequest request) throws Exception {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new Exception("Order not found"));
+
+        if (order.getStatus().equals(OrderStatus.PENDING)) {
+            order.setStatus(OrderStatus.CANCELLED);
+
+            PaymentResponse paymentResponse = paymentClient.getPaymentByOrderId(orderId).getBody();
+
+            log.info("Payment response: {}", paymentResponse);
+            assert paymentResponse != null;
+            log.info("Payment status: {}", paymentResponse.getStatus());
+
+            if (paymentResponse != null && paymentResponse.getStatus().toUpperCase().equalsIgnoreCase("SUCCESS")) {
+                log.info("Refunding payment");
+                try {
+                    RefundResponse refundResponse = paymentClient.refundPayment(
+                            order.getId(),
+                            "02",
+                            String.valueOf((long) paymentResponse.getAmount() / 100),
+                            "merchant",
+                            paymentResponse.getTransactionDate(),
+                            GetIpAddress.getIpAddress(request),
+                            paymentResponse.getTransactionId()
+                    ).getBody();
+                    log.info("Refund response: {}", refundResponse);
+                } catch (Exception e) {
+                    log.error("Error while refunding payment", e);
+                    throw new Exception("Error while refunding payment");
+                }
+            }
+        }
+
+        order.setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
+        return orderMapper.orderToOrderResponse(order);
     }
 
     public void deleteById(String s) {
