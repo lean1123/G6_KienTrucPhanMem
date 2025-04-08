@@ -2,7 +2,9 @@ package ktpm17ctt.g6.paymentservice.controllers.internals;
 
 import ktpm17ctt.g6.paymentservice.configurations.VNPayConfig;
 import ktpm17ctt.g6.paymentservice.dtos.responses.PaymentResponse;
+import ktpm17ctt.g6.paymentservice.dtos.responses.RefundResponse;
 import ktpm17ctt.g6.paymentservice.services.PaymentService;
+import ktpm17ctt.g6.paymentservice.services.VNPayService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import java.io.IOException;
 @Slf4j
 public class PaymentInternalController {
     PaymentService paymentService;
+    VNPayService vnPayService;
 
     @PostMapping("/create")
     public ResponseEntity<PaymentResponse> createNewPayment(@RequestParam(required = true) String orderId,
@@ -29,7 +32,7 @@ public class PaymentInternalController {
                                             ) throws Exception {
         return  ResponseEntity.ok(
                 PaymentResponse.builder()
-                        .paymentUrl(VNPayConfig.getPaymentUrl(orderId, total, ipAddress, bankCode, language))
+                        .paymentUrl(vnPayService.getPaymentUrl(orderId, total, ipAddress, bankCode, language))
                         .build()
         );
 
@@ -51,7 +54,7 @@ public class PaymentInternalController {
     }
 
     @PostMapping("/refund")
-    public ResponseEntity<PaymentResponse> refundPayment(
+    public ResponseEntity<RefundResponse> refundPayment(
             @RequestParam String orderId,
             @RequestParam String transactionType,
             @RequestParam String amountRequest,

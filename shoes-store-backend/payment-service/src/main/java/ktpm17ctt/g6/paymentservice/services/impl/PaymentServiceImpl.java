@@ -3,6 +3,7 @@ package ktpm17ctt.g6.paymentservice.services.impl;
 import com.google.gson.JsonObject;
 import ktpm17ctt.g6.paymentservice.configurations.VNPayConfig;
 import ktpm17ctt.g6.paymentservice.dtos.responses.PaymentResponse;
+import ktpm17ctt.g6.paymentservice.dtos.responses.RefundResponse;
 import ktpm17ctt.g6.paymentservice.entities.Payment;
 import ktpm17ctt.g6.paymentservice.entities.PaymentStatus;
 import ktpm17ctt.g6.paymentservice.repositories.PaymentRepository;
@@ -10,6 +11,8 @@ import ktpm17ctt.g6.paymentservice.services.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,9 +32,11 @@ import java.util.TimeZone;
 public class PaymentServiceImpl implements PaymentService {
     PaymentRepository paymentRepository;
 
+
     @Transactional
     @Override
-    public PaymentResponse save(String orderId, String transactionId, String responseCode, String amount, String transDate) {
+    public PaymentResponse save(String orderId, String transactionId, String responseCode,
+                                String amount, String transDate) {
         Payment paymentEntity = Payment.builder()
                 .orderId(orderId)
                 .transactionId(transactionId)
@@ -41,6 +46,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
 
         paymentEntity = paymentRepository.save(paymentEntity);
+        log.info("Payment saved: {}", paymentEntity);
         return PaymentResponse.builder()
                 .orderId(paymentEntity.getOrderId())
                 .status(String.valueOf(paymentEntity.getStatus()))
@@ -64,7 +70,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
    @Override
-   public PaymentResponse refundPayment(
+   public RefundResponse refundPayment(
            String orderId,
            String transactionType,
            String amountRequest,
@@ -136,12 +142,24 @@ public class PaymentServiceImpl implements PaymentService {
                new InputStreamReader(con.getInputStream()));
        String output;
        StringBuffer response = new StringBuffer();
+
        while ((output = in.readLine()) != null) {
            response.append(output);
        }
-       in.close();
-         log.info("Response : {}", response.toString());
-       return null;
+
+       log.info("Response : {}", response.toString());
+
+       JSONObject vnResObj = new JSONObject(response.toString());
+       String vnp_ResponseCode = vnResObj.getString("vnp_ResponseCode");
+       String vnp_Message = vnResObj.getString("vnp_Message");
+
+       return RefundResponse.builder()
+               .vnp_ResponseCode(vnp_ResponseCode)
+               .vnp_Message(vnp_Message)
+               .amountRequest(String.valueOf(amount / 100))
+               .orderId(orderId)
+               .transactionId(transactionNo)
+               .build();
    }
 
 
