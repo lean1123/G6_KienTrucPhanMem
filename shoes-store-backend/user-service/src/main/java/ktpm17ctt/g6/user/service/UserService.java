@@ -22,7 +22,7 @@ public interface UserService {
 
     Optional<UserResponse> updateInfo(String id, UserRequest userRequest);
 
-    Optional<User> getUserById(String id);
+    Optional<UserResponse> getUserById(String id);
 
     List<UserResponse> search(String keyword);
 }

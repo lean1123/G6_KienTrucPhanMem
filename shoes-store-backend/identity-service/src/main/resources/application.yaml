@@ -25,9 +25,14 @@ spring:
 
 jwt:
     signerKey: "1Tj5jmm5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
   api-docs:
     path: /v3/api-docs
+
+app:
+  services:
+    user: http://localhost:8081/user
 

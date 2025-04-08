@@ -1,4 +1,4 @@
-package ktpm17ctt.g6.user.dto.util;
+package ktpm17ctt.g6.user.util;
 
 public class ValidationConstraints {
     public static final String VIETNAMESE_NAME_REGEX = "^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỉịọỏốồổỗộớờởỡợỤỦứửữựỲỴÝỶỸỳỵỷỹ\\s]{2,50}$";

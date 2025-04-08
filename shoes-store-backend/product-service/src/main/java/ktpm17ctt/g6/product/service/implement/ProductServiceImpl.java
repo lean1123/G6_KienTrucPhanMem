@@ -4,6 +4,7 @@ import ktpm17ctt.g6.product.dto.request.ProductRequest;
 import ktpm17ctt.g6.product.dto.response.ProductResponse;
 import ktpm17ctt.g6.product.entity.Category;
 import ktpm17ctt.g6.product.entity.Product;
+import ktpm17ctt.g6.product.exception.NotFoundException;
 import ktpm17ctt.g6.product.mapper.CategoryMapper;
 import ktpm17ctt.g6.product.mapper.ProductMapper;
 import ktpm17ctt.g6.product.repository.CategoryRepository;
@@ -28,7 +29,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse save(ProductRequest productRequest) {
-        Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow();
+        Category category = categoryRepository.findById(productRequest.getCategoryId())
+                .orElseThrow(() -> new NotFoundException("Category ID", productRequest.getCategoryId()));
         Product product = productMapper.toProduct(productRequest);
         product.setCategory(category);
         productRepository.save(product);
@@ -37,10 +39,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse update(String id, ProductRequest productRequest) {
-        Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow();
-        Product product = productRepository.findById(id).orElseThrow();
+        Category category = categoryRepository.findById(productRequest.getCategoryId())
+                .orElseThrow(() -> new NotFoundException("Category ID", productRequest.getCategoryId()));
+        productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Product ID", id));
+        Product product;
         product = productMapper.toProduct(productRequest);
         product.setCategory(category);
+        product.setId(id);
         productRepository.save(product);
         return productMapper.toProductResponse(product);
     }
@@ -52,7 +58,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Optional<ProductResponse> findById(String id) {
-        Product product = productRepository.findById(id).orElseThrow();
+        Product product = productRepository.findById(id)
+                .orElseThrow(()-> new NotFoundException("Product ID", id));
         return Optional.of(productMapper.toProductResponse(product));
     }
 

@@ -1,0 +1,46 @@
+
+services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    image: api-gateway:latest
+    container_name: api-gateway
+    ports:
+      - "8888:8888"
+    networks:
+      - backend
+  identity-service:
+    build:
+      context: ./identity-service
+      dockerfile: Dockerfile
+    image: identity-service:latest
+    container_name: identity-service
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+#  user-service:
+#    build:
+#      context: ./user-service
+#      dockerfile: Dockerfile
+#    image: user-service:latest
+#    container_name: user-service
+#    ports:
+#      - "8081:8081"
+#    networks:
+#      - backend
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    image: product-service:latest
+    container_name: product-service
+    ports:
+      - "8082:8082"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

@@ -1,11 +1,10 @@
 package ktpm17ctt.g6.identity.dto.request;
 
-import ktpm17ctt.g6.identity.validator.DobConstraint;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -14,7 +13,11 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountUpdateRequest {
+    @Size(min = 6, message = "Password must be at least 6 characters")
+    @NotBlank(message = "Password is required")
     String password;
+    @Size(min = 6, message = "Password confirm must be at least 6 characters")
+    @NotBlank(message = "Password confirm is required")
     String passwordConfirm;
     Set<String> roles;
 }
