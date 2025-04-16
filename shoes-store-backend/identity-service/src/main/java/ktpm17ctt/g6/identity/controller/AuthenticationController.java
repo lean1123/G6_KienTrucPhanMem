@@ -1,6 +1,7 @@
 package ktpm17ctt.g6.identity.controller;
 
 import com.nimbusds.jose.JOSEException;
+import jakarta.validation.Valid;
 import ktpm17ctt.g6.identity.dto.ApiResponse;
 import ktpm17ctt.g6.identity.dto.request.AuthenticationRequest;
 import ktpm17ctt.g6.identity.dto.request.IntrospectRequest;
@@ -27,7 +28,7 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
 
     @PostMapping("/token")
-    ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    ApiResponse<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request) {
         var result = authenticationService.authenticate(request);
         return ApiResponse.<AuthenticationResponse>builder().result(result).build();
     }
