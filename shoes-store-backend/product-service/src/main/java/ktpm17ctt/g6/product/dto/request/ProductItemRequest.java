@@ -1,6 +1,7 @@
 package ktpm17ctt.g6.product.dto.request;
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import ktpm17ctt.g6.product.entity.Color;
@@ -8,6 +9,7 @@ import ktpm17ctt.g6.product.entity.QuantityOfSize;
 import ktpm17ctt.g6.product.entity.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,13 +19,16 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductItemRequest {
-    @Positive(message = "ITEM_PRICE_INVALID")
+    @NotNull(message = "Product item price is required")
+    @Positive(message = "Product item price must be positive")
     double price;
-    List<String> images;
-    @NotNull(message = "ITEM_COLOR_INVALID")
+    List<MultipartFile> images;
+    @NotBlank(message = "Product item color is required")
     String colorId;
-    List<QuantityOfSize> quantityOfSize;
-    @NotNull(message = "ITEM_PRODUCT_INVALID")
+    @NotBlank(message = "Product item quantity of size is required")
+    String quantityOfSize;
+    @NotBlank(message = "Product item product id is required")
     String productId;
+    @NotNull(message = "Product item status is required")
     Status status;
 }

@@ -12,8 +12,10 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ProductItemMapper {
-    @Mapping(target = "quantityOfSize", source = "quantityOfSize", qualifiedByName = "mapQuantityOfSizeList")
+//    @Mapping(target = "quantityOfSize", source = "quantityOfSize", qualifiedByName = "mapQuantityOfSizeList")
     @Mapping(target = "status", source = "status")
+    @Mapping(target = "images", ignore = true)
+    @Mapping(target = "quantityOfSize", ignore = true)
     ProductItem toProductItem(ProductItemRequest productItemRequest);
     ProductItemResponse toProductItemResponse(ProductItem productItem);
 

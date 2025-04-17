@@ -1,18 +1,23 @@
 package ktpm17ctt.g6.product.service.implement;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ktpm17ctt.g6.product.dto.PageResponse;
 import ktpm17ctt.g6.product.dto.request.ProductItemRequest;
 import ktpm17ctt.g6.product.dto.response.ProductItemResponse;
 import ktpm17ctt.g6.product.entity.ProductItem;
+import ktpm17ctt.g6.product.entity.QuantityOfSize;
 import ktpm17ctt.g6.product.entity.enums.Type;
 import ktpm17ctt.g6.product.exception.AppException;
 import ktpm17ctt.g6.product.exception.ErrorCode;
+import ktpm17ctt.g6.product.exception.NotFoundException;
 import ktpm17ctt.g6.product.mapper.ColorMapper;
 import ktpm17ctt.g6.product.mapper.ProductItemMapper;
 import ktpm17ctt.g6.product.mapper.ProductMapper;
 import ktpm17ctt.g6.product.repository.ColorRepository;
 import ktpm17ctt.g6.product.repository.ProductItemRepository;
 import ktpm17ctt.g6.product.repository.ProductRepository;
+import ktpm17ctt.g6.product.service.CloudinaryService;
 import ktpm17ctt.g6.product.service.ProductItemService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +27,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -38,29 +47,44 @@ public class ProductItemServiceImpl implements ProductItemService {
     ProductMapper productMapper;
     ColorMapper colorMapper;
 
+    CloudinaryService cloudinaryService;
+
+    @Transactional
     @Override
     public ProductItemResponse save(ProductItemRequest productItemRequest) {
-        if (productItemRequest.getProductId() == null) {
-            throw new AppException(ErrorCode.PRODUCT_ITEM_NOT_FOUND);
-        }
         if (productRepository.findById(productItemRequest.getProductId()).isEmpty()) {
-            throw new AppException(ErrorCode.PRODUCT_NOT_FOUND);
+            throw new NotFoundException("Product ID", productItemRequest.getProductId());
         }
         if (colorRepository.findById(productItemRequest.getColorId()).isEmpty()) {
-            throw new AppException(ErrorCode.COLOR_NOT_FOUND);
+            throw new NotFoundException("Color ID", productItemRequest.getColorId());
         }
         ProductItem productItem = productItemMapper.toProductItem(productItemRequest);
+        productItem.setQuantityOfSize(convertJsonToQuantityOfSize(productItemRequest.getQuantityOfSize()));
         productItem.setColor(colorRepository.findById(productItemRequest.getColorId()).get());
         productItem.setProduct(productRepository.findById(productItemRequest.getProductId()).get());
+        log.info("Saving productItem: {}", productItem);
+        if (productItemRequest.getImages() != null && !productItemRequest.getImages().isEmpty()) {
+            log.info("Product item: {}", productItem.getProduct().getId());
+            try {
+                List<Map> uploadResult = cloudinaryService.uploadFiles(productItemRequest.getImages(), "Product-Item", productItem.getProduct().getId());
+                List<String> listDetailImages = new ArrayList<>();
+                for (Map map : uploadResult) {
+                    listDetailImages.add(map.get("url").toString());
+                }
+                productItem.setImages(listDetailImages);
+            } catch (Exception e) {
+                throw new AppException(ErrorCode.ITEM_IMAGE_CANT_UPLOAD);
+            }
+        }
         return productItemMapper.toProductItemResponse(productItemRepository.save(productItem));
     }
 
     @Override
     public ProductItemResponse update(String id, ProductItemRequest productItemRequest) {
-        ProductItem productItem = productItemRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_ITEM_NOT_FOUND));
+        ProductItem productItem = productItemRepository.findById(id).orElseThrow(() -> new NotFoundException("Product Item ID", id));
         if (productItemRequest.getProductId() != null) {
             if (productRepository.findById(productItemRequest.getProductId()).isEmpty()) {
-                throw new AppException(ErrorCode.PRODUCT_NOT_FOUND);
+                throw new NotFoundException("Product ID", productItemRequest.getProductId());
             }
             productItem.setProduct(productRepository.findById(productItemRequest.getProductId()).get());
         }
@@ -70,13 +94,45 @@ public class ProductItemServiceImpl implements ProductItemService {
         if (productItemRequest.getStatus() != null && productItemRequest.getStatus() != productItem.getStatus()) {
             productItem.setStatus(productItemRequest.getStatus());
         }
-        if (productItemRequest.getQuantityOfSize() != null && productItemRequest.getQuantityOfSize() != productItem.getQuantityOfSize()) {
-            productItem.setQuantityOfSize(productItemRequest.getQuantityOfSize());
+        if (productItemRequest.getQuantityOfSize() != null && convertJsonToQuantityOfSize(productItemRequest.getQuantityOfSize()) != productItem.getQuantityOfSize()) {
+            productItem.setQuantityOfSize(convertJsonToQuantityOfSize(productItemRequest.getQuantityOfSize()));
         }
         if (productItemRequest.getColorId() != null && !productItemRequest.getColorId().equals(productItem.getColor().getId())) {
-            productItem.setColor(colorRepository.findById(productItemRequest.getColorId()).orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_FOUND)));
+            productItem.setColor(colorRepository.findById(productItemRequest.getColorId()).orElseThrow(() -> new NotFoundException("Color ID", productItemRequest.getColorId())));
         }
         // image
+        var files = productItemRequest.getImages();
+
+        if (files == null || files.isEmpty()) {
+            productItem.setImages(productItem.getImages());
+        } else {
+            List<MultipartFile> nonEmptyFiles = new ArrayList<>();
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    nonEmptyFiles.add(file);
+                }
+            }
+
+            if (nonEmptyFiles.size() == 0) {
+                productItem.setImages(productItem.getImages());
+                return productItemMapper.toProductItemResponse(productItemRepository.save(productItem));
+            }
+
+            try {
+                List<Map> uploadResult = cloudinaryService.uploadFiles(List.of(nonEmptyFiles.toArray(new MultipartFile[0])),
+                        "Product-Item", productItem.getId());
+                List<String> listDetailImages = new ArrayList<>();
+                for (Map map : uploadResult) {
+                    listDetailImages.add(map.get("url").toString());
+                }
+                productItem.setImages(listDetailImages);
+            } catch (Exception e) {
+                throw new AppException(ErrorCode.ITEM_IMAGE_INVALID);
+            }
+        }
+
+        productItem.setId(id);
+
         return productItemMapper.toProductItemResponse(productItemRepository.save(productItem));
     }
 
@@ -114,6 +170,13 @@ public class ProductItemServiceImpl implements ProductItemService {
                 .build();
     }
 
-
+    private List<QuantityOfSize> convertJsonToQuantityOfSize(String json) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(json, new TypeReference<List<QuantityOfSize>>() {});
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid quantityOfSize JSON format", e);
+        }
+    }
 
 }

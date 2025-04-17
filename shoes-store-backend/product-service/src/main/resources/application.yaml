@@ -7,10 +7,19 @@ app:
   mongodb:
     username: ${MONGO_USERNAME}
     password: ${MONGO_PASSWORD}
+  cloudinary:
+    cloud-name: ${CLOUDINARY_CLOUD_NAME}
+    api-key: ${CLOUDINARY_API_KEY}
+    api-secret: ${CLOUDINARY_API_SECRET}
 
 spring:
   application:
     name: product-service
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 100MB
 
 springdoc:
   api-docs:

@@ -11,6 +11,7 @@ import ktpm17ctt.g6.identity.mapper.UserMapper;
 import ktpm17ctt.g6.identity.mapper.AccountMapper;
 import ktpm17ctt.g6.identity.repository.RoleRepository;
 import ktpm17ctt.g6.identity.repository.AccountRepository;
+import ktpm17ctt.g6.identity.repository.httpClient.UserClient;
 import ktpm17ctt.g6.identity.service.AccountService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class AccountServiceImpl implements AccountService {
     AccountMapper accountMapper;
     PasswordEncoder passwordEncoder;
     UserMapper userMapper;
+    UserClient userClient;
 
 
     @Override
@@ -51,13 +53,17 @@ public class AccountServiceImpl implements AccountService {
 
         account = accountRepository.save(account);
 
+        log.info("Registration request for account: {}", request);
+
         var userCreationRequest = userMapper.toUserCreationRequest(request);
         userCreationRequest.setAccountId(account.getId());
-//        connect to profile service
-//        profileClient.create(profileCreationRequest);
 
+        log.info("User creation request: {}", userCreationRequest);
+//        connect to profile service
+        var userProfile = userClient.createProfile(userCreationRequest);
+        log.info("Created user profile: {}", userProfile);
         var accountCreationResponse = accountMapper.toAccountResponse(account);
-        accountCreationResponse.setId(account.getId());
+        accountCreationResponse.setId(userProfile.getResult().getId());
         return accountCreationResponse;
     }
 

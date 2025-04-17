@@ -56,7 +56,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         boolean isValid = true;
 
         try {
-            verifyToken(token);
+                verifyToken(token);
         } catch (Exception e) {
             isValid = false;
         }
