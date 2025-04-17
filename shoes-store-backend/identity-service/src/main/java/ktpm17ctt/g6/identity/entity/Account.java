@@ -28,4 +28,6 @@ public class Account {
 
     @ManyToMany
     Set<Role> roles;
+
+    String googleAccountId;
 }

@@ -1,14 +1,13 @@
 package ktpm17ctt.g6.identity.service.implement;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import ktpm17ctt.g6.identity.dto.request.AuthenticationRequest;
-import ktpm17ctt.g6.identity.dto.request.IntrospectRequest;
-import ktpm17ctt.g6.identity.dto.request.LogoutRequest;
-import ktpm17ctt.g6.identity.dto.request.RefreshRequest;
+import ktpm17ctt.g6.identity.dto.request.*;
 import ktpm17ctt.g6.identity.dto.response.AuthenticationResponse;
 import ktpm17ctt.g6.identity.dto.response.IntrospectResponse;
 import ktpm17ctt.g6.identity.entity.Account;
@@ -24,15 +23,20 @@ import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Map;
 import java.util.StringJoiner;
 import java.util.UUID;
 
@@ -48,6 +52,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String signerKey;
+
+    @NonFinal
+    @Value("${spring.security.oauth2.client.registration.client-id}")
+    protected String clientId;
+
+    @NonFinal
+    @Value("${spring.security.oauth2.client.registration.client-secret}")
+    protected String clientSecret;
+
+    @NonFinal
+    @Value("${spring.security.oauth2.client.registration.redirect-uri}")
+    protected String redirectUri;
 
     @Override
     public IntrospectResponse introspect(IntrospectRequest request) {
@@ -117,6 +133,33 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .refreshToken(token.refreshToken)
                 .refreshTokenExpiryTime(token.refreshTokenExpiry())
                 .build();
+    }
+
+    @Override
+    public AuthenticationResponse loginSocial(LoginSocialRequest request, String provider) throws ParseException, JOSEException {
+        if (request.getGoogleAccountId() == null) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+        if (provider.toLowerCase().equals("google")) {
+            var account = accountRepository.findByGoogleAccountId(request.getGoogleAccountId());
+            if (account.isPresent()) {
+                return getAuthenticationResponse(account.get());
+            }
+            var optionalAccount = accountRepository.findByEmail(request.getEmail());
+            if (optionalAccount.isPresent()) {
+                var tempAccount = optionalAccount.get();
+                tempAccount.setGoogleAccountId(request.getGoogleAccountId());
+                accountRepository.save(tempAccount);
+                return getAuthenticationResponse(tempAccount);
+            }
+            var tempAccount = Account.builder()
+                    .email(request.getEmail())
+                    .googleAccountId(request.getGoogleAccountId())
+                    .build();
+            var savedAccount = accountRepository.save(tempAccount);
+            return getAuthenticationResponse(savedAccount);
+        }
+        throw new AppException(ErrorCode.UNAUTHENTICATED);
     }
 
     private TokenPair generateToken(Account account) {
@@ -197,4 +240,72 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             Date accessTokenExpiry,
             Date refreshTokenExpiry
     ) { }
+
+    private String generateSocialAuthenticationURL(String provider) {
+        provider = provider.trim().toLowerCase();
+        if (provider.equals("google")) {
+            return String.format("https://accounts.google.com/o/oauth2/v2/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=openid%%20email%%20profile", clientId, redirectUri);
+        }
+        return "";
+    }
+
+    private MultiValueMap<String, String> getTokenParams(String code) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("client_id", clientId);
+        params.add("client_secret", clientSecret);
+        params.add("redirect_uri", redirectUri);
+        params.add("scope", "openid email profile");
+        params.add("code", code);
+        params.add("grant_type", "authorization_code");
+        return params;
+    }
+
+    private void validateTokenResponse(Map<String, Object> tokenResponse) {
+        if (tokenResponse == null || !tokenResponse.containsKey("access_token")) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+    }
+
+    private AuthenticationResponse getAuthenticationResponse(Account account) {
+        var token = generateToken(account);
+        refreshTokenService.createRefreshToken(account, token.refreshJti, token.refreshToken);
+        return AuthenticationResponse.builder()
+                .token(token.accessToken)
+                .expiryTime(token.accessTokenExpiry)
+                .refreshToken(token.refreshToken)
+                .refreshTokenExpiryTime(token.refreshTokenExpiry)
+                .build();
+    }
+
+    private Map<String, Object> authenticationAndFetchProfile(String provider, String code) throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String accessToken;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        if (provider.equals("google")) {
+            String tokenUrl = "https://oauth2.googleapis.com/token";
+            MultiValueMap<String, String> params = getTokenParams(code);
+            HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+            ResponseEntity<String> response = restTemplate.postForEntity(tokenUrl, request, String.class);
+            Map<String, Object> tokenResponse = objectMapper.readValue(response.getBody(), Map.class);
+            validateTokenResponse(tokenResponse);
+            accessToken = (String) tokenResponse.get("access_token");
+            HttpHeaders userInfoHeaders = new HttpHeaders();
+            userInfoHeaders.setBearerAuth(accessToken);
+            ResponseEntity<String> userInfoResponse = restTemplate.exchange(
+                    "https://www.googleapis.com/oauth2/v3/userinfo",
+                    HttpMethod.GET,
+                    new HttpEntity<>(userInfoHeaders),
+                    String.class
+            );
+            Map<String, Object> userInfo = objectMapper.readValue(userInfoResponse.getBody(), Map.class);
+            if (userInfo.containsKey("error")) {
+                throw new AppException(ErrorCode.UNAUTHENTICATED);
+            }
+            return userInfo;
+        } else {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+    }
 }

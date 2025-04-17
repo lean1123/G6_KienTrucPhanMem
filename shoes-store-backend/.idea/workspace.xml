@@ -4,70 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0d1c3a83-a38e-4d24-9cf3-b317d05e5733" name="Changes" comment="feat: add docker file">
-      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/RefreshToken.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/enums/TokenStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/repository/RefreshTokenRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/RefreshTokenService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/RefreshTokenServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/ApplicationInitConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/ApplicationInitConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/controller/PermissionController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/controller/RoleController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/LogoutRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/LogoutRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/PermissionRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/RefreshRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/RefreshRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/RoleRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/RoleRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/response/AuthenticationResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/response/AuthenticationResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/response/PermissionResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/response/RoleResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/response/RoleResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/InvalidatedToken.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/Permission.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/Role.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/mapper/PermissionMapper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/mapper/RoleMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/mapper/RoleMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/repository/InvalidatedTokenRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/repository/PermissionRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/PermissionService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/RoleService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/AuthenticationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/AuthenticationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/PermissionServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/RoleServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/application.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/UserServiceApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/configuration/CustomJwtDecoder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/configuration/JwtAuthenticationEntryPoint.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/configuration/SecurityConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/controller/UserController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/controller/internal/UserInternalController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/dto/ApiResponse$ApiResponseBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/dto/ApiResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/dto/request/UserRequest$UserRequestBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/dto/request/UserRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/dto/response/UserResponse$UserResponseBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/dto/response/UserResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/entity/Address$AddressBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/entity/Address.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/entity/User$UserBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/entity/User.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/entity/enums/Gender.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/exception/AppException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/exception/ErrorCode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/exception/GlobalExceptionHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/mapper/UserMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/mapper/UserMapperImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/repository/UserRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/service/Impl/UserServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/service/UserService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/util/ValidationConstraints.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/user-service-0.0.1-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/target/user-service-0.0.1-SNAPSHOT.jar.original" beforeDir="false" />
+    <list default="true" id="0d1c3a83-a38e-4d24-9cf3-b317d05e5733" name="Changes" comment="fix: change logic refresh token">
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/Account.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/resources/application.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -328,7 +267,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744105927492</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="fix: change logic refresh token">
+      <option name="closed" value="true" />
+      <created>1744900277954</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1744900277954</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -348,6 +295,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat(product): add web client" />
     <MESSAGE value="feat: add docker file" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: add docker file" />
+    <MESSAGE value="fix: change logic refresh token" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: change logic refresh token" />
   </component>
 </project>
