@@ -1,6 +1,5 @@
 package ktpm17ctt.g6.paymentservice.controllers.internals;
 
-import ktpm17ctt.g6.paymentservice.configurations.VNPayConfig;
 import ktpm17ctt.g6.paymentservice.dtos.responses.PaymentResponse;
 import ktpm17ctt.g6.paymentservice.dtos.responses.RefundResponse;
 import ktpm17ctt.g6.paymentservice.services.PaymentService;

@@ -64,6 +64,7 @@ services:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - TZ=Asia/Jakarta
       - PAYMENT_URL=http://payment-service:8089
+      - PRODUCT_ITEM_URL=http://localhost:8083/product/item
     ports:
       - "8088:8088"
     networks:
