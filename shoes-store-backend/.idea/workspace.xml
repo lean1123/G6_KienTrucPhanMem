@@ -5,32 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d1c3a83-a38e-4d24-9cf3-b317d05e5733" name="Changes" comment="feat(product): add web client">
-      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/configuration/ObjectMapperConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/request/CartDetailPKRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/CartDetailSessionDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/ProductResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/UserResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/feign/UserFeignClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/controller/CartController.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/controller/CartController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/request/CartDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/request/CartDetailRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/CartDetailPKResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/CartDetailPKResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/CartDetailResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/CartDetailResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/ProductItemResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/ProductItemResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/QuantityOfSizeResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/QuantityOfSizeResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/enties/CartDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/enties/CartDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/enties/CartDetailPK.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/enties/CartDetailPK.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/feign/ProductFeignClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/feign/ProductFeignClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/repository/CartDetailRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/repository/CartDetailRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/repository/CartRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/repository/CartRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/CartDetailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/CartDetailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/CartService.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/CartService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/implement/CartDetailServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/implement/CartDetailServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/implement/CartServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/implement/CartServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/ProductItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/ProductItemController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/ProductItemService.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/ProductItemService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductItemServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductItemServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
