@@ -5,9 +5,69 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d1c3a83-a38e-4d24-9cf3-b317d05e5733" name="Changes" comment="feat: add docker file">
+      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/RefreshToken.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/enums/TokenStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/repository/RefreshTokenRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/RefreshTokenService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/RefreshTokenServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/ApplicationInitConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/ApplicationInitConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/controller/PermissionController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/controller/RoleController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/LogoutRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/LogoutRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/PermissionRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/RefreshRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/RefreshRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/RoleRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/RoleRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/response/AuthenticationResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/response/AuthenticationResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/response/PermissionResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/response/RoleResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/response/RoleResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/InvalidatedToken.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/Permission.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/mapper/PermissionMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/mapper/RoleMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/mapper/RoleMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/repository/InvalidatedTokenRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/repository/PermissionRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/PermissionService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/RoleService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/AuthenticationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/AuthenticationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/PermissionServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/RoleServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/UserServiceApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/configuration/CustomJwtDecoder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/configuration/JwtAuthenticationEntryPoint.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/configuration/SecurityConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/controller/UserController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/controller/internal/UserInternalController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/dto/ApiResponse$ApiResponseBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/dto/ApiResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/dto/request/UserRequest$UserRequestBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/dto/request/UserRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/dto/response/UserResponse$UserResponseBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/dto/response/UserResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/entity/Address$AddressBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/entity/Address.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/entity/User$UserBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/entity/User.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/entity/enums/Gender.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/exception/AppException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/exception/ErrorCode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/exception/GlobalExceptionHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/mapper/UserMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/mapper/UserMapperImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/repository/UserRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/service/Impl/UserServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/service/UserService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/classes/ktpm17ctt/g6/user/util/ValidationConstraints.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/user-service-0.0.1-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/target/user-service-0.0.1-SNAPSHOT.jar.original" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,17 +89,18 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
-        <option value="Interface" />
         <option value="Exception" />
         <option value="Dockerfile" />
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="feature/product/integrated-cloudinary" />
+        <entry key="$PROJECT_DIR$/.." value="feature/user/intergrated-with-gateway" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -67,42 +128,48 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;Maven.identity-service [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.product-service [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.user-service [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.user-service [install].executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;Spring Boot.ApiGatewayApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.IdentityServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.ProductServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.UserServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/user/intergrated-with-gateway&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/HK2-năm cuối/Kiến trúc phần mềm/MicroserviceSample&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.2.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "Maven.identity-service [clean].executor": "Run",
+    "Maven.product-service [clean].executor": "Run",
+    "Maven.user-service [clean].executor": "Run",
+    "Maven.user-service [install].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.ApiGatewayApplication.executor": "Run",
+    "Spring Boot.CommonDtoApplication (1).executor": "Run",
+    "Spring Boot.IdentityServiceApplication.executor": "Run",
+    "Spring Boot.OrderServiceApplication.executor": "Run",
+    "Spring Boot.PaymentServiceApplication.executor": "Run",
+    "Spring Boot.ProductServiceApplication.executor": "Run",
+    "Spring Boot.UserServiceApplication (1).executor": "Run",
+    "Spring Boot.UserServiceApplication.executor": "Run",
+    "git-widget-placeholder": "fix/identity/add-refresh-token",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/G6_KienTrucPhanMem/shoes-store-backend/user-service/src",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.2.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\G6_KienTrucPhanMem\shoes-store-backend\user-service\src" />
+      <recent name="D:\G6_KienTrucPhanMem\shoes-store-backend\user-service" />
       <recent name="D:\G6_KienTrucPhanMem\shoes-store-backend\identity-service\src\main\java\ktpm17ctt\g6\identity\entity" />
       <recent name="D:\G6_KienTrucPhanMem\shoes-store-backend\user-service\src\main\java\ktpm17ctt\g6\user" />
     </key>
@@ -122,7 +189,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.ProductServiceApplication">
+  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
     <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="api-gateway" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="ktpm17ctt.g6.gateway.ApiGatewayApplication" />

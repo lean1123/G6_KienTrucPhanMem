@@ -29,7 +29,7 @@ public class ApplicationInitConfig {
     static final String ADMIN_EMAIL = "admin@admin.com";
 
     @NonFinal
-    static final String ADMIN_PASSWORD = "admin";
+    static final String ADMIN_PASSWORD = "admin1";
 
     @Bean
     @ConditionalOnProperty(

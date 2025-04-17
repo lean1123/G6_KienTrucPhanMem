@@ -12,12 +12,11 @@ import ktpm17ctt.g6.identity.dto.request.RefreshRequest;
 import ktpm17ctt.g6.identity.dto.response.AuthenticationResponse;
 import ktpm17ctt.g6.identity.dto.response.IntrospectResponse;
 import ktpm17ctt.g6.identity.entity.Account;
-import ktpm17ctt.g6.identity.entity.InvalidatedToken;
 import ktpm17ctt.g6.identity.exception.AppException;
 import ktpm17ctt.g6.identity.exception.ErrorCode;
-import ktpm17ctt.g6.identity.repository.InvalidatedTokenRepository;
 import ktpm17ctt.g6.identity.repository.AccountRepository;
 import ktpm17ctt.g6.identity.service.AuthenticationService;
+import ktpm17ctt.g6.identity.service.RefreshTokenService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -43,8 +42,8 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationServiceImpl implements AuthenticationService {
     AccountRepository accountRepository;
-    InvalidatedTokenRepository invalidatedTokenRepository;
     StringRedisTemplate redisTemplate;
+    RefreshTokenService refreshTokenService;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -75,41 +74,34 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         var token = generateToken(account);
 
+        refreshTokenService.createRefreshToken(account, token.refreshJti, token.refreshToken);
+
         return AuthenticationResponse.builder()
-                .token(token.token())
-                .expiryTime(token.expiryDate())
+                .token(token.accessToken)
+                .expiryTime(token.accessTokenExpiry)
+                .refreshToken(token.refreshToken)
+                .refreshTokenExpiryTime(token.refreshTokenExpiry)
                 .build();
     }
 
     @Override
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
         var signToken = verifyToken(request.getToken());
-
-        String jit = signToken.getJWTClaimsSet().getJWTID();
-        Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
-
-        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-                .id(jit)
-                .expiryTime(expiryTime)
-                .build();
-
+        var refreshToken = verifyToken(request.getRefreshToken());
+        String refreshJti = refreshToken.getJWTClaimsSet().getJWTID();
+        refreshTokenService.revokeRefreshToken(refreshJti);
         redisTemplate.delete("token:" + request.getToken());
-        invalidatedTokenRepository.save(invalidatedToken);
     }
 
     @Override
     public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
-        var signedJWT = verifyToken(request.getToken());
+        var signedJWT = verifyToken(request.getRefreshToken());
 
-        var jit = signedJWT.getJWTClaimsSet().getJWTID();
-        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        var jti = signedJWT.getJWTClaimsSet().getJWTID();
 
-        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-                .id(jit)
-                .expiryTime(expiryTime)
-                .build();
+        var oldToken = refreshTokenService.validateRefreshToken(jti);
 
-        invalidatedTokenRepository.save(invalidatedToken);
+        refreshTokenService.invalidateRefreshToken(oldToken.getId());
 
         var email = signedJWT.getJWTClaimsSet().getSubject();
 
@@ -117,36 +109,59 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
         var token = generateToken(account);
+        refreshTokenService.createRefreshToken(account, token.refreshJti, token.refreshToken);
 
         return AuthenticationResponse.builder()
-                .token(token.token())
-                .expiryTime(token.expiryDate())
+                .token(token.accessToken)
+                .expiryTime(token.accessTokenExpiry())
+                .refreshToken(token.refreshToken)
+                .refreshTokenExpiryTime(token.refreshTokenExpiry())
                 .build();
     }
 
-    private TokenInfo generateToken(Account account) {
+    private TokenPair generateToken(Account account) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         Date issueTime = new Date();
-        Date expiryTime = new Date(Instant.ofEpochMilli(issueTime.getTime()).plus(1, ChronoUnit.HOURS).toEpochMilli());
+        Date accessTokenExpiry = new Date(Instant.ofEpochMilli(issueTime.getTime()).plus(15, ChronoUnit.MINUTES).toEpochMilli());
+        Date refreshTokenExpiry = new Date(Instant.ofEpochMilli(issueTime.getTime()).plus(7, ChronoUnit.DAYS).toEpochMilli());
 
-        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+        String accessJti = UUID.randomUUID().toString();
+        String refreshJti = UUID.randomUUID().toString();
+
+        JWTClaimsSet accessClaimsSet = new JWTClaimsSet.Builder()
                 .subject(account.getEmail())
                 .issuer("identity-service")
                 .issueTime(issueTime)
-                .expirationTime(expiryTime)
-                .jwtID(UUID.randomUUID().toString())
+                .expirationTime(accessTokenExpiry)
+                .jwtID(accessJti)
                 .claim("scope", buildScope(account))
                 .claim("accountId", account.getId())
                 .build();
 
-        Payload payload = new Payload(claimsSet.toJSONObject());
+        JWTClaimsSet refreshClaimsSet = new JWTClaimsSet.Builder()
+                .subject(account.getEmail())
+                .issuer("identity-service")
+                .issueTime(issueTime)
+                .expirationTime(refreshTokenExpiry)
+                .jwtID(refreshJti)
+                .claim("type", "refresh_token")
+                .build();
 
-        JWSObject jwsObject = new JWSObject(header, payload);
+        SignedJWT accessJWT = new SignedJWT(header, accessClaimsSet);
+        SignedJWT refreshSignedJWT = new SignedJWT(header, refreshClaimsSet);
 
         try {
-            jwsObject.sign(new MACSigner(signerKey.getBytes()));
-            return new TokenInfo(jwsObject.serialize(), expiryTime);
+            accessJWT.sign(new MACSigner(signerKey.getBytes()));
+            refreshSignedJWT.sign(new MACSigner(signerKey.getBytes()));
+            return new TokenPair(
+                    accessJti,
+                    refreshJti,
+                    accessJWT.serialize(),
+                    refreshSignedJWT.serialize(),
+                    accessTokenExpiry,
+                    refreshTokenExpiry
+            );
         } catch (JOSEException e) {
             log.error("Cannot create token", e);
             throw new AppException(ErrorCode.UNAUTHENTICATED);
@@ -155,17 +170,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private SignedJWT verifyToken(String token) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(signerKey.getBytes());
-
         SignedJWT signedJWT = SignedJWT.parse(token);
-
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-
         var verified = signedJWT.verify(verifier);
-
         if (!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
-
-        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
         return signedJWT;
     }
 
@@ -175,14 +183,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!CollectionUtils.isEmpty(account.getRoles())) {
             account.getRoles().forEach(role -> {
                 joiner.add("ROLE_" + role.getName());
-                if (!CollectionUtils.isEmpty(role.getPermissions())) {
-                    role.getPermissions().forEach(permission -> joiner.add(permission.getName()));
-                }
             });
         }
 
         return joiner.toString();
     }
 
-    private record TokenInfo(String token, Date expiryDate) { }
+    private record TokenPair(
+            String accessJti,
+            String refreshJti,
+            String accessToken,
+            String refreshToken,
+            Date accessTokenExpiry,
+            Date refreshTokenExpiry
+    ) { }
 }
