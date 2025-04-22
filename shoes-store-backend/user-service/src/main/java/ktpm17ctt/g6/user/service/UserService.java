@@ -25,4 +25,6 @@ public interface UserService {
     Optional<UserResponse> getUserById(String id);
 
     List<UserResponse> search(String keyword);
+
+    Optional<UserResponse> findByAccountId(String accountId);
 }
