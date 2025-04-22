@@ -2,10 +2,10 @@ spring:
   application:
     name: order-service
   datasource:
-    url: jdbc:mysql://localhost:3306/order_service
+    url: jdbc:mysql://localhost:3307/order_service?createDatabaseIfNotExist=true"
     driverClassName: com.mysql.cj.jdbc.Driver
     password: root
-    username: root
+    username: user
   jpa:
     hibernate:
       ddl-auto: update

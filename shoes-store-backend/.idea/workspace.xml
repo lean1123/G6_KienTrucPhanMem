@@ -5,13 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4541b1f7-07f0-41d4-bb5c-071a78a1c4c4" name="Changes" comment="feature/update/payment: resolved conflict">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/controller/FallbackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/controller/FallbackController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/configurations/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/configurations/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/controllers/internals/PaymentInternalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/controllers/internals/PaymentInternalController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/DockerFile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/.envrc" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/.envrc" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,10 +21,10 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Dockerfile" />
         <option value="Interface" />
         <option value="Class" />
         <option value="AnnotationType" />
+        <option value="Dockerfile" />
       </list>
     </option>
   </component>
@@ -48,32 +48,32 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.ApiGatewayApplication.executor": "Run",
-    "Application.IdentityServiceApplication.executor": "Run",
-    "Application.OrderServiceApplication.executor": "Run",
-    "Application.PaymentServiceApplication.executor": "Run",
-    "Application.ProductServiceApplication.executor": "Run",
-    "Application.UserServiceApplication.executor": "Run",
-    "Maven.common-dto [clean].executor": "Run",
-    "Maven.identity-service [clean].executor": "Run",
-    "Maven.order-service [clean].executor": "Run",
-    "Maven.order-service [compile].executor": "Run",
-    "Maven.order-service [install].executor": "Run",
-    "Maven.order-service [org.apache.maven.plugins:maven-install-plugin:3.1.1:install].executor": "Run",
-    "Maven.payment-service [clean].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feature/update/order",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/21136181_MicroService_WS/subject-project/G6_KienTrucPhanMem/shoes-store-backend/identity-service/.env.propertities",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.ApiGatewayApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.IdentityServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.OrderServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.PaymentServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ProductServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.UserServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.common-dto [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.identity-service [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.order-service [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.order-service [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.order-service [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.order-service [org.apache.maven.plugins:maven-install-plugin:3.1.1:install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.payment-service [clean].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/update/order&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/21136181_MicroService_WS/subject-project/G6_KienTrucPhanMem/shoes-store-backend/identity-service/.env.propertities&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\21136181_MicroService_WS\subject-project\G6_KienTrucPhanMem\shoes-store-backend\payment-service\src\main\java\ktpm17ctt\g6\paymentservice\configurations" />
