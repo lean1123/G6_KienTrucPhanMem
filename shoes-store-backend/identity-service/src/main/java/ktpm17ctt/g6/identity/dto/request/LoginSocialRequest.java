@@ -1,16 +1,18 @@
-package ktpm17ctt.g6.identity.dto.response;
+package ktpm17ctt.g6.identity.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoleResponse {
+public class LoginSocialRequest {
+    String email;
     String name;
-    String description;
+    String avatar;
+    String googleAccountId;
 }
