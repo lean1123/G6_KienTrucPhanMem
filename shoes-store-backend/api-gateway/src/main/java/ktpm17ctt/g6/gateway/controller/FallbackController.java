@@ -36,7 +36,7 @@ public class FallbackController {
                 .build();
     }
 
-    @RequestMapping("/order")
+    @RequestMapping("/orders")
     public ApiResponse orderFallback() {
         return ApiResponse.builder()
                 .code(HttpStatus.SERVICE_UNAVAILABLE.value())
@@ -44,7 +44,7 @@ public class FallbackController {
                 .build();
     }
 
-    @RequestMapping("/payment")
+    @RequestMapping("/payments")
     public ApiResponse paymentFallback() {
         return ApiResponse.builder()
                 .code(HttpStatus.SERVICE_UNAVAILABLE.value())
