@@ -4,16 +4,15 @@ import ktpm17ctt.g6.paymentservice.dtos.responses.PaymentResponse;
 import ktpm17ctt.g6.paymentservice.services.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/payments")
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
+@Slf4j
 public class PaymentController {
     PaymentService paymentService;
 

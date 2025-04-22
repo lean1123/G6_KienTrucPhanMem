@@ -11,6 +11,8 @@
         <option value="$PROJECT_DIR$/common-dto/pom.xml" />
         <option value="$PROJECT_DIR$/payment-service/pom.xml" />
         <option value="$PROJECT_DIR$/cart-service/pom.xml" />
+        <option value="$PROJECT_DIR$/notification-service/pom.xml" />
+        <option value="$PROJECT_DIR$/user-service/pom.xml" />
       </list>
     </option>
   </component>

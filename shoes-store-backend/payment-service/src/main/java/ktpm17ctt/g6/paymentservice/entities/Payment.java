@@ -17,6 +17,9 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String transactionId;
+    private String transactionDate;
+    private String transactionType;
+    private String userId;
     private String orderId;
     private long amount;
     @Enumerated(EnumType.STRING)

@@ -23,6 +23,7 @@ public class SecurityConfig {
             "/auth/introspect",
             "/auth/refresh",
             "/auth/logout",
+            "/internal/**",
     };
 
     private final CustomJwtDecoder customJwtDecoder;
@@ -34,7 +35,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeRequests ->
-                authorizeRequests.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+
+                authorizeRequests
+                        .requestMatchers(HttpMethod.GET, "/internal/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
                         .anyRequest().authenticated());
         http.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(jwt -> jwt

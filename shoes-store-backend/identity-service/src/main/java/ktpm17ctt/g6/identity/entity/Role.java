@@ -20,7 +20,4 @@ public class Role {
     String name;
 
     String description;
-
-    @ManyToMany
-    Set<Permission> permissions;
 }

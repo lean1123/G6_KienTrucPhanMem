@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +26,10 @@ import java.util.List;
 public class ProductItemController {
     ProductItemService productItemService;
 
-    @PostMapping()
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    ApiResponse<ProductItemResponse> createProductItem(@RequestBody @Valid ProductItemRequest productItemRequest) {
-        log.info("Create product item: {}", productItemRequest);
+    ApiResponse<ProductItemResponse> createProductItem(@ModelAttribute @Valid ProductItemRequest productItemRequest) {
+//        log.info("Create product item: {}", productItemRequest);
         ProductItemResponse productItemResponse = productItemService.save(productItemRequest);
         return ApiResponse.<ProductItemResponse>builder()
                 .result(productItemResponse)

@@ -1,5 +1,6 @@
 package ktpm17ctt.g6.identity.mapper;
 
+import ktpm17ctt.g6.identity.dto.request.LoginSocialRequest;
 import ktpm17ctt.g6.identity.dto.request.RegistrationRequest;
 import ktpm17ctt.g6.identity.dto.request.AccountUpdateRequest;
 import ktpm17ctt.g6.identity.dto.response.AccountResponse;
