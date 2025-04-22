@@ -1,5 +1,6 @@
 package ktpm17ctt.g6.orderservice.services.impl;
 
+import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemResponse;
 import ktpm17ctt.g6.orderservice.dto.request.OrderDetailRequest;
 import ktpm17ctt.g6.orderservice.dto.response.OrderDetailResponse;
 import ktpm17ctt.g6.orderservice.entities.Order;
@@ -13,9 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import ktpm17ctt.g6.commondto.dtos.responses.ProductItemResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,19 +33,17 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Override
     public OrderDetailResponse save(OrderDetailRequest request, Order order) throws Exception {
 
-//        ProductItemResponse productItemResponse = productItemClient.getProductItem(request.getProductItemId())
-//                .getResult();
+        ProductItemResponse productItemResponse = productItemClient.getProductItem(request.getProductItemId())
+                .getResult();
 
-//        if(productItemResponse == null) {
-//            throw new Exception("Product item not found");
-//        }
+        if(productItemResponse == null) {
+            throw new Exception("Product item not found");
+        }
 
         OrderDetail orderDetailResponse = orderDetailRepository.save(OrderDetail.builder()
                 .quantity(request.getQuantity())
-//                .price(productItemResponse.getPrice())
-//                .productItemId(productItemResponse.getId())
-                        .price(100000)
-                        .productItemId("01010101")
+                .price(productItemResponse.getPrice())
+                .productItemId(productItemResponse.getId())
                 .order(order)
                 .build());
 

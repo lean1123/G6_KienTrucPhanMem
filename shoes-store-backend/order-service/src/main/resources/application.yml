@@ -2,10 +2,10 @@ spring:
   application:
     name: order-service
   datasource:
-    url: jdbc:mysql://localhost:3306/order_service
+    url: jdbc:mysql://localhost:3307/order_service?createDatabaseIfNotExist=true"
     driverClassName: com.mysql.cj.jdbc.Driver
     password: root
-    username: root
+    username: user
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,6 +13,14 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092  # Cấu hình theo đúng địa chỉ broker
+      group-id: order-service-group
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 server:
   port: 8088
