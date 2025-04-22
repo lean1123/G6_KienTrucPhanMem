@@ -1,135 +1,136 @@
-version: "3"
-name: shoes-store-app-back-end
-networks:
-  app-network:
+version: "3.8"
 
 services:
-  mysql:
-    image: 'mysql:8.0'
-    container_name: mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init-db.sql  # Gắn script vào container
-    networks:
-      - app-network
-
-
   zookeeper:
-    image: 'bitnami/zookeeper:3.9.1'
-    container_name: zookeeper
-    hostname: zookeeper
-    ports:
-      - "2181:2181"
+    image: confluentinc/cp-zookeeper
     environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-    networks:
-      - app-network
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 2181:2181
+    restart: on-failure
 
-  kafka:
-    image: 'bitnami/kafka:3.9.0'
-    container_name: kafka
-    hostname: kafka
+  kafka-1:
+    image: confluentinc/cp-kafka
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"
-      - "9094:9094"
+      - 9092:9092
+    restart: on-failure
     environment:
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,EXTERNAL://:9094
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
-      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
-      - ALLOW_PLAINTEXT_LISTENER=yes
-    networks:
-      - app-network
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
-  api-gateway:
-    build:
-      context: ./api-gateway
-      dockerfile: Dockerfile
-    image: api-gateway:latest
-    container_name: api-gateway
+  mongodb:
+    image: mongo:5
+    container_name: mongo
+    restart: always
     ports:
-      - "8888:8888"
-    networks:
-      - app-network
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
 
-  identity-service:
-    build:
-      context: ./identity-service
-      dockerfile: Dockerfile
-    image: identity-service:latest
-    container_name: identity-service
-    ports:
-      - "8080:8080"
-    networks:
-      - app-network
-    #  user-service:
-    #    build:
-    #      context: ./user-service
-    #      dockerfile: Dockerfile
-    #    image: user-service:latest
-    #    container_name: user-service
-    #    ports:
-    #      - "8081:8081"
-    #    networks:
-    #      - backend
-  product-service:
-    build:
-      context: ./product-service
-      dockerfile: Dockerfile
-    image: product-service:latest
-    container_name: product-service
-    ports:
-      - "8082:8082"
-    networks:
-      - app-network
-
-  order-service:
-    image: 'order-service'
-    container_name: order-service
+  notificationservice:
+    image: eclipse-temurin:17-jdk-alpine
+    container_name: notification-service
     depends_on:
-      - mysql
-      - kafka
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/order_service
-      - SPRING_DATASOURCE_USERNAME=user
-      - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - TZ=Asia/Jakarta
-      - PAYMENT_URL=http://payment-service:8089
-      - PRODUCT_ITEM_URL=http://localhost:8083/product/item
+      - kafka-1
+      - mongodb
+    volumes:
+      - ./notificationservice/target:/app
+    working_dir: /app
+    command: ["java", "-jar", "notification-service.jar"]
     ports:
-      - "8088:8088"
-    networks:
-      - app-network
+      - 8082:8082
+    restart: on-failure
 
-  payment-service:
-    image: 'payment-service'
-    env_file:
-      - ./payment-service/.envrc
-    container_name: payment-service
-    depends_on:
-      - mysql
-      - kafka
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/payment_service
-      - SPRING_DATASOURCE_USERNAME=user
-      - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - TZ=Asia/Jakarta
-    ports:
-      - "8089:8089"
-    networks:
-      - app-network
+    mysql:
+      image: 'mysql:8.0'
+      container_name: mysql
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_USER: user
+        MYSQL_PASSWORD: password
+      ports:
+        - "3307:3306"
+      volumes:
+        - mysql_data:/var/lib/mysql
+        - ./init.sql:/docker-entrypoint-initdb.d/init-db.sql  # Gắn script vào container
+      networks:
+        - app-network
+          identity-service:
+            build:
+              context: ./identity-service
+              dockerfile: Dockerfile
+            image: identity-service:latest
+            container_name: identity-service
+            ports:
+              - "8080:8080"
+            networks:
+              - app-network
+            #  user-service:
+            #    build:
+            #      context: ./user-service
+            #      dockerfile: Dockerfile
+            #    image: user-service:latest
+            #    container_name: user-service
+            #    ports:
+            #      - "8081:8081"
+            #    networks:
+            #      - backend
+          product-service:
+            build:
+              context: ./product-service
+              dockerfile: Dockerfile
+            image: product-service:latest
+            container_name: product-service
+            ports:
+              - "8082:8082"
+            networks:
+              - app-network
+                order-service:
+                  image: 'order-service'
+                  container_name: order-service
+                  depends_on:
+                    - mysql
+                    - kafka
+                  environment:
+                    - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/order_service
+                    - SPRING_DATASOURCE_USERNAME=user
+                    - SPRING_DATASOURCE_PASSWORD=password
+                    - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+                    - TZ=Asia/Jakarta
+                    - PAYMENT_URL=http://payment-service:8089
+                    - PRODUCT_ITEM_URL=http://localhost:8083/product/item
+                  ports:
+                    - "8088:8088"
+                  networks:
+                    - app-network
 
-volumes:
-  mysql_data:
+                  payment-service:
+                    image: 'payment-service'
+                    env_file:
+                      - ./payment-service/.envrc
+                    container_name: payment-service
+                    depends_on:
+                      - mysql
+                      - kafka
+                    environment:
+                      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/payment_service
+                      - SPRING_DATASOURCE_USERNAME=user
+                      - SPRING_DATASOURCE_PASSWORD=password
+                      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+                      - TZ=Asia/Jakarta
+                    ports:
+                      - "8089:8089"
+                    networks:
+                      - app-network
+
+                volumes:
+                  mysql_data:
