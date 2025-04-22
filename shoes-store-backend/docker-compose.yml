@@ -1,23 +1,128 @@
 version: "3.8"
 
 services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    image: api-gateway:latest
+    container_name: api-gateway
+    ports:
+      - "8888:8888"
+    networks:
+      - backend
+
+  identity-service:
+    build:
+      context: ./identity-service
+      dockerfile: Dockerfile
+    image: identity-service:latest
+    container_name: identity-service
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/shoes_store_identity
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      - mariadb
+      - redis
+    networks:
+      - backend
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    image: user-service:latest
+    container_name: user-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/shoes_store_user
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      - mariadb
+    networks:
+      - backend
+
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    image: product-service:latest
+    container_name: product-service
+    env_file:
+      - ./product-service/.env.properties
+    ports:
+      - "8082:8082"
+    environment:
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+    networks:
+      - backend
+
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    image: notification-service:latest
+    container_name: notification-service
+    depends_on:
+      - kafka-1
+      - mongodb
+    ports:
+      - "8086:8086"
+    restart: on-failure
+    networks:
+      - backend
+
+  mariadb:
+    image: mariadb:10.11
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - backend
+
+  redis:
+    image: redis:7.2
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend
+
   zookeeper:
     image: confluentinc/cp-zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - 2181:2181
+      - "2181:2181"
     restart: on-failure
     networks:
-      - app-network
+      - backend
 
   kafka-1:
     image: confluentinc/cp-kafka
     depends_on:
       - zookeeper
     ports:
-      - 9092:9092
+      - "9092:9092"
     restart: on-failure
     environment:
       KAFKA_BROKER_ID: 1
@@ -26,9 +131,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     networks:
-      - app-network
+      - backend
 
   mongodb:
     image: mongo:5
@@ -40,29 +144,67 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
     networks:
-      - app-network
+      - backend
 
-  notificationservice:
-    build:
-      context: ./notificationservice
-      dockerfile: Dockerfile
-    image: notification-service:latest
-    container_name: notification-service
-    depends_on:
-      - kafka-1
-      - mongodb
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
     environment:
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-1:9092
-      - SPRING_DATA_MONGODB_URI=mongodb://root:root@mongodb:27017/notification-service?authSource=admin
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     ports:
-      - 8082:8082
-    restart: on-failure
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init-db.sql
     networks:
-      - app-network
+      - backend
+
+  order-service:
+    image: order-service
+    container_name: order-service
+    depends_on:
+      - mysql
+      - kafka-1
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/order_service
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-1:9092
+      - TZ=Asia/Jakarta
+      - PAYMENT_URL=http://payment-service:8089
+      - PRODUCT_ITEM_URL=http://localhost:8083/product/item
+    ports:
+      - "8088:8088"
+    networks:
+      - backend
+
+  payment-service:
+    image: payment-service
+    env_file:
+      - ./payment-service/.envrc
+    container_name: payment-service
+    depends_on:
+      - mysql
+      - kafka-1
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/payment_service
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-1:9092
+      - TZ=Asia/Jakarta
+    ports:
+      - "8089:8089"
+    networks:
+      - backend
 
 networks:
-  app-network:
+  backend:
     driver: bridge
 
 volumes:
-  mysql_data: # Giữ lại nếu các service khác cần, nhưng không liên quan đến notification-service
+  db_data:
+  redis_data:
+  mysql_data:

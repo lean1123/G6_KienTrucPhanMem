@@ -50,18 +50,18 @@ public class PaymentServiceImpl implements PaymentService {
 
 
         // Gửi sự kiện Kafka nếu thanh toán thành công
-        if (responseCode.equals("00")) {
-            PaymentResponse paymentResponse = PaymentResponse.builder()
-                    .orderId(paymentEntity.getOrderId())
-                    .status(String.valueOf(paymentEntity.getStatus()))
-                    .transactionId(paymentEntity.getTransactionId())
-                    .amount(paymentEntity.getAmount())
-            //        .userEmail(userEmail)  // Thêm thông tin email người dùng
-                    .build();
-
-            // Gửi sự kiện Kafka với thông tin thanh toán thành công
-         //   kafkaTemplate.send(PAYMENT_SUCCESS_TOPIC, paymentResponse.getUserEmail());
-        }
+//        if (responseCode.equals("00")) {
+//            PaymentResponse paymentResponse = PaymentResponse.builder()
+//                    .orderId(paymentEntity.getOrderId())
+//                    .status(String.valueOf(paymentEntity.getStatus()))
+//                    .transactionId(paymentEntity.getTransactionId())
+//                    .amount(paymentEntity.getAmount())
+////                    .userEmail(userEmail)  // Thêm thông tin email người dùng
+//                    .build();
+//
+//            // Gửi sự kiện Kafka với thông tin thanh toán thành công
+////            kafkaTemplate.send(PAYMENT_SUCCESS_TOPIC, paymentResponse.getUserEmail());
+//        }
         return PaymentResponse.builder()
                 .orderId(paymentEntity.getOrderId())
                 .status(String.valueOf(paymentEntity.getStatus()))
