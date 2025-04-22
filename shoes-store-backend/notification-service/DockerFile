@@ -1,18 +1,21 @@
-# Use an official OpenJDK image as a base
-FROM openjdk:17-jdk-slim
+# Stage 1: Build
+FROM maven:3.8-openjdk-17-slim AS build
+WORKDIR /app
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+RUN ./mvnw dependency:go-offline
+COPY src ./src
+RUN ./mvnw clean package -DskipTests
+
+# Stage 2: Run
+FROM openjdk:17-jre-slim
+WORKDIR /app
+COPY --from=build /app/target/notification-service-0.0.1-SNAPSHOT.jar notification-service.jar
+EXPOSE 8082
 
 # Metadata (optional)
 LABEL maintainer="your-name@domain.com"
 LABEL description="Docker image for Notification Service"
 
-# Set the working directory inside the container
-WORKDIR /app
-
-# Copy the jar file into the container
-COPY target/notification-service.jar app.jar
-
-# Expose port if your app runs on 8082
-EXPOSE 8082
-
-# Run the jar file
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "notification-service.jar"]

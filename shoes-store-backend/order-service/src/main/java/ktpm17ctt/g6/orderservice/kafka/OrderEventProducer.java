@@ -13,7 +13,7 @@ public class OrderEventProducer {
     }
 
     public void sendOrderSuccessEvent(String userEmail) {
-        String message = "Order successfully placed for user: " + userEmail;
-        kafkaTemplate.send("order_success_topic", userEmail, message); // Send to a Kafka topic
+        String message = "OrderSuccess:" + userEmail; // Định dạng message khớp với notification-service
+        kafkaTemplate.send("order_success_topic", userEmail, message);
     }
 }

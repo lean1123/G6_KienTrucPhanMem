@@ -21,6 +21,10 @@
           enable.auto.commit: false
       listener:
         ack-mode: manual_immediate
+      template:
+        default-topic: order_success_topic
+      dlq:
+        topic: order_success_topic.dlq
 
 
   brevo:

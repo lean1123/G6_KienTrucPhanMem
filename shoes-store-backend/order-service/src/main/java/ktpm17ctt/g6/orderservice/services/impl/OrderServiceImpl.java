@@ -27,7 +27,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-//import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -50,8 +49,6 @@ public class OrderServiceImpl implements OrderService {
     ProductItemClient productItemClient;
     IdentityClient identityClient;
     OrderEventProducer orderEventProducer;
-//    KafkaTemplate<String, Object> kafkaTemplate;
-//    KafkaService kafkaService;
 
 
     @Override
@@ -108,6 +105,8 @@ public class OrderServiceImpl implements OrderService {
             throw new Exception("Payment URL is empty in payment service");
         }
 
+        orderEventProducer.sendOrderSuccessEvent(email);
+        log.info("Sent order success event for order {} to user {}", entity.getId(), email);
 
         return OrderResponse.builder()
                 .id(entity.getId())
@@ -208,5 +207,6 @@ public class OrderServiceImpl implements OrderService {
 
         return total;
     }
+
 }
 
