@@ -1,0 +1,18 @@
+# Use an official OpenJDK image as a base
+FROM openjdk:17-jdk-slim
+
+# Metadata (optional)
+LABEL maintainer="your-name@domain.com"
+LABEL description="Docker image for Notification Service"
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the jar file into the container
+COPY target/notification-service.jar app.jar
+
+# Expose port if your app runs on 8082
+EXPOSE 8082
+
+# Run the jar file
+ENTRYPOINT ["java", "-jar", "app.jar"]
