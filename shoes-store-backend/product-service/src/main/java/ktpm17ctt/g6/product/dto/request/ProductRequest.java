@@ -14,18 +14,19 @@ import java.time.Instant;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductRequest {
-    @Size(min = 3, max = 100, message = "PRODUCT_NAME_INVALID")
+    @NotBlank(message = "Product name is required")
+    @Size(min = 3, max = 100, message = "Product name must be between 3 and 100 characters")
     String name;
     String description;
-    @Min(value = 0, message = "PRODUCT_RATING_INVALID")
-    @Max(value = 5, message = "PRODUCT_RATING_INVALID")
+    @Min(value = 0, message = "Product price must be greater than 0")
+    @Max(value = 5, message = "Product price must be less than 5")
     double rating;
-    @NotNull(message = "PRODUCT_TYPE_INVALID")
+    @NotNull(message = "Product type is required")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     Type type;
-    @NotNull(message = "PRODUCT_CATEGORY_INVALID")
-    @NotEmpty(message = "PRODUCT_CATEGORY_INVALID")
+    @NotBlank(message = "Product category id is required")
     String categoryId;
+
     Instant createdDate;
     Instant modifiedDate;
 }

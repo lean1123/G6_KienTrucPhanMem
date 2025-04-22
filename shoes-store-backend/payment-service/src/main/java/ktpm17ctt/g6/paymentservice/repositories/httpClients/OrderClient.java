@@ -1,6 +1,7 @@
 package ktpm17ctt.g6.paymentservice.repositories.httpClients;
 
-import ktpm17ctt.g6.commondto.dtos.responses.OrderResponse;
+
+import ktpm17ctt.g6.paymentservice.dtos.feinClient.OrderResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

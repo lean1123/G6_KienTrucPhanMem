@@ -10,6 +10,7 @@ import ktpm17ctt.g6.product.entity.QuantityOfSize;
 import ktpm17ctt.g6.product.entity.enums.Type;
 import ktpm17ctt.g6.product.exception.AppException;
 import ktpm17ctt.g6.product.exception.ErrorCode;
+import ktpm17ctt.g6.product.exception.NotFoundException;
 import ktpm17ctt.g6.product.mapper.ColorMapper;
 import ktpm17ctt.g6.product.mapper.ProductItemMapper;
 import ktpm17ctt.g6.product.mapper.ProductMapper;
@@ -51,14 +52,11 @@ public class ProductItemServiceImpl implements ProductItemService {
     @Transactional
     @Override
     public ProductItemResponse save(ProductItemRequest productItemRequest) {
-        if (productItemRequest.getProductId() == null) {
-            throw new AppException(ErrorCode.PRODUCT_NOT_FOUND);
-        }
         if (productRepository.findById(productItemRequest.getProductId()).isEmpty()) {
-            throw new AppException(ErrorCode.PRODUCT_NOT_FOUND);
+            throw new NotFoundException("Product ID", productItemRequest.getProductId());
         }
         if (colorRepository.findById(productItemRequest.getColorId()).isEmpty()) {
-            throw new AppException(ErrorCode.COLOR_NOT_FOUND);
+            throw new NotFoundException("Color ID", productItemRequest.getColorId());
         }
         ProductItem productItem = productItemMapper.toProductItem(productItemRequest);
         productItem.setQuantityOfSize(convertJsonToQuantityOfSize(productItemRequest.getQuantityOfSize()));
@@ -83,10 +81,10 @@ public class ProductItemServiceImpl implements ProductItemService {
 
     @Override
     public ProductItemResponse update(String id, ProductItemRequest productItemRequest) {
-        ProductItem productItem = productItemRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_ITEM_NOT_FOUND));
+        ProductItem productItem = productItemRepository.findById(id).orElseThrow(() -> new NotFoundException("Product Item ID", id));
         if (productItemRequest.getProductId() != null) {
             if (productRepository.findById(productItemRequest.getProductId()).isEmpty()) {
-                throw new AppException(ErrorCode.PRODUCT_NOT_FOUND);
+                throw new NotFoundException("Product ID", productItemRequest.getProductId());
             }
             productItem.setProduct(productRepository.findById(productItemRequest.getProductId()).get());
         }
@@ -100,7 +98,7 @@ public class ProductItemServiceImpl implements ProductItemService {
             productItem.setQuantityOfSize(convertJsonToQuantityOfSize(productItemRequest.getQuantityOfSize()));
         }
         if (productItemRequest.getColorId() != null && !productItemRequest.getColorId().equals(productItem.getColor().getId())) {
-            productItem.setColor(colorRepository.findById(productItemRequest.getColorId()).orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_FOUND)));
+            productItem.setColor(colorRepository.findById(productItemRequest.getColorId()).orElseThrow(() -> new NotFoundException("Color ID", productItemRequest.getColorId())));
         }
         // image
         var files = productItemRequest.getImages();

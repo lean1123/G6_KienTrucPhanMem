@@ -25,36 +25,6 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
-  kafka-2:
-    image: confluentinc/cp-kafka
-    depends_on:
-      - zookeeper
-    ports:
-      - 9093:9093
-    restart: on-failure
-    environment:
-      KAFKA_BROKER_ID: 2
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
-  kafka-3:
-    image: confluentinc/cp-kafka
-    depends_on:
-      - zookeeper
-    ports:
-      - 9094:9094
-    restart: on-failure
-    environment:
-      KAFKA_BROKER_ID: 3
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9094
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
   mongodb:
     image: mongo:5
     container_name: mongo
@@ -79,113 +49,88 @@ services:
       - 8082:8082
     restart: on-failure
 
+    mysql:
+      image: 'mysql:8.0'
+      container_name: mysql
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_USER: user
+        MYSQL_PASSWORD: password
+      ports:
+        - "3307:3306"
+      volumes:
+        - mysql_data:/var/lib/mysql
+        - ./init.sql:/docker-entrypoint-initdb.d/init-db.sql  # Gắn script vào container
+      networks:
+        - app-network
+          identity-service:
+            build:
+              context: ./identity-service
+              dockerfile: Dockerfile
+            image: identity-service:latest
+            container_name: identity-service
+            ports:
+              - "8080:8080"
+            networks:
+              - app-network
+            #  user-service:
+            #    build:
+            #      context: ./user-service
+            #      dockerfile: Dockerfile
+            #    image: user-service:latest
+            #    container_name: user-service
+            #    ports:
+            #      - "8081:8081"
+            #    networks:
+            #      - backend
+          product-service:
+            build:
+              context: ./product-service
+              dockerfile: Dockerfile
+            image: product-service:latest
+            container_name: product-service
+            ports:
+              - "8082:8082"
+            networks:
+              - app-network
+                order-service:
+                  image: 'order-service'
+                  container_name: order-service
+                  depends_on:
+                    - mysql
+                    - kafka
+                  environment:
+                    - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/order_service
+                    - SPRING_DATASOURCE_USERNAME=user
+                    - SPRING_DATASOURCE_PASSWORD=password
+                    - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+                    - TZ=Asia/Jakarta
+                    - PAYMENT_URL=http://payment-service:8089
+                    - PRODUCT_ITEM_URL=http://localhost:8083/product/item
+                  ports:
+                    - "8088:8088"
+                  networks:
+                    - app-network
 
+                  payment-service:
+                    image: 'payment-service'
+                    env_file:
+                      - ./payment-service/.envrc
+                    container_name: payment-service
+                    depends_on:
+                      - mysql
+                      - kafka
+                    environment:
+                      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/payment_service
+                      - SPRING_DATASOURCE_USERNAME=user
+                      - SPRING_DATASOURCE_PASSWORD=password
+                      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+                      - TZ=Asia/Jakarta
+                    ports:
+                      - "8089:8089"
+                    networks:
+                      - app-network
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  #services:
-#  zookeeper:
-#    image: confluentinc/cp-zookeeper
-#    environment:
-#      ZOOKEEPER_CLIENT_PORT: 2181
-#      ZOOKEEPER_TICK_TIME: 2000
-#    ports:
-#      - 2181:2181
-#    restart: "on-failure"
-#
-#  kafka-1:
-#    image: confluentinc/cp-kafka
-#    depends_on:
-#      - zookeeper
-#    ports:
-#      - 9092:9092
-#    restart: "on-failure"
-#    environment:
-#      KAFKA_BROKER_ID: 1
-#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-#      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-#  #
-#  kafka-2:
-#    image: confluentinc/cp-kafka
-#    depends_on:
-#      - zookeeper
-#    ports:
-#      - 9093:9093
-#    restart: "on-failure"
-#    environment:
-#      KAFKA_BROKER_ID: 2
-#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9093
-#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-#      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-#
-#  kafka-3:
-#    image: confluentinc/cp-kafka
-#    depends_on:
-#      - zookeeper
-#    ports:
-#      - 9094:9094
-#    restart: "on-failure"
-#    environment:
-#      KAFKA_BROKER_ID: 3
-#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9094
-#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-#      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  # microservice
-  # accountservice:
-  #   build:
-  #     context: accountservice
-  #     dockerfile: Dockerfile
-  #   image: account-service
-  #   ports:
-  #     - 8080:8080
-  #   restart: on-failure
-  #   env_file:
-  #     - local.env
-
-  # statisticservice:
-  #   build:
-  #     context: statisticservice
-  #     dockerfile: Dockerfile
-  #   image: statistic-service
-  #   ports:
-  #     - 8090:8090
-  #   restart: on-failure
-  #   env_file:
-  #     - local.env
-
-  # notificationservice:
-  #   build:
-  #     context: notificationservice
-  #     dockerfile: Dockerfile
-  #   image: notification-service
-  #   restart: on-failure
-  #   env_file:
-  #     - local.env
-
-
-
-
-
-
-
-
+                volumes:
+                  mysql_data:
