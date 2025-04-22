@@ -12,7 +12,7 @@ spring:
       timeout: 6000ms
       client-type: lettuce
   datasource:
-    url: "jdbc:mariadb://localhost:3306/shoes_store_identity"
+    url: "jdbc:mariadb://localhost:3306/shoes_store_identity?createDatabaseIfNotExist=true"
     driverClassName: org.mariadb.jdbc.Driver
     username: root
     password: root

@@ -7,7 +7,7 @@ spring:
   application:
     name: user-service
   datasource:
-    url: jdbc:mariadb://localhost:3306/shoes_store_users
+    url: jdbc:mariadb://localhost:3306/shoes_store_users?createDatabaseIfNotExist=true
     driverClassName: org.mariadb.jdbc.Driver
     password: root
     username: root
