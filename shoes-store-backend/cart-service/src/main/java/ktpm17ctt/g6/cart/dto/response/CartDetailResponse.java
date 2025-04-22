@@ -10,5 +10,5 @@ public class CartDetailResponse {
     private CartDetailPK cartDetailPK;
     private String productItemId;
     private int quantity;
-    private String productId;
+//    private String productId;
 }

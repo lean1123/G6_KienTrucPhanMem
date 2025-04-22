@@ -19,4 +19,7 @@ public interface CartDetailService {
     <S extends CartDetail> S save(S entity);
     Optional<CartDetail> findById(CartDetailPK id);
 
+    List<CartDetail> findByCartId(String cartId);
+    void delete(CartDetail cartDetail);
+    void deleteAllByCartId(String cartId);
 }

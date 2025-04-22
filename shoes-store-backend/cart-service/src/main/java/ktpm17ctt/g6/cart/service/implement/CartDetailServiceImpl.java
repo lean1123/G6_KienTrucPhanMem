@@ -89,5 +89,20 @@ public class CartDetailServiceImpl implements CartDetailService {
         return cartDetailRepository.findById(id);
     }
 
+    @Override
+    public List<CartDetail> findByCartId(String cartId) {
+        return cartDetailRepository.findByCartId(cartId);
+    }
+    @Override
+    public void delete(CartDetail cartDetail) {
+        cartDetailRepository.delete(cartDetail);
+    }
 
+    @Override
+    public void deleteAllByCartId(String cartId) {
+        List<CartDetail> cartDetails = cartDetailRepository.findAllByCartId(cartId);
+        if (!cartDetails.isEmpty()) {
+            cartDetailRepository.deleteAll(cartDetails);
+        }
+    }
 }

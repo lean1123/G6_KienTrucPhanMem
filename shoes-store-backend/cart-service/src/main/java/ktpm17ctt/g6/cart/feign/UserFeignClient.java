@@ -14,5 +14,5 @@ public interface UserFeignClient {
     Optional<UserResponse> findByEmail(String email);
 
     @GetMapping("/{id}")
-    ResponseEntity<?> findById(@PathVariable String id);
+    UserResponse findById(@PathVariable String id);
 }
