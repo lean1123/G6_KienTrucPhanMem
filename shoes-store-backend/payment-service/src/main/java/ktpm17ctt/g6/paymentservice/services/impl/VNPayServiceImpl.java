@@ -9,7 +9,7 @@ import ktpm17ctt.g6.paymentservice.services.VNPayService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
+//import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -28,7 +28,7 @@ import java.util.*;
 @FieldDefaults(makeFinal = true)
 @Slf4j
 public class VNPayServiceImpl implements VNPayService {
-    KafkaTemplate<String, PaymentUrlResponse> kafkaTemplate;
+//    KafkaTemplate<String, PaymentUrlResponse> kafkaTemplate;
 
     @Override
     public String getPaymentUrl(String orderId, String total, String ipAddress, String bankCode, String language) throws Exception {
@@ -103,15 +103,15 @@ public class VNPayServiceImpl implements VNPayService {
                 .paymentUrl(paymentUrl)
                 .build();
 
-        kafkaTemplate.send("payment-response", paymentUrlResponse)
-                .whenComplete((result, ex) -> {
-                    if (ex != null) {
-                        log.error("Failed to send Kafka message", ex);
-                        throw new RuntimeException("Payment service unavailable. Please try again.");
-                    } else {
-                        log.info("Kafka message sent successfully: {}", result.getProducerRecord().value());
-                    }
-                });
+//        kafkaTemplate.send("payment-response", paymentUrlResponse)
+//                .whenComplete((result, ex) -> {
+//                    if (ex != null) {
+//                        log.error("Failed to send Kafka message", ex);
+//                        throw new RuntimeException("Payment service unavailable. Please try again.");
+//                    } else {
+//                        log.info("Kafka message sent successfully: {}", result.getProducerRecord().value());
+//                    }
+//                });
 
         return paymentUrl;
     }

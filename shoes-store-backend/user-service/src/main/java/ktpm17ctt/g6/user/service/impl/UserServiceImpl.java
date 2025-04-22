@@ -76,5 +76,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.search(keyword).stream().map(userMapper::toUserResponse).toList();
     }
 
+    @Override
+    public Optional<UserResponse> findByAccountId(String accountId) {
+        return userRepository.findByAccountId(accountId).map(userMapper::toUserResponse);
+    }
+
 
 }
