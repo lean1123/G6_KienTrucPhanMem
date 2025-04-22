@@ -12,14 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/item")
+@RequestMapping("/internal/item")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ProductItemInternalController {
     ProductItemService productItemService;
 
-    @GetMapping("/internal/{id}")
+    @GetMapping("/{id}")
     ApiResponse<ProductItemResponse> getProductItem(@PathVariable String id) {
         log.info("Get product item: {}", id);
         return ApiResponse.<ProductItemResponse>builder()
@@ -27,7 +27,7 @@ public class ProductItemInternalController {
                 .build();
     }
 
-    @PutMapping("/internal/update/{id}")
+    @PutMapping("/update/{id}")
     ApiResponse<ProductItemResponse> updateProductItem(@PathVariable String id, @RequestBody @Valid ProductItemRequest productItemRequest) {
         log.info("Update product item: {}", productItemRequest);
         ProductItemResponse productItemResponse = productItemService.update(id, productItemRequest);
