@@ -13,6 +13,7 @@ import ktpm17ctt.g6.orderservice.dto.response.OrderResponse;
 import ktpm17ctt.g6.orderservice.entities.Order;
 import ktpm17ctt.g6.orderservice.entities.OrderStatus;
 import ktpm17ctt.g6.orderservice.entities.PaymentMethod;
+import ktpm17ctt.g6.orderservice.kafka.OrderEventProducer;
 import ktpm17ctt.g6.orderservice.mapper.OrderMapper;
 import ktpm17ctt.g6.orderservice.repositories.OrderRepository;
 import ktpm17ctt.g6.orderservice.repositories.httpClients.IdentityClient;
@@ -48,6 +49,7 @@ public class OrderServiceImpl implements OrderService {
     UserClient userClient;
     ProductItemClient productItemClient;
     IdentityClient identityClient;
+    OrderEventProducer orderEventProducer;
 //    KafkaTemplate<String, Object> kafkaTemplate;
 //    KafkaService kafkaService;
 
