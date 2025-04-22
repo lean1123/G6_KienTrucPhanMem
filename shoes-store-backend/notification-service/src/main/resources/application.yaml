@@ -1,5 +1,5 @@
   server:
-    port: 8082
+    port: 8086
     servlet:
       context-path: /notification
 
@@ -12,7 +12,7 @@
         uri: mongodb://root:root@localhost:27017/notification-service?authSource=admin
 
     kafka:
-      bootstrap-servers: host.docker.internal:9092
+      bootstrap-servers: localhost:9092
       consumer:
         group-id: notification-group
         auto-offset-reset: earliest
@@ -21,10 +21,14 @@
           enable.auto.commit: false
       listener:
         ack-mode: manual_immediate
+      template:
+        default-topic: order_success_topic
+      dlq:
+        topic: order_success_topic.dlq
 
 
   brevo:
-    api-key: ""  # Thay thế bằng API Key của bạn
+    api-key: "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"  # Thay thế bằng API Key của bạn
     sender-email: "tokiejame@gmail.com"  # Email người gửi
 
   logging:

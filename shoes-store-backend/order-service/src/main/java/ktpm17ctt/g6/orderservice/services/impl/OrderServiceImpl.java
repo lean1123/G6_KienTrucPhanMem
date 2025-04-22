@@ -108,6 +108,10 @@ public class OrderServiceImpl implements OrderService {
             throw new Exception("Payment URL is empty in payment service");
         }
 
+        orderEventProducer.sendOrderSuccessEvent(email);
+        log.info("Sent order success event for order {} to user {}", entity.getId(), email);
+
+
 
         return OrderResponse.builder()
                 .id(entity.getId())

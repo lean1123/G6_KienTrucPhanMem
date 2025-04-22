@@ -4,6 +4,8 @@ import ktpm17ctt.g6.notification.dto.EmailRequest;
 import ktpm17ctt.g6.notification.model.Notification;
 import ktpm17ctt.g6.notification.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class EmailService {
+
+    private static final Logger log = LoggerFactory.getLogger(EmailService.class);
 
     @Value("${brevo.api-key}")
     private String apiKey;
@@ -35,34 +39,48 @@ public class EmailService {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://api.brevo.com/v3/smtp/email"))
                     .header("accept", "application/json")
-                    .header("api-key", apiKey)  // ✅ Đọc từ application.yaml
+                    .header("api-key", apiKey)
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString("""
-                    {
-                      "sender": { "email": "%s" },
-                      "to": [ { "email": "%s" } ],
-                      "subject": "%s",
-                      "htmlContent": "%s"
-                    }
-                    """.formatted(senderEmail, email, subject, content))) // ✅ Đọc từ application.yaml
+                            {
+                              "sender": { "email": "%s" },
+                              "to": [ { "email": "%s" } ],
+                              "subject": "%s",
+                              "htmlContent": "%s"
+                            }
+                            """.formatted(senderEmail, email, subject, content)))
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // Lưu vào MongoDB
+            boolean isSuccess = response.statusCode() == 201;
             Notification notification = Notification.builder()
                     .email(email)
                     .subject(subject)
                     .message(content)
-                    .sent(response.statusCode() == 201) // Nếu status 201 nghĩa là gửi thành công
+                    .sent(isSuccess)
                     .createdAt(LocalDateTime.now())
                     .build();
 
             notificationRepository.save(notification);
 
-            System.out.println("Email sent: " + response.body());
+            if (!isSuccess) {
+                log.error("Failed to send email to {}: {}", email, response.body());
+                throw new EmailSendingException("Failed to send email: " + response.body());
+            }
+
+            log.info("Email sent successfully to {}", email);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error sending email to {}: {}", email, e.getMessage());
+            Notification notification = Notification.builder()
+                    .email(email)
+                    .subject(subject)
+                    .message(content)
+                    .sent(false)
+                    .createdAt(LocalDateTime.now())
+                    .build();
+            notificationRepository.save(notification);
+            throw new EmailSendingException("Error sending email", e);
         }
     }
 }
