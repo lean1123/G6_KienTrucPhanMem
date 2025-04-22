@@ -1,4 +1,3 @@
-
 services:
   api-gateway:
     build:
@@ -10,6 +9,7 @@ services:
       - "8888:8888"
     networks:
       - backend
+
   identity-service:
     build:
       context: ./identity-service
@@ -18,29 +18,81 @@ services:
     container_name: identity-service
     ports:
       - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/shoes_store_identity
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      - mariadb
+      - redis
     networks:
       - backend
-#  user-service:
-#    build:
-#      context: ./user-service
-#      dockerfile: Dockerfile
-#    image: user-service:latest
-#    container_name: user-service
-#    ports:
-#      - "8081:8081"
-#    networks:
-#      - backend
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    image: user-service:latest
+    container_name: user-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/shoes_store_user
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      - mariadb
+    networks:
+      - backend
+
   product-service:
     build:
       context: ./product-service
       dockerfile: Dockerfile
     image: product-service:latest
     container_name: product-service
+    env_file:
+      - ./product-service/.env.properties
     ports:
       - "8082:8082"
+    environment:
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+    networks:
+      - backend
+
+  mariadb:
+    image: mariadb:10.11
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - backend
+
+  redis:
+    image: redis:7.2
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
     networks:
       - backend
 
 networks:
   backend:
     driver: bridge
+
+volumes:
+  db_data:
+  redis_data:
