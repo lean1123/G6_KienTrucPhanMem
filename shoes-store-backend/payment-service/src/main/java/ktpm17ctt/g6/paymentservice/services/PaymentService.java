@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface PaymentService {
     @Transactional
-    PaymentResponse save(String orderId, String transactionId, String responseCode, String amount, String transDate, String userEmail);
+    PaymentResponse save(String orderId, String transactionId, String responseCode, String amount, String transDate);
 
     PaymentResponse getPaymentByOrderId(String orderId);
 

@@ -1,0 +1,56 @@
+server:
+    port: 8080
+    servlet:
+        context-path: /identity
+
+spring:
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: ""
+      timeout: 6000ms
+      client-type: lettuce
+  datasource:
+    url: "jdbc:mariadb://localhost:3306/shoes_store_identity?createDatabaseIfNotExist=true"
+    driverClassName: org.mariadb.jdbc.Driver
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MariaDBDialect
+  security:
+    oauth2:
+      client:
+        registration:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: "http://localhost:3000/auth/google/callback"
+            authorization-grant-type: authorization_code
+            client-name: Google
+        provider:
+            google:
+                authorization-uri: https://accounts.google.com/o/oauth2/auth
+                token-uri: https://oauth2.googleapis.com/token
+                user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+
+jwt:
+    signerKey: "1Tj5jmm5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+app:
+  services:
+    user: http://localhost:8081/user
+
