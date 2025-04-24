@@ -86,4 +86,24 @@ public class ProductItemController {
                 .result(productItemService.search(page, productName, type, categoryName, colorName, size, minPrice, maxPrice))
                 .build();
     }
+
+    @GetMapping("/quantity")
+    ApiResponse<Integer> getTotalQuantityByProductItemAndSize(
+            @RequestParam String id,
+            @RequestParam Integer size) {
+        log.info("Get total quantity for productItemId={} and size={}", id, size);
+        int totalQuantity = productItemService.getTotalQuantityByProductAndSize(id,size);
+        return ApiResponse.<Integer>builder()
+                .result(totalQuantity)
+                .build();
+    }
+
+    @GetMapping("/all")
+    ApiResponse<List<ProductItemResponse>> getAllProductItems() {
+        log.info("Get all product items");
+        return ApiResponse.<List<ProductItemResponse>>builder()
+                .result(productItemService.findAll())
+                .build();
+    }
+
 }
