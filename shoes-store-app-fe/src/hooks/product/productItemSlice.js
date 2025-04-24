@@ -12,6 +12,8 @@ export const fetchProductItem = createAsyncThunk(
 				);
 			}
 
+			console.log('Product item response:', response);
+
 			return response.data?.data;
 		} catch (error) {
 			console.error('Error fetching product item: ', error);

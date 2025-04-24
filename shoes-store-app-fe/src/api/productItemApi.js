@@ -6,7 +6,7 @@ const productItemApi = {
 	},
 
 	getProductItemById: (id) => {
-		return AdminAxiosClient.get(`/product-items/${id}`, {
+		return AdminAxiosClient.get(`/product/item/${id}`, {
 			withCredentials: true,
 		});
 	},
