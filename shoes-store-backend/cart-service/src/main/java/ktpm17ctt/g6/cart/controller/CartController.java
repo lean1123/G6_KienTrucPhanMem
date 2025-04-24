@@ -10,6 +10,7 @@ import ktpm17ctt.g6.cart.dto.response.ApiResponse;
 import ktpm17ctt.g6.cart.dto.response.CartDetailResponse;
 import ktpm17ctt.g6.cart.dto.response.ProductItemResponse;
 import ktpm17ctt.g6.cart.dto.response.UserResponse;
+import ktpm17ctt.g6.cart.dto.response.QuantityOfSizeResponse;
 import ktpm17ctt.g6.cart.enties.Cart;
 import ktpm17ctt.g6.cart.enties.CartDetail;
 import ktpm17ctt.g6.cart.enties.CartDetailPK;
@@ -47,8 +48,12 @@ public class CartController {
                                        @Valid @RequestBody CartDetailRequest cartDetailRequest,
                                        BindingResult bindingResult) {
         Map<String, Object> response = new LinkedHashMap<>();
+        log.info("Adding to cart: productItemId={}, size={}, quantity={}",
+                cartDetailRequest.getProductItemId(), cartDetailRequest.getSize(), cartDetailRequest.getQuantity());
 
-        // Kiểm tra lỗi validation
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        log.debug("Authentication in addToCart: {}, Principal: {}", auth, auth != null ? auth.getPrincipal() : "null");
+
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getFieldErrors().stream()
                     .map(error -> error.getField() + ": " + error.getDefaultMessage())
@@ -59,7 +64,6 @@ public class CartController {
         }
 
         List<CartDetail> cartDetails = getCartFromSession(httpSession);
-
         try {
             handleCarDetail(cartDetails, cartDetailRequest, httpSession, cartDetailRequest.getSize());
         } catch (IllegalArgumentException e) {
@@ -71,18 +75,35 @@ public class CartController {
         try {
             String cartDetailsJson = objectMapper.writeValueAsString(cartDetails);
             httpSession.setAttribute("cart", cartDetailsJson);
+            log.debug("Saved cart to session: {} items", cartDetails.size());
         } catch (Exception e) {
-            log.error("Failed to save cart to session: {}", e.getMessage());
+            log.error("Failed to save cart to session: {}", e.getMessage(), e);
             response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.put("data", "Failed to save cart to session");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
 
-        // Đồng bộ với cơ sở dữ liệu
+        String cartId = null;
         try {
-            syncCartWithDatabase(cartDetails);
+            cartId = syncCartWithDatabase(cartDetails);
+            log.info("Successfully synced cart with database");
         } catch (Exception e) {
-            log.error("Failed to sync cart with database: {}", e.getMessage());
+            log.error("Failed to sync cart with database: {}", e.getMessage(), e);
+            response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("data", "Failed to sync cart with database: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+
+        // Tải lại cartDetails từ cơ sở dữ liệu
+        if (cartId != null) {
+            cartDetails = cartDetailService.findByCartId(cartId);
+            try {
+                String cartDetailsJson = objectMapper.writeValueAsString(cartDetails);
+                httpSession.setAttribute("cart", cartDetailsJson);
+                log.debug("Synced cart to session after database update: {} items", cartDetails.size());
+            } catch (Exception e) {
+                log.error("Failed to save cart to session after sync: {}", e.getMessage(), e);
+            }
         }
 
         List<CartDetailResponse> cartDetailResponses = new ArrayList<>();
@@ -126,6 +147,7 @@ public class CartController {
         }
 
         int size = cartDetailRequest.getSize();
+        // Kiểm tra productItemId
         ApiResponse<ProductItemResponse> productItemResponseApiResponse =
                 productFeignClient.getProductItemById(cartDetailRequest.getProductItemId());
         if (productItemResponseApiResponse == null || productItemResponseApiResponse.getResult() == null) {
@@ -134,14 +156,31 @@ public class CartController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        ApiResponse<Integer> realQtyResponse =
-                productFeignClient.getTotalQuantityByProductItemAndSize(cartDetailRequest.getProductItemId(), size);
-        if (realQtyResponse == null || realQtyResponse.getResult() == null) {
+        // Kiểm tra size có trong quantityOfSize không
+        ProductItemResponse productItem = productItemResponseApiResponse.getResult();
+        List<QuantityOfSizeResponse> quantityOfSize = productItem.getQuantityOfSize();
+        if (quantityOfSize == null || quantityOfSize.isEmpty()) {
             response.put("status", HttpStatus.BAD_REQUEST.value());
-            response.put("data", "Failed to retrieve real quantity");
+            response.put("data", "No sizes available for productItemId " + cartDetailRequest.getProductItemId());
             return ResponseEntity.badRequest().body(response);
         }
-        int realQuantity = realQtyResponse.getResult();
+
+        Optional<QuantityOfSizeResponse> sizeQtyOpt = quantityOfSize.stream()
+                .filter(sizeQty -> sizeQty.getSize() == size)
+                .findFirst();
+        if (sizeQtyOpt.isEmpty()) {
+            response.put("status", HttpStatus.BAD_REQUEST.value());
+            response.put("data", "Size " + size + " is not available for productItemId " + cartDetailRequest.getProductItemId());
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // Kiểm tra số lượng tồn kho trực tiếp từ quantityOfSize
+        int realQuantity = sizeQtyOpt.get().getQuantity();
+        if (realQuantity == 0) {
+            response.put("status", HttpStatus.BAD_REQUEST.value());
+            response.put("data", "Product with size " + size + " is out of stock for productItemId " + cartDetailRequest.getProductItemId());
+            return ResponseEntity.badRequest().body(response);
+        }
 
         boolean found = false;
         for (CartDetail cartDetail : cartDetails) {
@@ -174,10 +213,26 @@ public class CartController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
 
+        String cartId = null;
         try {
-            syncCartWithDatabase(cartDetails);
+            cartId = syncCartWithDatabase(cartDetails);
         } catch (Exception e) {
             log.error("Failed to sync cart with database: {}", e.getMessage());
+            response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.put("data", "Failed to sync cart with database: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+
+        // Tải lại cartDetails từ cơ sở dữ liệu
+        if (cartId != null) {
+            cartDetails = cartDetailService.findByCartId(cartId);
+            try {
+                String cartDetailsJson = objectMapper.writeValueAsString(cartDetails);
+                session.setAttribute("cart", cartDetailsJson);
+                log.debug("Synced cart to session after database update: {} items", cartDetails.size());
+            } catch (Exception e) {
+                log.error("Failed to save cart to session after sync: {}", e.getMessage(), e);
+            }
         }
 
         List<CartDetailResponse> cartDetailResponses = cartDetails.stream()
@@ -257,49 +312,51 @@ public class CartController {
     @GetMapping
     public ResponseEntity<?> viewCart(HttpSession session) {
         Map<String, Object> response = new LinkedHashMap<>();
-
-        // Kiểm tra người dùng đã đăng nhập chưa
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         List<CartDetail> cartDetails = new ArrayList<>();
 
-        if (auth != null && auth.getName() != null) {
-            String email = auth.getName();
-            log.info("Viewing cart for authenticated user: {}", email);
-
-            // Tìm thông tin người dùng
-            Optional<UserResponse> userOpt;
-            try {
-                userOpt = userFeignClient.findByEmail(email);
-            } catch (Exception e) {
-                log.error("Failed to fetch user by email from user-service: {}", e.getMessage());
-                response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-                response.put("data", "Failed to fetch user from user-service");
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        log.debug("Authentication: {}, Principal: {}", auth, auth != null ? auth.getPrincipal() : "null");
+        if (auth != null) {
+            String accountId = null;
+            if (auth.getPrincipal() instanceof org.springframework.security.oauth2.jwt.Jwt) {
+                org.springframework.security.oauth2.jwt.Jwt jwt = (org.springframework.security.oauth2.jwt.Jwt) auth.getPrincipal();
+                accountId = jwt.getClaimAsString("accountId");
             }
 
-            if (userOpt.isEmpty()) {
-                log.warn("User not found for email: {}", email);
-            } else {
-                UserResponse user = userOpt.get();
-                Cart cart = cartService.findCartByUser(user.getId());
-                if (cart != null) {
-                    // Lấy giỏ hàng từ cơ sở dữ liệu
-                    cartDetails = cartDetailService.findByCartId(cart.getId());
-                    log.debug("Loaded cart from database: {} items", cartDetails.size());
+            if (accountId != null && !accountId.isEmpty()) {
+                log.info("Viewing cart for authenticated user: {}", accountId);
 
-                    // Đồng bộ dữ liệu từ cơ sở dữ liệu vào session
-                    try {
-                        String cartDetailsJson = objectMapper.writeValueAsString(cartDetails);
-                        session.setAttribute("cart", cartDetailsJson);
-                        log.debug("Synced cart from database to session");
-                    } catch (Exception e) {
-                        log.error("Failed to sync cart to session: {}", e.getMessage());
+                ApiResponse<UserResponse> userResponse;
+                try {
+                    log.debug("Calling userFeignClient.getUserByAccountId({})", accountId);
+                    userResponse = userFeignClient.getUserByAccountId(accountId);
+                    log.debug("userFeignClient.getUserByAccountId response: {}", userResponse);
+                    if (userResponse != null && userResponse.getResult() != null) {
+                        UserResponse user = userResponse.getResult();
+                        Cart cart = cartService.findCartByUser(user.getId());
+                        if (cart != null) {
+                            cartDetails = cartDetailService.findByCartId(cart.getId());
+                            log.debug("Loaded cart from database: {} items", cartDetails.size());
+
+                            try {
+                                String cartDetailsJson = objectMapper.writeValueAsString(cartDetails);
+                                session.setAttribute("cart", cartDetailsJson);
+                                log.debug("Synced cart from database to session");
+                            } catch (Exception e) {
+                                log.error("Failed to sync cart to session: {}", e.getMessage(), e);
+                            }
+                        }
+                    } else {
+                        log.warn("User not found for accountId: {}", accountId);
                     }
+                } catch (Exception e) {
+                    log.error("Failed to fetch user by accountId from user-service: {}", e.getMessage(), e);
                 }
+            } else {
+                log.debug("No accountId found in token, skipping database cart load");
             }
         }
 
-        // Nếu không có dữ liệu từ cơ sở dữ liệu (người dùng chưa đăng nhập hoặc không có giỏ hàng), lấy từ session
         if (cartDetails.isEmpty()) {
             String cartDetailsJson = (String) session.getAttribute("cart");
             if (cartDetailsJson != null && !cartDetailsJson.isEmpty()) {
@@ -307,7 +364,7 @@ public class CartController {
                     cartDetails = objectMapper.readValue(cartDetailsJson,
                             objectMapper.getTypeFactory().constructCollectionType(List.class, CartDetail.class));
                 } catch (Exception e) {
-                    log.error("Failed to deserialize cart from session: {}", e.getMessage());
+                    log.error("Failed to deserialize cart from session: {}", e.getMessage(), e);
                     response.put("status", HttpStatus.BAD_REQUEST.value());
                     response.put("data", "Error in view cart");
                     return ResponseEntity.badRequest().body(response);
@@ -353,30 +410,44 @@ public class CartController {
     }
 
     private void handleCarDetail(List<CartDetail> cartDetails, CartDetailRequest cartDetailRequest, HttpSession httpSession, int size) throws IllegalArgumentException {
+        // Kiểm tra productItemId
         ApiResponse<ProductItemResponse> productItemResponseApiResponse = productFeignClient.getProductItemById(cartDetailRequest.getProductItemId());
-
         if (productItemResponseApiResponse == null || productItemResponseApiResponse.getResult() == null) {
             throw new IllegalArgumentException("ProductItem not found");
         }
 
-        ApiResponse<Integer> realQty = productFeignClient.getTotalQuantityByProductItemAndSize(cartDetailRequest.getProductItemId(), size);
-        if (realQty == null || realQty.getResult() == null) {
-            throw new IllegalArgumentException("Failed to retrieve real quantity");
+        // Kiểm tra size có trong quantityOfSize không
+        ProductItemResponse productItem = productItemResponseApiResponse.getResult();
+        List<QuantityOfSizeResponse> quantityOfSize = productItem.getQuantityOfSize();
+        if (quantityOfSize == null || quantityOfSize.isEmpty()) {
+            throw new IllegalArgumentException("No sizes available for productItemId " + cartDetailRequest.getProductItemId());
         }
 
-        int realQuantity = realQty.getResult();
+        Optional<QuantityOfSizeResponse> sizeQtyOpt = quantityOfSize.stream()
+                .filter(sizeQty -> sizeQty.getSize() == size)
+                .findFirst();
+        if (sizeQtyOpt.isEmpty()) {
+            throw new IllegalArgumentException("Size " + size + " is not available for productItemId " + cartDetailRequest.getProductItemId());
+        }
+
+        // Kiểm tra số lượng tồn kho trực tiếp từ quantityOfSize
+        int realQuantity = sizeQtyOpt.get().getQuantity();
+        if (realQuantity == 0) {
+            throw new IllegalArgumentException("Product with size " + size + " is out of stock for productItemId " + cartDetailRequest.getProductItemId());
+        }
 
         // Kiểm tra sản phẩm cùng productItemId và size đã tồn tại trong giỏ hàng chưa
         for (CartDetail detail : cartDetails) {
             if (detail.getProductItemId().equals(cartDetailRequest.getProductItemId()) &&
                     detail.getCartDetailPK().getSize() == size) {
-
                 int newQuantity = detail.getQuantity() + cartDetailRequest.getQuantity();
                 if (newQuantity > realQuantity) {
                     throw new IllegalArgumentException("Quantity must be less than or equal to available stock");
                 }
                 detail.setQuantity(newQuantity);
-                return; // Không cần tạo mới, chỉ cập nhật số lượng
+                log.debug("Updated quantity for productItemId={}, size={}: new quantity={}",
+                        cartDetailRequest.getProductItemId(), size, newQuantity);
+                return; // Cập nhật số lượng và thoát
             }
         }
 
@@ -392,73 +463,87 @@ public class CartController {
         CartDetailPK cartDetailPK = new CartDetailPK();
         cartDetailPK.setProductItemId(cartDetailRequest.getProductItemId());
         cartDetailPK.setSize(size);
+        // Không gán cartId ở đây, để syncCartWithDatabase xử lý
         newCartDetail.setCartDetailPK(cartDetailPK);
 
         cartDetails.add(newCartDetail);
+        log.debug("Added new CartDetail to session: productItemId={}, size={}, quantity={}",
+                cartDetailRequest.getProductItemId(), size, cartDetailRequest.getQuantity());
     }
 
-    private void syncCartWithDatabase(List<CartDetail> cartDetails) throws IllegalArgumentException {
-        // Kiểm tra người dùng đã đăng nhập chưa
+    private String syncCartWithDatabase(List<CartDetail> cartDetails) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || auth.getName() == null) {
+        if (auth == null) {
             log.debug("User not authenticated, skipping sync with database");
-            return;
+            return null;
         }
-        String email = auth.getName();
-        log.info("Syncing cart with database for user: {}", email);
 
-        // Tìm thông tin người dùng
-        Optional<UserResponse> userOpt;
+        String accountId = null;
+        if (auth.getPrincipal() instanceof org.springframework.security.oauth2.jwt.Jwt) {
+            org.springframework.security.oauth2.jwt.Jwt jwt = (org.springframework.security.oauth2.jwt.Jwt) auth.getPrincipal();
+            accountId = jwt.getClaimAsString("accountId");
+        }
+
+        if (accountId == null || accountId.isEmpty()) {
+            log.debug("No accountId found in token, skipping sync with database");
+            return null;
+        }
+        log.info("Syncing cart with database for accountId: {}", accountId);
+
+        ApiResponse<UserResponse> userResponse;
         try {
-            userOpt = userFeignClient.findByEmail(email);
+            log.debug("Calling userFeignClient.getUserByAccountId({})", accountId);
+            userResponse = userFeignClient.getUserByAccountId(accountId);
+            log.debug("userFeignClient.getUserByAccountId response: {}", userResponse);
         } catch (Exception e) {
-            log.error("Failed to fetch user by email from user-service: {}", e.getMessage());
-            throw new IllegalArgumentException("Failed to fetch user from user-service");
+            log.error("Failed to fetch user by accountId from user-service: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to fetch user by accountId", e);
         }
 
-        if (userOpt.isEmpty()) {
-            log.warn("User not found for email: {}", email);
-            return;
+        UserResponse user = userResponse != null ? userResponse.getResult() : null;
+        if (user == null) {
+            log.warn("User not found for accountId: {}", accountId);
+            throw new RuntimeException("User not found for accountId: " + accountId);
         }
+        log.debug("Found user: id={}, accountId={}", user.getId(), accountId);
 
-        UserResponse user = userOpt.get();
-        log.debug("Found user: id={}", user.getId());
-
-        // Tìm hoặc tạo giỏ hàng trong cơ sở dữ liệu
         Cart cart = cartService.findCartByUser(user.getId());
         if (cart == null) {
             log.info("Cart not found for user {}, creating new cart", user.getId());
             cart = new Cart();
-
-            UserResponse userResponse;
+            ApiResponse<UserResponse> userByIdResponse;
             try {
-                userResponse = userFeignClient.findById(user.getId());
+                log.debug("Calling userFeignClient.findById({})", user.getId());
+                userByIdResponse = userFeignClient.findById(user.getId());
+                log.debug("userFeignClient.findById response: {}", userByIdResponse);
             } catch (Exception e) {
-                log.error("Failed to fetch user by ID from user-service: {}", e.getMessage());
-                throw new IllegalArgumentException("Failed to fetch user from user-service");
+                log.error("Failed to fetch user by ID from user-service: {}", e.getMessage(), e);
+                throw new RuntimeException("Failed to fetch user by ID", e);
             }
 
-            String userId = userResponse != null ? userResponse.getId() : null;
+            UserResponse userById = userByIdResponse != null ? userByIdResponse.getResult() : null;
+            String userId = userById != null ? userById.getId() : null;
             if (userId != null && !userId.isEmpty()) {
                 cart.setUserId(userId);
+                log.debug("Saving new cart for userId: {}", userId);
                 cartService.save(cart);
                 log.info("Created new cart with ID {} for user {}", cart.getId(), userId);
             } else {
                 log.error("Invalid user ID for user {}", user.getId());
-                throw new IllegalArgumentException("User not found");
+                throw new RuntimeException("Invalid user ID for user: " + user.getId());
             }
         } else {
             log.debug("Found existing cart with ID {} for user {}", cart.getId(), user.getId());
         }
 
-        // Lấy danh sách CartDetail hiện có trong cơ sở dữ liệu
         List<CartDetail> existingCartDetails = cartDetailService.findByCartId(cart.getId());
         log.debug("Found {} existing cart details in database", existingCartDetails.size());
 
-        // Đồng bộ: Xóa các mục không còn trong session
+        // Xóa các mục không còn trong session
         for (CartDetail existingDetail : existingCartDetails) {
             boolean existsInSession = cartDetails.stream().anyMatch(sessionDetail ->
-                    sessionDetail.getProductItemId().equals(existingDetail.getProductItemId()) &&
+                    sessionDetail.getCartDetailPK() != null &&
+                            sessionDetail.getProductItemId().equals(existingDetail.getProductItemId()) &&
                             sessionDetail.getCartDetailPK().getSize() == existingDetail.getCartDetailPK().getSize());
             if (!existsInSession) {
                 log.info("Deleting cart detail from database: productItemId={}, size={}",
@@ -467,16 +552,18 @@ public class CartController {
             }
         }
 
-        // Đồng bộ: Thêm hoặc cập nhật các mục từ session vào cơ sở dữ liệu
+        // Thêm hoặc cập nhật các mục từ session
         for (CartDetail sessionDetail : cartDetails) {
-            Optional<CartDetail> existingDetailOpt = existingCartDetails.stream()
-                    .filter(dbDetail ->
-                            dbDetail.getProductItemId().equals(sessionDetail.getProductItemId()) &&
-                                    dbDetail.getCartDetailPK().getSize() == sessionDetail.getCartDetailPK().getSize())
-                    .findFirst();
+            if (sessionDetail.getCartDetailPK() == null || sessionDetail.getProductItemId() == null) {
+                log.warn("Invalid CartDetail in session: productItemId={}, skipping", sessionDetail.getProductItemId());
+                continue;
+            }
+
+            CartDetailPK newCartDetailPK = new CartDetailPK(cart.getId(), sessionDetail.getProductItemId(), sessionDetail.getCartDetailPK().getSize());
+            Optional<CartDetail> existingDetailOpt = cartDetailService.findById(newCartDetailPK);
 
             if (existingDetailOpt.isPresent()) {
-                // Cập nhật nếu đã tồn tại
+                // Cập nhật số lượng nếu đã tồn tại
                 CartDetail existingDetail = existingDetailOpt.get();
                 if (existingDetail.getQuantity() != sessionDetail.getQuantity()) {
                     existingDetail.setQuantity(sessionDetail.getQuantity());
@@ -486,16 +573,22 @@ public class CartController {
                 }
             } else {
                 // Thêm mới nếu chưa tồn tại
-                CartDetailPK cartDetailPK = new CartDetailPK(cart.getId(), sessionDetail.getProductItemId(), sessionDetail.getCartDetailPK().getSize());
-                sessionDetail.setCartDetailPK(cartDetailPK);
+                sessionDetail.setCartDetailPK(newCartDetailPK);
                 sessionDetail.setCart(cart);
-                cartDetailService.save(sessionDetail);
-                log.info("Added new cart detail to database: productItemId={}, size={}",
-                        sessionDetail.getProductItemId(), sessionDetail.getCartDetailPK().getSize());
+                try {
+                    cartDetailService.save(sessionDetail);
+                    log.info("Added new cart detail to database: productItemId={}, size={}",
+                            sessionDetail.getProductItemId(), sessionDetail.getCartDetailPK().getSize());
+                } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                    log.error("Failed to save CartDetail due to duplicate entry: productItemId={}, size={}, cartId={}",
+                            sessionDetail.getProductItemId(), sessionDetail.getCartDetailPK().getSize(), cart.getId(), e);
+                    throw e;
+                }
             }
         }
 
-        log.info("Successfully synced cart with database for user {}", email);
+        log.info("Successfully synced cart with database for accountId {}", accountId);
+        return cart.getId();
     }
 
     @DeleteMapping("/clear")
@@ -503,43 +596,41 @@ public class CartController {
         Map<String, Object> response = new LinkedHashMap<>();
         log.info("Clearing cart for user");
 
-        // Xóa giỏ hàng trong session
         session.removeAttribute("cart");
         log.debug("Cleared cart from session");
 
-        // Nếu người dùng đã đăng nhập, xóa giỏ hàng trong cơ sở dữ liệu
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.getName() != null) {
-            String email = auth.getName();
-            log.info("Clearing cart in database for user: {}", email);
-
-            // Tìm thông tin người dùng
-            Optional<UserResponse> userOpt;
-            try {
-                userOpt = userFeignClient.findByEmail(email);
-            } catch (Exception e) {
-                log.error("Failed to fetch user by email from user-service: {}", e.getMessage());
-                response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-                response.put("data", "Failed to fetch user from user-service");
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        log.debug("Authentication: {}, Principal: {}", auth, auth != null ? auth.getPrincipal() : "null");
+        if (auth != null) {
+            String accountId = null;
+            if (auth.getPrincipal() instanceof org.springframework.security.oauth2.jwt.Jwt) {
+                org.springframework.security.oauth2.jwt.Jwt jwt = (org.springframework.security.oauth2.jwt.Jwt) auth.getPrincipal();
+                accountId = jwt.getClaimAsString("accountId");
             }
 
-            if (userOpt.isEmpty()) {
-                log.warn("User not found for email: {}", email);
-                response.put("status", HttpStatus.OK.value());
-                response.put("data", "Cart cleared (user not found)");
-                return ResponseEntity.ok(response);
-            }
+            if (accountId != null && !accountId.isEmpty()) {
+                log.info("Clearing cart in database for user: {}", accountId);
 
-            UserResponse user = userOpt.get();
-            Cart cart = cartService.findCartByUser(user.getId());
-            if (cart != null) {
-                // Xóa tất cả CartDetail trong cơ sở dữ liệu
-                cartDetailService.deleteAllByCartId(cart.getId());
-                log.info("Cleared all cart details from database for cartId: {}", cart.getId());
-
-                // Tùy chọn: Xóa luôn Cart nếu không cần giữ lại
-                // cartService.delete(cart);
+                ApiResponse<UserResponse> userResponse;
+                try {
+                    log.debug("Calling userFeignClient.getUserByAccountId({})", accountId);
+                    userResponse = userFeignClient.getUserByAccountId(accountId);
+                    log.debug("userFeignClient.getUserByAccountId response: {}", userResponse);
+                    if (userResponse != null && userResponse.getResult() != null) {
+                        UserResponse user = userResponse.getResult();
+                        Cart cart = cartService.findCartByUser(user.getId());
+                        if (cart != null) {
+                            cartDetailService.deleteAllByCartId(cart.getId());
+                            log.info("Cleared all cart details from database for cartId: {}", cart.getId());
+                        }
+                    } else {
+                        log.warn("User not found for accountId: {}", accountId);
+                    }
+                } catch (Exception e) {
+                    log.error("Failed to fetch user by accountId from user-service: {}", e.getMessage(), e);
+                }
+            } else {
+                log.debug("No accountId found in token, skipping database cart clear");
             }
         }
 

@@ -173,7 +173,7 @@ import java.util.Optional;
         @Override
         public int getTotalQuantityByProductAndSize(String id, Integer size) {
             ProductItem productItem = productItemRepository.findById(id)
-                    .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_ITEM_NOT_FOUND));
+                    .orElseThrow(() -> new RuntimeException("ffh"));
 
             return productItem.getQuantityOfSize().stream()
                     .filter(q -> q.getSize().equals(size))

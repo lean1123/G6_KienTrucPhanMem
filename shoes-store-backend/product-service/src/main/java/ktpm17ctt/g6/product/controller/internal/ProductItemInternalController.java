@@ -11,6 +11,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/internal/item")
 @RequiredArgsConstructor
@@ -33,6 +35,25 @@ public class ProductItemInternalController {
         ProductItemResponse productItemResponse = productItemService.update(id, productItemRequest);
         return ApiResponse.<ProductItemResponse>builder()
                 .result(productItemResponse)
+                .build();
+    }
+
+    @GetMapping("/quantity")
+    ApiResponse<Integer> getTotalQuantityByProductItemAndSize(
+            @RequestParam String id,
+            @RequestParam Integer size) {
+        log.info("Get total quantity for productItemId={} and size={}", id, size);
+        int totalQuantity = productItemService.getTotalQuantityByProductAndSize(id,size);
+        return ApiResponse.<Integer>builder()
+                .result(totalQuantity)
+                .build();
+    }
+
+    @GetMapping("/all")
+    ApiResponse<List<ProductItemResponse>> getAllProductItems() {
+        log.info("Get all product items");
+        return ApiResponse.<List<ProductItemResponse>>builder()
+                .result(productItemService.findAll())
                 .build();
     }
 }

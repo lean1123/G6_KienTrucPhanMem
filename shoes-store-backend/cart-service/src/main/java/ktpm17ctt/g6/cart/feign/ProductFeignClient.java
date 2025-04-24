@@ -17,19 +17,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "product-service", url = "http://localhost:8082/product", configuration = FeignClientConfig.class)
 public interface ProductFeignClient {
-    @GetMapping("/item/{id}")
+    @GetMapping("/internal/item/{id}")
     ApiResponse<ProductItemResponse> getProductItemById(@PathVariable("id") String id);
 
 
 
-    @GetMapping("/item/quantity")
+    @GetMapping("/internal/item/quantity")
     ApiResponse<Integer> getTotalQuantityByProductItemAndSize(
             @RequestParam("id") String id,
             @RequestParam("size") Integer size
     );
 
 
-    @GetMapping("/item/all")
+    @GetMapping("/internal/item/all")
     ApiResponse<List<ProductItemResponse>> getAllProductItems();
 
     @GetMapping("/products/{id}")
