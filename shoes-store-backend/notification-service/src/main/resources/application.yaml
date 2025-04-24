@@ -10,6 +10,7 @@
     data:
       mongodb:
         uri: mongodb://root:root@localhost:27017/notification-service?authSource=admin
+#        uri: mongodb://notification-user:secure-password@mongo:27017/notification-service?authSource=admin
 
     kafka:
       bootstrap-servers: localhost:9092

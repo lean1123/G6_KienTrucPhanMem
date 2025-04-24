@@ -107,7 +107,7 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - 9092:9092
+      - "9092:9092"
     restart: on-failure
     environment:
       KAFKA_BROKER_ID: 1
@@ -116,8 +116,10 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_NUM_PARTITIONS: 1
     networks:
-        - backend
+      - backend
 
   mongodb:
     image: mongo:5

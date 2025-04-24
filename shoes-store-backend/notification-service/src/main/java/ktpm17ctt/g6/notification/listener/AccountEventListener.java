@@ -15,6 +15,6 @@ public class AccountEventListener {
     public void sendWelcomeEmail(String email) {
         String subject = "Chào mừng bạn đến với hệ thống!";
         String content = "Cảm ơn bạn đã đăng ký tài khoản!";
-        emailService.sendEmail(email, subject, content);
+       // emailService.sendEmail(email, subject, content);
     }
 }

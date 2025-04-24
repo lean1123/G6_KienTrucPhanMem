@@ -15,6 +15,6 @@ public class PaymentEventListener {
     public void sendPaymentSuccessConfirmation(String userEmail) {
         String subject = "Thông báo thanh toán thành công";
         String content = "Thanh toán cho đơn hàng của bạn đã được thực hiện thành công!";
-        emailService.sendEmail(userEmail, subject, content);  // Gửi email thanh toán thành công
+      //  emailService.sendEmail(userEmail, subject, content);  // Gửi email thanh toán thành công
     }
 }

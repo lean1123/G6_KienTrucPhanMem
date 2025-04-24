@@ -27,7 +27,6 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class KafkaConsumerConfig {
-
     private static final Logger log = LoggerFactory.getLogger(KafkaConsumerConfig.class);
 
     @Value("${spring.kafka.bootstrap-servers}")
@@ -40,6 +39,8 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "notification-group");
+        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100);
+        props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 300000);
         return props;
     }
 
@@ -56,12 +57,11 @@ public class KafkaConsumerConfig {
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
 
-        // Cấu hình retry và DLQ
-        FixedBackOff backOff = new FixedBackOff(2000L, 3L); // 2 giây, 3 lần retry
+        FixedBackOff backOff = new FixedBackOff(2000L, 3L);
         DeadLetterPublishingRecoverer dlqRecoverer = new DeadLetterPublishingRecoverer(kafkaTemplate,
                 (record, ex) -> new TopicPartition("order_success_topic.dlq", record.partition()));
         DefaultErrorHandler errorHandler = new DefaultErrorHandler(dlqRecoverer, backOff);
-        errorHandler.addNotRetryableExceptions(IllegalArgumentException.class); // Ví dụ: Không retry nếu gặp IllegalArgumentException
+        errorHandler.addNotRetryableExceptions(IllegalArgumentException.class);
 
         factory.setCommonErrorHandler(errorHandler);
         return factory;
@@ -78,6 +78,8 @@ public class KafkaConsumerConfig {
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configProps.put(ProducerConfig.RETRIES_CONFIG, 3);
+        configProps.put(ProducerConfig.ACKS_CONFIG, "all");
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 }
