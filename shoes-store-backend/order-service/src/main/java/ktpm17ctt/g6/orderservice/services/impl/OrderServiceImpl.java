@@ -76,6 +76,8 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDetailRequest> orderDetails = request.getOrderDetails();
         double total = this.getTotalPrice(orderDetails);
 
+        log.info("Total price: {}", total);
+
         Order entity = Order.builder()
                 .total(total)
                 .userId(userId)
@@ -86,6 +88,8 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         entity = orderRepository.save(entity);
+
+        log.info("Order created: {}", entity);
 
         for (OrderDetailRequest orderDetail : orderDetails) {
             orderDetailService.save(orderDetail, entity);
@@ -107,6 +111,13 @@ public class OrderServiceImpl implements OrderService {
         if(paymentUrl == null || paymentUrl.isEmpty()) {
             throw new Exception("Payment URL is empty in payment service");
         }
+
+        log.info("Payment URL: {}", paymentUrl);
+
+        orderEventProducer.sendOrderSuccessEvent(email, userId); // Truyền cả email và userId
+        log.info("Sent order success event for order {} to user {}", entity.getId(), email);
+
+
 
 
         return OrderResponse.builder()
@@ -177,6 +188,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private String getUserIdFromEmail(String email) throws  Exception{
+        log.info("Email in get user id from email: {}", email);
         ApiResponse<AccountResponse> accountResponse = identityClient.getAccountByEmail(email);
 
         if(accountResponse.getResult() == null){
