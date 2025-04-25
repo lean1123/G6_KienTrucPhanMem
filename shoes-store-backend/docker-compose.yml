@@ -1,4 +1,4 @@
-version: "3.8"
+#version: "3.8"
 
 services:
   api-gateway:
@@ -131,6 +131,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_NUM_PARTITIONS: 1
     networks:
       - backend
 
@@ -162,43 +164,43 @@ services:
     networks:
       - backend
 
-  order-service:
-    image: order-service
-    container_name: order-service
-    depends_on:
-      - mysql
-      - kafka-1
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/order_service
-      - SPRING_DATASOURCE_USERNAME=user
-      - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-1:9092
-      - TZ=Asia/Jakarta
-      - PAYMENT_URL=http://payment-service:8089
-      - PRODUCT_ITEM_URL=http://localhost:8083/product/item
-    ports:
-      - "8088:8088"
-    networks:
-      - backend
+#  order-service:
+#    image: order-service
+#    container_name: order-service
+#    depends_on:
+#      - mysql
+#      - kafka-1
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/order_service
+#      - SPRING_DATASOURCE_USERNAME=user
+#      - SPRING_DATASOURCE_PASSWORD=password
+#      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-1:9092
+#      - TZ=Asia/Jakarta
+#      - PAYMENT_URL=http://payment-service:8089
+#      - PRODUCT_ITEM_URL=http://localhost:8083/product/item
+#    ports:
+#      - "8088:8088"
+#    networks:
+#      - backend
 
-  payment-service:
-    image: payment-service
-    env_file:
-      - ./payment-service/.envrc
-    container_name: payment-service
-    depends_on:
-      - mysql
-      - kafka-1
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/payment_service
-      - SPRING_DATASOURCE_USERNAME=user
-      - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-1:9092
-      - TZ=Asia/Jakarta
-    ports:
-      - "8089:8089"
-    networks:
-      - backend
+#  payment-service:
+#    image: payment-service
+#    env_file:
+#      - ./payment-service/.envrc
+#    container_name: payment-service
+#    depends_on:
+#      - mysql
+#      - kafka-1
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/payment_service
+#      - SPRING_DATASOURCE_USERNAME=user
+#      - SPRING_DATASOURCE_PASSWORD=password
+#      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-1:9092
+#      - TZ=Asia/Jakarta
+#    ports:
+#      - "8089:8089"
+#    networks:
+#      - backend
 
 networks:
   backend:
