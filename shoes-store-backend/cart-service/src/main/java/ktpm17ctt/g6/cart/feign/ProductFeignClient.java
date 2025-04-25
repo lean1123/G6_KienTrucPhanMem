@@ -1,15 +1,14 @@
 package ktpm17ctt.g6.cart.feign;
 
 import ktpm17ctt.g6.cart.configuration.FeignClientConfig;
-import ktpm17ctt.g6.cart.dto.response.ApiResponse;
-import ktpm17ctt.g6.cart.dto.response.ProductItemResponse;
-import ktpm17ctt.g6.cart.dto.response.ProductResponse;
-import ktpm17ctt.g6.cart.dto.response.QuantityOfSizeResponse;
+
 
 import java.util.List;
 
 
-
+import ktpm17ctt.g6.cart.dto.response.ApiResponse;
+import ktpm17ctt.g6.cart.dto.response.product.ProductItemResponse;
+import ktpm17ctt.g6.cart.dto.response.product.ProductResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -10,19 +10,17 @@ function Address() {
 	const [isAddingNew, setIsAddingNew] = useState(false);
 	const [editingAddress, setEditingAddress] = useState(null);
 
-	const { userId } = useSelector((state) => state.persistedReducer.user);
 	// Thay đổi cách lấy address từ userInfo
 	const userInfo = useSelector((state) => state.persistedReducer.userInfo);
 	const address = userInfo?.address || [];
 
 	useEffect(() => {
-		if (!userId) {
-			navigate('/login');
-			return;
-		}
+		const fetchMyAddress = async () => {
+			await dispatch(fetchAddress());
+		};
 
-		dispatch(fetchAddress(userId));
-	}, [dispatch, userId, navigate]);
+		fetchMyAddress();
+	}, [dispatch]);
 
 	const handleEditSuccess = () => {
 		setEditingAddress(null);
@@ -67,7 +65,7 @@ function Address() {
 					</li>
 					<li className='text-blue-500'>
 						<i className='fa fa-map-marker' aria-hidden='true'></i>{' '}
-						<a href='' onClick={handleBackAddress}>
+						<a href='#' onClick={handleBackAddress}>
 							Danh sách địa chỉ
 						</a>
 					</li>

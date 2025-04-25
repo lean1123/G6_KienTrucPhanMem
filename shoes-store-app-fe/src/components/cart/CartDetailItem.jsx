@@ -34,17 +34,17 @@ function CartDetailItem({ item, onQuantityChange, onRemoveProduct }) {
 		<div>
 			<div className='flex items-center justify-between border p-4 rounded-md mb-6'>
 				<img
-					src={item.productItem.listDetailImages[0]}
+					src={item.productItem.images[0]}
 					alt={'product item'}
 					className='w-20 h-20 object-cover rounded-md'
 				/>
 				<div className='flex-1 ml-4'>
-					<p className='font-medium'>{item.product.name}</p>
+					<p className='font-medium'>{item?.productItem?.product?.name}</p>
 					<div className='flex justify-start items-center space-x-4 text-gray-500 mt-2'>
 						<p>
-							Màu sắc: <span className='ml-2'>{item.productItem?.color}</span>
+							Màu sắc: <span className='ml-2'>{item.productItem?.color?.name}</span>
 						</p>
-						<p>Kích thước: {item.productItem?.size}</p>
+						<p>Kích thước: {item.cartDetailPK?.size}</p>
 					</div>
 					{/* Price per item */}
 					<p className='font-semibold text-red-500 mt-2'>

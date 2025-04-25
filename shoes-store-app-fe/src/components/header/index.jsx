@@ -282,7 +282,7 @@ function Header() {
 															key={index}
 														>
 															<img
-																src={item?.productItem?.listDetailImages[0]}
+																src={item?.productItem?.images[0]}
 																alt='san pham'
 																className='w-20 h-20'
 															/>
@@ -292,7 +292,7 @@ function Header() {
 																	{item?.product?.name}
 																</span>
 																<span className='text-base'>
-																	{item?.productItem?.color}/{item?.productItem?.size}
+																	{item?.productItem?.color?.name}/{item?.cartDetailPK?.size}
 																</span>
 																<span className='text-sm text-gray-400 font-semibold'>
 																	{item?.quantity}

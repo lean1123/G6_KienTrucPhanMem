@@ -78,14 +78,17 @@ public class OrderServiceImpl implements OrderService {
 
         log.info("Total price: {}", total);
 
-        Order entity = Order.builder()
+        Order entity =  entity = Order.builder()
                 .total(total)
                 .userId(userId)
                 .paymentMethod(PaymentMethod.valueOf(request.getPaymentMethod()))
                 .status(OrderStatus.PENDING)
                 .createdDate(Instant.now())
                 .total(total)
+                .addressId(request.getAddressId())
                 .build();
+
+
 
         entity = orderRepository.save(entity);
 
@@ -93,6 +96,18 @@ public class OrderServiceImpl implements OrderService {
 
         for (OrderDetailRequest orderDetail : orderDetails) {
             orderDetailService.save(orderDetail, entity);
+        }
+
+        if(entity.getPaymentMethod().toString().equalsIgnoreCase(PaymentMethod.CASH.toString())){
+            return OrderResponse.builder()
+                    .id(entity.getId())
+                    .createdDate(entity.getCreatedDate())
+                    .userId(entity.getUserId())
+                    .paymentMethod(entity.getPaymentMethod())
+                    .status(entity.getStatus())
+                    .orderDetails(orderDetailService.findOrderDetailByOrder_Id(entity.getId()))
+                    .total(entity.getTotal())
+                    .build();
         }
 
         String paymentUrl = "";

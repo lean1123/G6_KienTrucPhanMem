@@ -18,6 +18,8 @@ public class OrderDetailRequest {
     @NotNull(message = "Quantity is required")
     @Min(value = 1, message = "Quantity must be greater than 0")
     Integer quantity;
+    @NotNull(message = "Size is required")
+    Integer size;
     @Nullable
     double price;
     @Nullable

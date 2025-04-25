@@ -27,4 +27,8 @@ public interface UserService {
     List<UserResponse> search(String keyword);
 
     Optional<UserResponse> findByAccountId(String accountId);
+
+    UserResponse getMyProfile() throws Exception;
+
+    UserResponse getUserFromEmail(String email) throws  Exception;
 }

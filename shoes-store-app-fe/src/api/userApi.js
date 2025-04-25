@@ -41,5 +41,9 @@ const userApi = {
 			params: { keyword },
 		});
 	},
+
+	getMyProfile: async () => {
+		return await AdminAxiosClient.get('/user/get-my-profile');
+	},
 };
 export default userApi;

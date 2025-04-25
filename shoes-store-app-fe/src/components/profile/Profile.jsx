@@ -1,31 +1,27 @@
+import CancelIcon from '@mui/icons-material/Cancel';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link } from '@mui/material';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { fetchOrderByUserId, fetchUser } from '../../hooks/user/userSlice';
-import CancelIcon from '@mui/icons-material/Cancel';
+import { fetchUser } from '../../hooks/user/userSlice';
 import { convertTimestampToDateTime } from '../../utils/dateFormat';
 
 function Profile() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-
-	const { userId } = useSelector((state) => state.persistedReducer.user);
 	const { user, orders } = useSelector(
 		(state) => state.persistedReducer.userInfo,
 	);
 
 	useEffect(() => {
 		const fetchUserInfo = async () => {
-			if (userId) {
-				await dispatch(fetchUser(userId));
-				await dispatch(fetchOrderByUserId(userId));
-			}
+			await dispatch(fetchUser());
+			// await dispatch(fetchOrderByUserId());
 		};
 
 		fetchUserInfo();
-	}, [dispatch, userId]);
+	}, [dispatch]);
 
 	const handleUpdateProfile = () => navigate('/updateProfile');
 	const handleBackAddress = () => navigate('/address');
@@ -57,7 +53,7 @@ function Profile() {
 					</li>
 					<li className='text-blue-500'>
 						<i className='fa fa-map-marker' aria-hidden='true'></i>
-						<a href='#' onClick={handleBackAddress}>
+						<a href='/address' onClick={handleBackAddress}>
 							Danh sách địa chỉ
 						</a>
 					</li>
@@ -86,7 +82,7 @@ function Profile() {
 
 							<p>
 								<span>Ngày sinh: </span>
-								{user.dateOfBirth}
+								{user.dob}
 							</p>
 							<p>
 								<span>Điện thoại: </span>

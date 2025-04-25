@@ -23,4 +23,5 @@ public class Order {
     private String userId;
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
+    private String addressId;
 }

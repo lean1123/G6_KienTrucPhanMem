@@ -44,6 +44,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                 .quantity(request.getQuantity())
                 .price(productItemResponse.getPrice())
                 .productItemId(productItemResponse.getId())
+                .size(request.getSize())
                 .order(order)
                 .build());
 

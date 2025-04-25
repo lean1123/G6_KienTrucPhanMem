@@ -1,9 +1,9 @@
 import AdminAxiosClient from './axiosClient';
 
 const orderApi = {
-	createOrder: (orderRequest) => {
-		const url = '/orders';
-		return AdminAxiosClient.post(url, orderRequest, {
+	createOrder: async (orderRequest) => {
+		const url = '/orders/add-new-order';
+		return await AdminAxiosClient.post(url, orderRequest, {
 			withCredentials: true,
 		});
 	},

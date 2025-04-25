@@ -43,6 +43,8 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             "/product/item/search.*",
             "/product/.*",
             "/product/external/.*",
+            "/cart",
+            "/cart/.*",
     };
 
 

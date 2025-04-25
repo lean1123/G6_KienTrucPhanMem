@@ -5,9 +5,9 @@ import orderApi from '../../api/orderApi';
 
 export const fetchUser = createAsyncThunk(
 	'user/fetchUser',
-	async (userId, { rejectWithValue }) => {
+	async (_, { rejectWithValue }) => {
 		try {
-			const userResponse = await userApi.getUserInfo(userId);
+			const userResponse = await userApi.getMyProfile();
 
 			if (userResponse.status !== 200) {
 				return rejectWithValue(
@@ -15,7 +15,7 @@ export const fetchUser = createAsyncThunk(
 				);
 			}
 
-			return userResponse.data.result; // Nếu dữ liệu trả về hợp lệ
+			return userResponse.data.result;
 		} catch (error) {
 			console.error('Error fetching user:', error);
 			return rejectWithValue(error.message); // Trả lỗi chi tiết
@@ -25,9 +25,9 @@ export const fetchUser = createAsyncThunk(
 
 export const fetchAddress = createAsyncThunk(
 	'user/fetchAddress',
-	async (userId, { rejectWithValue }) => {
+	async (_, { rejectWithValue }) => {
 		try {
-			const response = await addressApi.getAddress(userId);
+			const response = await addressApi.getMyAddress();
 
 			if (response.status !== 200) {
 				return rejectWithValue(
@@ -35,7 +35,9 @@ export const fetchAddress = createAsyncThunk(
 				);
 			}
 
-			return response.data;
+			console.log('List Address: ', response);
+
+			return response.data.result;
 		} catch (error) {
 			console.error('Error fetching address:', error);
 			return rejectWithValue('Error fetching address');

@@ -1,15 +1,14 @@
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { Link } from '@mui/material';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { enqueueSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Outlet, useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
+import { addToCart } from '../../../hooks/cart/cartSlice';
 import useProductItem from '../../../hooks/product/useProductItem';
+import { formatCurrency } from '../../../utils/formatPrice';
 import './Style.css';
 import SubProductDetail from './SubProductDetail';
-import { enqueueSnackbar } from 'notistack';
-import { unwrapResult } from '@reduxjs/toolkit';
-import { addToCart } from '../../../hooks/cart/cartSlice';
-import { formatCurrency } from '../../../utils/formatPrice';
 
 function ProductDetail() {
 	const params = useParams();
@@ -40,8 +39,9 @@ function ProductDetail() {
 		try {
 			const result = await dispatch(
 				addToCart({
-					productId: productItem.id,
+					productItemId: productItem.id,
 					quantity: 1,
+					size: selectedSize,
 				}),
 			);
 
@@ -144,7 +144,7 @@ function ProductDetail() {
 				<div className='flex justify-start ml-24 mb-10'>
 					<button
 						className='bg-orange-600 px-8 py-2 font-bold hover:bg-slate-950 hover:text-sky-50'
-						// onClick={handleAddToCart}
+						onClick={handleAddToCart}
 					>
 						THÊM VÀO GIỎ HÀNG
 					</button>

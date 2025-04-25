@@ -4,8 +4,11 @@ package ktpm17ctt.g6.user.controller;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.validation.Valid;
 import ktpm17ctt.g6.user.dto.ApiResponse;
+import ktpm17ctt.g6.user.dto.request.AddressCreationRequest;
 import ktpm17ctt.g6.user.dto.request.UserRequest;
 import ktpm17ctt.g6.user.dto.response.UserResponse;
+import ktpm17ctt.g6.user.entity.Address;
+import ktpm17ctt.g6.user.service.AddressService;
 import ktpm17ctt.g6.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +30,9 @@ import java.util.Optional;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AddressService addressService;
 
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
@@ -80,5 +86,26 @@ public class UserController {
             return ResponseEntity.badRequest().body(response);
         }
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/get-my-profile")
+    public ApiResponse<UserResponse> getMyProfile() throws Exception {
+        return ApiResponse.<UserResponse>builder()
+                .result(this.userService.getMyProfile())
+                .build();
+    }
+
+    @PostMapping("/create-address")
+    public ApiResponse<Address> createAddress(@RequestBody AddressCreationRequest request) throws Exception {
+        return ApiResponse.<Address>builder()
+                .result(addressService.createAddress(request))
+                .build();
+    }
+
+    @GetMapping("get-my-address")
+    public ApiResponse<List<Address>> getAddress() throws Exception {
+        return ApiResponse.<List<Address>>builder()
+                .result(addressService.getMyAddress())
+                .build();
     }
 }

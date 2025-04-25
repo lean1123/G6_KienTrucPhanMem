@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
 	Box,
-	Checkbox,
 	FormControlLabel,
 	FormGroup,
 	Radio,
@@ -20,14 +19,7 @@ import { createOrder } from '../../../hooks/order/orderSlice';
 import { fetchAddress } from '../../../hooks/user/userSlice';
 
 const schema = yup.object().shape({
-	paymentMethod: yup
-		.string()
-		.test(
-			'is-true',
-			'Vui lòng chọn phương thức thanh toán',
-			(value) => value === 'true',
-		)
-		.required('Vui lòng chọn phương thức thanh toán'),
+	paymentMethod: yup.string().required('Vui lòng chọn phương thức thanh toán'),
 	addressId: yup.string().required('Vui lòng chọn địa chỉ'),
 });
 
@@ -35,7 +27,7 @@ const Pay = () => {
 	const dispatch = useDispatch();
 	const navigation = useNavigate();
 	const [isExpanded, setIsExpanded] = useState(false);
-	const [isCod, setIsCod] = useState(false);
+	const [paymentMethod, setPaymentMethod] = useState('');
 
 	const { cartItems } = useSelector((state) => state.persistedReducer.cart);
 	const { userId } = useSelector((state) => state.persistedReducer.user);
@@ -65,7 +57,7 @@ const Pay = () => {
 
 	const form = useForm({
 		defaultValues: {
-			paymentMethod: isCod ? 'CASH' : '',
+			paymentMethod: paymentMethod,
 			totalPrice: total,
 			orderDetails: cartItems?.map((item) => ({
 				productItemId: item?.productItem?.id,
@@ -85,40 +77,40 @@ const Pay = () => {
 	} = form;
 
 	const onSubmit = async (data) => {
-		if (data.paymentMethod === 'true') {
-			data.paymentMethod = 'CASH';
-		} else {
-			enqueueSnackbar('Vui lòng chọn phương thức thanh toán', {
-				variant: 'error',
-			});
-			return;
-		}
+		// if (data.paymentMethod.trim().length() !== 0) {
+		// 	data.paymentMethod = 'CASH';
+		// } else {
+		// 	enqueueSnackbar('Vui lòng chọn phương thức thanh toán', {
+		// 		variant: 'error',
+		// 	});
+		// 	return;
+		// }
 
-		if (data.orderDetails.length === 0) {
-			enqueueSnackbar('Vui lòng chọn sản phẩm vào giỏ hàng trước khi đặt hàng!', {
-				variant: 'error',
-			});
-			return;
-		}
+		// if (data.orderDetails.length === 0) {
+		// 	enqueueSnackbar('Vui lòng chọn sản phẩm vào giỏ hàng trước khi đặt hàng!', {
+		// 		variant: 'error',
+		// 	});
+		// 	return;
+		// }
 
 		console.log('data', data);
 
-		try {
-			const orderResult = await dispatch(createOrder(data));
-			const resultUnwrapped = unwrapResult(orderResult);
-			if (resultUnwrapped?.id) {
-				enqueueSnackbar('Đặt hàng thành công', { variant: 'success' });
-				dispatch(viewCart());
-				navigation('/orderSuccess');
-				return;
-			}
-			enqueueSnackbar('Đặt hàng thất bại', { variant: 'error' });
-			navigation('/orderFail');
-		} catch (error) {
-			console.error('Error creating order:', error);
-			enqueueSnackbar('Đặt hàng thất bại', { variant: 'error' });
-			navigation('/orderFail');
-		}
+		// try {
+		// 	const orderResult = await dispatch(createOrder(data));
+		// 	const resultUnwrapped = unwrapResult(orderResult);
+		// 	if (resultUnwrapped?.id) {
+		// 		enqueueSnackbar('Đặt hàng thành công', { variant: 'success' });
+		// 		dispatch(viewCart());
+		// 		navigation('/orderSuccess');
+		// 		return;
+		// 	}
+		// 	enqueueSnackbar('Đặt hàng thất bại', { variant: 'error' });
+		// 	navigation('/orderFail');
+		// } catch (error) {
+		// 	console.error('Error creating order:', error);
+		// 	enqueueSnackbar('Đặt hàng thất bại', { variant: 'error' });
+		// 	navigation('/orderFail');
+		// }
 	};
 
 	return (
@@ -143,22 +135,21 @@ const Pay = () => {
 							<Typography variant='subtitle1' fontWeight={'bold'}>
 								Chọn phương thức thanh toán
 							</Typography>
-							<FormGroup>
+							<RadioGroup
+								value={paymentMethod}
+								onChange={(e) => setPaymentMethod(e.target.value)}
+							>
 								<FormControlLabel
-									content='center'
-									control={
-										<Checkbox
-											checked={isCod}
-											onChange={(e) => {
-												setIsCod(e.target.checked);
-											}}
-										/>
-									}
+									value='CASH'
+									control={<Radio {...register('paymentMethod')} />}
 									label='Thanh toán khi nhận hàng'
-									checked={isCod}
-									{...register('paymentMethod')}
 								/>
-							</FormGroup>
+								<FormControlLabel
+									value='VNPAY'
+									control={<Radio {...register('paymentMethod')} />}
+									label='Thanh toán qua VNPAY'
+								/>
+							</RadioGroup>
 							{errors.paymentMethod && (
 								<Typography color='error'>{errors?.paymentMethod?.message}</Typography>
 							)}
@@ -221,15 +212,15 @@ const Pay = () => {
 						>
 							<div className='flex items-center'>
 								<img
-									src={item?.productItem?.listDetailImages[0]}
+									src={item?.productItem?.images[0]}
 									alt={item?.product?.name}
 									className='h-20 w-20 rounded-lg mr-2'
 								/>
 								<div>
 									<p>{item?.product?.name}</p>
 									<div className='flex'>
-										<p className='text-stone-500'>{item?.productItem?.color}</p>
-										<p className='text-stone-500 ml-1'> {item?.productItem?.size}</p>
+										<p className='text-stone-500'>{item?.productItem?.color?.name}</p>
+										<p className='text-stone-500 ml-1'> {item?.cartDetailPK?.size}</p>
 									</div>
 								</div>
 							</div>

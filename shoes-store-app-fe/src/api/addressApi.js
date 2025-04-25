@@ -38,11 +38,15 @@ const addressApi = {
 
 	addAddress: async (userId, addressData) => {
 		const url = `/addresses/user/${userId}`;
-		return AdminAxiosClient.post(url, addressData, {
+		return await AdminAxiosClient.post(url, addressData, {
 			headers: {
 				'Content-Type': 'application/json',
 			},
 		});
+	},
+
+	getMyAddress: async () => {
+		return AdminAxiosClient.get('user/get-my-address');
 	},
 };
 
