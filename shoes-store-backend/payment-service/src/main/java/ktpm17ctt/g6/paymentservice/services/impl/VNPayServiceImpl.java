@@ -5,6 +5,7 @@ import ktpm17ctt.g6.event.dto.PaymentUrlCreationReq;
 import ktpm17ctt.g6.event.dto.PaymentUrlResponse;
 import ktpm17ctt.g6.paymentservice.configurations.VNPayConfig;
 import ktpm17ctt.g6.paymentservice.dtos.responses.PaymentResponse;
+import ktpm17ctt.g6.paymentservice.repositories.httpClients.OrderClient;
 import ktpm17ctt.g6.paymentservice.services.VNPayService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,6 +30,7 @@ import java.util.*;
 @Slf4j
 public class VNPayServiceImpl implements VNPayService {
 //    KafkaTemplate<String, PaymentUrlResponse> kafkaTemplate;
+    OrderClient orderClient;
 
     @Override
     public String getPaymentUrl(String orderId, String total, String ipAddress, String bankCode, String language) throws Exception {
@@ -169,6 +171,8 @@ public class VNPayServiceImpl implements VNPayService {
         }
         in.close();
 
+
+
         return response.toString();
     }
 
@@ -255,6 +259,9 @@ public class VNPayServiceImpl implements VNPayService {
         in.close();
         log.info("Response : {}", response.toString());
         log.info("VNP Response Code : {}", vnp_ResponseCode);
+
+
+
         return response.toString();
     }
 }

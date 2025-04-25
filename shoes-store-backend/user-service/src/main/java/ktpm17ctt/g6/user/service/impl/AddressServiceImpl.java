@@ -1,6 +1,7 @@
 package ktpm17ctt.g6.user.service.impl;
 
 import ktpm17ctt.g6.user.dto.request.AddressCreationRequest;
+import ktpm17ctt.g6.user.dto.response.AddressResponse;
 import ktpm17ctt.g6.user.dto.response.UserResponse;
 import ktpm17ctt.g6.user.entity.Address;
 import ktpm17ctt.g6.user.entity.User;
@@ -63,7 +64,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public List<Address> getMyAddress() throws Exception {
+    public List<AddressResponse> getMyAddress() throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = null;
         if(authentication != null && authentication.isAuthenticated()){
@@ -76,7 +77,27 @@ public class AddressServiceImpl implements AddressService {
         if (userResponse == null) {
             throw new Exception("User not found");
         }
-        return addressRepository.findByUserId(userResponse.getId());
+        return addressRepository.findByUserId(userResponse.getId()).stream().map(address -> AddressResponse.builder()
+                        .id(address.getId())
+                        .homeNumber(address.getHomeNumber())
+                        .ward(address.getWard())
+                        .district(address.getDistrict())
+                        .city(address.getCity())
+                        .build())
+                .toList();
     }
+
+    @Override
+    public AddressResponse getAddressById(String id) throws Exception {
+        Address address = addressRepository.findById(id).orElseThrow(() -> new Exception("Address not found"));
+
+        return AddressResponse.builder()
+                .city(address.getCity())
+                .district(address.getDistrict())
+                .homeNumber(address.getHomeNumber())
+                .ward(address.getWard())
+                .build();
+    }
+
 
 }

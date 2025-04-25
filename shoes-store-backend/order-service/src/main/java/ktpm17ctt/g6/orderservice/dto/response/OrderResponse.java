@@ -1,5 +1,6 @@
 package ktpm17ctt.g6.orderservice.dto.response;
 
+import ktpm17ctt.g6.orderservice.dto.feinClient.user.AddressResponse;
 import ktpm17ctt.g6.orderservice.entities.OrderStatus;
 import ktpm17ctt.g6.orderservice.entities.PaymentMethod;
 import lombok.*;
@@ -22,5 +23,5 @@ public class OrderResponse {
     PaymentMethod paymentMethod;
     List<OrderDetailResponse> orderDetails;
     String paymentUrl;
-    String address;
+    AddressResponse address;
 }

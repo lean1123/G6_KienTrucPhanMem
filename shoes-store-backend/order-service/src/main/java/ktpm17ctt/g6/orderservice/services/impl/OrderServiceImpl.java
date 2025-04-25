@@ -6,6 +6,7 @@ import ktpm17ctt.g6.orderservice.dto.feinClient.identity.AccountResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.payment.PaymentResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.payment.RefundResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemResponse;
+import ktpm17ctt.g6.orderservice.dto.feinClient.user.AddressResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.user.UserResponse;
 import ktpm17ctt.g6.orderservice.dto.request.OrderCreationRequest;
 import ktpm17ctt.g6.orderservice.dto.request.OrderDetailRequest;
@@ -35,7 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
@@ -72,6 +72,8 @@ public class OrderServiceImpl implements OrderService {
             throw new Exception("User not exist in system");
         }
 
+        AddressResponse addressResponse = userClient.getAddressById(request.getAddressId()).getResult();
+
 
         List<OrderDetailRequest> orderDetails = request.getOrderDetails();
         double total = this.getTotalPrice(orderDetails);
@@ -98,7 +100,12 @@ public class OrderServiceImpl implements OrderService {
             orderDetailService.save(orderDetail, entity);
         }
 
+
+
         if(entity.getPaymentMethod().toString().equalsIgnoreCase(PaymentMethod.CASH.toString())){
+
+
+
             return OrderResponse.builder()
                     .id(entity.getId())
                     .createdDate(entity.getCreatedDate())
@@ -107,6 +114,7 @@ public class OrderServiceImpl implements OrderService {
                     .status(entity.getStatus())
                     .orderDetails(orderDetailService.findOrderDetailByOrder_Id(entity.getId()))
                     .total(entity.getTotal())
+                    .address(addressResponse)
                     .build();
         }
 
@@ -118,8 +126,8 @@ public class OrderServiceImpl implements OrderService {
                         .getBody().getPaymentUrl();
             }catch (Exception e){
                 log.error("Error while creating payment" + entity.getId(), e);
-                entity.setStatus(OrderStatus.PAYMENT_FAILED);
-                orderRepository.save(entity);
+                //Xoa don hang
+                orderRepository.deleteById(entity.getId());
             }
         }
 
@@ -144,6 +152,7 @@ public class OrderServiceImpl implements OrderService {
                 .orderDetails(orderDetailService.findOrderDetailByOrder_Id(entity.getId()))
                 .total(entity.getTotal())
                 .paymentUrl(paymentUrl)
+                .address(addressResponse)
                 .build();
     }
 
@@ -152,6 +161,32 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findById(s)
                 .map(orderMapper::orderToOrderResponse)
                 .orElseThrow(() -> new Exception("Order not found"));
+    }
+
+    @Override
+    public OrderResponse handleUpdateOrderForPaymentFailed(String orderId) throws Exception {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new Exception("Order not found"));
+
+        if (order.getStatus().equals(OrderStatus.PENDING)) {
+            order.setStatus(OrderStatus.PAYMENT_FAILED);
+             order = orderRepository.save(order);
+        } else {
+            throw new Exception("Order cannot be updated for pay failed");
+        }
+
+        AddressResponse addressResponse = userClient.getAddressById(order.getAddressId()).getResult();
+
+        return OrderResponse.builder()
+                .id(order.getId())
+                .createdDate(order.getCreatedDate())
+                .userId(order.getUserId())
+                .paymentMethod(order.getPaymentMethod())
+                .status(order.getStatus())
+                .orderDetails(orderDetailService.findOrderDetailByOrder_Id(order.getId()))
+                .total(order.getTotal())
+                .address(addressResponse)
+                .build();
     }
 
     @Transactional
@@ -191,9 +226,20 @@ public class OrderServiceImpl implements OrderService {
 
         order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
-        return orderMapper.orderToOrderResponse(order);
+        AddressResponse addressResponse = userClient.getAddressById(order.getAddressId()).getResult();
+        return OrderResponse.builder()
+                .id(order.getId())
+                .createdDate(order.getCreatedDate())
+                .userId(order.getUserId())
+                .paymentMethod(order.getPaymentMethod())
+                .status(order.getStatus())
+                .orderDetails(orderDetailService.findOrderDetailByOrder_Id(order.getId()))
+                .total(order.getTotal())
+                .address(addressResponse)
+                .build();
     }
 
+    @Override
     public void deleteById(String s) {
         orderRepository.deleteById(s);
     }

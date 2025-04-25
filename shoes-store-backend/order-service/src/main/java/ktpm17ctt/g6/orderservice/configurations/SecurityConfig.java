@@ -21,6 +21,7 @@ public class SecurityConfig {
             "/internal/users/**",
             "/internal/items/**",
             "/internal/payments/**",
+            "/internal/orders/**",
     };
 
     private final CustomJwtDecoder customJwtDecoder;

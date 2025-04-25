@@ -22,4 +22,13 @@ public class OrderInternalController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @PostMapping("/update-order-for-payment-failed/{orderId}")
+    public ResponseEntity<OrderResponse> handleUpdateOrderForPaymentFailed(@PathVariable String orderId) {
+        try {
+            return ResponseEntity.ok(orderService.handleUpdateOrderForPaymentFailed(orderId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }

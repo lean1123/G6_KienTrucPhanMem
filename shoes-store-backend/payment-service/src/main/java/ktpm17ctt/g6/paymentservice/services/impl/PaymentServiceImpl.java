@@ -7,6 +7,7 @@ import ktpm17ctt.g6.paymentservice.dtos.responses.RefundResponse;
 import ktpm17ctt.g6.paymentservice.entities.Payment;
 import ktpm17ctt.g6.paymentservice.entities.PaymentStatus;
 import ktpm17ctt.g6.paymentservice.repositories.PaymentRepository;
+import ktpm17ctt.g6.paymentservice.repositories.httpClients.OrderClient;
 import ktpm17ctt.g6.paymentservice.services.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,21 +33,35 @@ import java.util.TimeZone;
 @Slf4j
 public class PaymentServiceImpl implements PaymentService {
     PaymentRepository paymentRepository;
-    KafkaTemplate<String, String> kafkaTemplate; // KafkaTemplate để gửi sự kiện
-    private static final String PAYMENT_SUCCESS_TOPIC = "payment_success"; // Định nghĩa topic Kafka
+//    KafkaTemplate<String, String> kafkaTemplate; // KafkaTemplate để gửi sự kiện
+//    private static final String PAYMENT_SUCCESS_TOPIC = "payment_success"; // Định nghĩa topic Kafka
+    OrderClient orderClient;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public PaymentResponse save(String orderId, String transactionId, String responseCode, String amount, String transDate) {
         Payment paymentEntity = Payment.builder()
                 .orderId(orderId)
                 .transactionId(transactionId)
                 .status(responseCode.equals("00") ? PaymentStatus.SUCCESS : PaymentStatus.FAILED)
-                .amount(Long.parseLong(amount))
+                .amount(Long.parseLong(amount) / 100)
                 .transactionDate(transDate)
                 .build();
 
-        paymentEntity = paymentRepository.save(paymentEntity);
+
+
+        try {
+            if(!responseCode.equalsIgnoreCase("00")){
+                orderClient.handleUpdateOrderForPaymentFailed(orderId);
+                log.info("Payment failed, updating order status to FAILED for orderId: {}", orderId);
+            }
+            paymentEntity = paymentRepository.save(paymentEntity);
+        }catch (Exception e){
+            log.error("Error saving payment: {}", e.getMessage());
+            paymentRepository.deleteById(paymentEntity.getId());
+        }
+
+
         log.info("Payment saved: {}", paymentEntity);
 
 

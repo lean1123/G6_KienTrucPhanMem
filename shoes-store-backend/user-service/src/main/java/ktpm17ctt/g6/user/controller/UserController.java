@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import ktpm17ctt.g6.user.dto.ApiResponse;
 import ktpm17ctt.g6.user.dto.request.AddressCreationRequest;
 import ktpm17ctt.g6.user.dto.request.UserRequest;
+import ktpm17ctt.g6.user.dto.response.AddressResponse;
 import ktpm17ctt.g6.user.dto.response.UserResponse;
 import ktpm17ctt.g6.user.entity.Address;
 import ktpm17ctt.g6.user.service.AddressService;
@@ -103,8 +104,8 @@ public class UserController {
     }
 
     @GetMapping("get-my-address")
-    public ApiResponse<List<Address>> getAddress() throws Exception {
-        return ApiResponse.<List<Address>>builder()
+    public ApiResponse<List<AddressResponse>> getAddress() throws Exception {
+        return ApiResponse.<List<AddressResponse>>builder()
                 .result(addressService.getMyAddress())
                 .build();
     }
