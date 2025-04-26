@@ -33,6 +33,4 @@ public class RegistrationRequest {
     String phone;
     @NotNull(message = "Gender is required")
     Gender gender;
-
-
 }

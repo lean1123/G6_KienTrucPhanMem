@@ -6,6 +6,15 @@ app:
   cors:
     allowed-origins: "http://localhost:5173,http://localhost:5174,https://admin.myapp.com"
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+
 resilience4j:
   circuitbreaker:
     instances:
@@ -56,11 +65,11 @@ resilience4j:
       productServiceCircuitBreaker:
         timeoutDuration: 20s
 
-logging:
-  level:
-    ROOT: INFO
-    org.springframework.cloud.gateway: DEBUG
-    io.github.resilience4j.circuitbreaker: DEBUG
+#logging:
+#  level:
+#    ROOT: INFO
+#    org.springframework.cloud.gateway: DEBUG
+#    io.github.resilience4j.circuitbreaker: DEBUG
 
 
 spring:
@@ -77,7 +86,7 @@ spring:
     gateway:
       routes:
         - id: identity-service
-          uri: http://localhost:8080
+          uri: lb://identity-service
           predicates:
             - Path=${app.api-prefix}/identity/**
           filters:
@@ -87,7 +96,7 @@ spring:
                 name: identityServiceCircuitBreaker
                 fallbackUri: forward:/fallback/identity
         - id: user-service
-          uri: http://localhost:8081
+          uri: lb://user-service
           predicates:
             - Path=${app.api-prefix}/user/**
           filters:
@@ -103,7 +112,7 @@ spring:
                 fallbackUri: forward:/fallback/user
 
         - id: product-service
-          uri: http://localhost:8082
+          uri: lb://product-service
           predicates:
             - Path=${app.api-prefix}/product/**
           filters:
@@ -118,7 +127,7 @@ spring:
                 name: productServiceCircuitBreaker
                 fallbackUri: forward:/fallback/product
         - id: order-service
-          uri: http://localhost:8088
+          uri: lb://order-service
           predicates:
             - Path=${app.api-prefix}/orders/**
           filters:
@@ -133,7 +142,7 @@ spring:
                 name: orderServiceCircuitBreaker
                 fallbackUri: forward:/fallback/order
         - id: payment-service
-          uri: http://localhost:8089
+          uri: lb://payment-service
           predicates:
             - Path=${app.api-prefix}/payments/**
           filters:
@@ -148,7 +157,7 @@ spring:
                 name: paymentServiceCircuitBreaker
                 fallbackUri: forward:/fallback/payment
         - id: cart-service
-          uri: http://localhost:8085
+          uri: lb://cart-service
           predicates:
             - Path=${app.api-prefix}/cart/**
           filters:
@@ -163,7 +172,7 @@ spring:
                 name: cartServiceCircuitBreaker
                 fallbackUri: forward:/fallback/cart
         - id: notification-service
-          uri: http://localhost:8086
+          uri: lb://notification-service
           predicates:
             - Path=${app.api-prefix}/notification/**
           filters:
@@ -178,7 +187,7 @@ spring:
                 name: notificationServiceCircuitBreaker
                 fallbackUri: forward:/fallback/notification
         - id: review-service
-          uri: http://localhost:8087
+          uri: lb://review-service
           predicates:
             - Path=${app.api-prefix}/review/**
           filters:
