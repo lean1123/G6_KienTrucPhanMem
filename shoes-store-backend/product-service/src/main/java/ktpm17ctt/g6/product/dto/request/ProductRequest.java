@@ -26,7 +26,4 @@ public class ProductRequest {
     Type type;
     @NotBlank(message = "Product category id is required")
     String categoryId;
-
-    Instant createdDate;
-    Instant modifiedDate;
 }
