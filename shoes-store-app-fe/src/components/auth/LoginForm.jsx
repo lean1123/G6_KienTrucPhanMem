@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { login } from '../../hooks/auth/authSlice';
+import { login, loginWithGoogle } from '../../hooks/auth/authSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -36,7 +36,7 @@ function LoginForm() {
 			console.log('Result:', resultUnwrapped);
 
 			if (resultUnwrapped?.token) {
-				await dispatch(fetchUser(resultUnwrapped.userId));
+				await dispatch(fetchUser());
 				enqueueSnackbar('Đăng nhập thành công', { variant: 'success' });
 				navigate('/');
 				return;
@@ -46,6 +46,23 @@ function LoginForm() {
 			return;
 		} catch (error) {
 			console.log('Error: ', error);
+			enqueueSnackbar('Đăng nhập thất bại', { variant: 'error' });
+			return;
+		}
+	};
+
+	const handleGoogleLogin = async () => {
+		try {
+			const action = loginWithGoogle();
+			const result = await dispatch(action);
+			const resultUnwrapped = unwrapResult(result);
+			if (resultUnwrapped) {
+				console.log(resultUnwrapped);
+				window.location.href = resultUnwrapped;
+				return;
+			}
+		} catch (error) {
+			// console.error('Error in loginWithGoogle', error);
 			enqueueSnackbar('Đăng nhập thất bại', { variant: 'error' });
 			return;
 		}
@@ -92,6 +109,15 @@ function LoginForm() {
 								className='bg-red py-2 px-4 text-white hover:bg-black'
 							>
 								Đăng Nhập
+							</button>
+						</div>
+						<div className='flex justify-center'>
+							<button
+								type='button'
+								className='bg-red py-2 px-4 text-white hover:bg-blue-300'
+								onClick={handleGoogleLogin}
+							>
+								Đăng Nhập Với Google
 							</button>
 						</div>
 						<div className='flex justify-center text-sl mt-3 hover:text-red-500'>

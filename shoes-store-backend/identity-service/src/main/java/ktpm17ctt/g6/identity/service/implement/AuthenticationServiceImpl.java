@@ -11,9 +11,13 @@ import ktpm17ctt.g6.identity.dto.request.*;
 import ktpm17ctt.g6.identity.dto.response.AuthenticationResponse;
 import ktpm17ctt.g6.identity.dto.response.IntrospectResponse;
 import ktpm17ctt.g6.identity.entity.Account;
+import ktpm17ctt.g6.identity.entity.Role;
 import ktpm17ctt.g6.identity.exception.AppException;
 import ktpm17ctt.g6.identity.exception.ErrorCode;
+import ktpm17ctt.g6.identity.mapper.UserMapper;
 import ktpm17ctt.g6.identity.repository.AccountRepository;
+import ktpm17ctt.g6.identity.repository.RoleRepository;
+import ktpm17ctt.g6.identity.repository.httpClient.UserClient;
 import ktpm17ctt.g6.identity.service.AuthenticationService;
 import ktpm17ctt.g6.identity.service.RefreshTokenService;
 import lombok.AccessLevel;
@@ -35,10 +39,7 @@ import org.springframework.web.client.RestTemplate;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.Map;
-import java.util.StringJoiner;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,8 +47,11 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationServiceImpl implements AuthenticationService {
     AccountRepository accountRepository;
+    RoleRepository roleRepository;
     StringRedisTemplate redisTemplate;
     RefreshTokenService refreshTokenService;
+    UserMapper userMapper;
+    UserClient userClient;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -97,6 +101,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .expiryTime(token.accessTokenExpiry)
                 .refreshToken(token.refreshToken)
                 .refreshTokenExpiryTime(token.refreshTokenExpiry)
+                .role(token.role)
                 .build();
     }
 
@@ -132,6 +137,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .expiryTime(token.accessTokenExpiry())
                 .refreshToken(token.refreshToken)
                 .refreshTokenExpiryTime(token.refreshTokenExpiry())
+                .role(token.role)
                 .build();
     }
 
@@ -156,7 +162,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .email(request.getEmail())
                     .googleAccountId(request.getGoogleAccountId())
                     .build();
+            HashSet<Role> roles = new HashSet<>();
+            roleRepository.findById("USER").ifPresent(roles::add);
+            tempAccount.setRoles(roles);
+
             var savedAccount = accountRepository.save(tempAccount);
+            var userCreationRequest = userMapper.toUserCreationRequest(request);
+            userCreationRequest.setAccountId(savedAccount.getId());
+            var userProfile = userClient.createProfile(userCreationRequest);
             return getAuthenticationResponse(savedAccount);
         }
         throw new AppException(ErrorCode.UNAUTHENTICATED);
@@ -203,7 +216,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     accessJWT.serialize(),
                     refreshSignedJWT.serialize(),
                     accessTokenExpiry,
-                    refreshTokenExpiry
+                    refreshTokenExpiry,
+                account.getRoles().stream()
+                        .map(role -> role.getName())
+                        .toList().toString()
             );
         } catch (JOSEException e) {
             log.error("Cannot create token", e);
@@ -238,10 +254,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String accessToken,
             String refreshToken,
             Date accessTokenExpiry,
-            Date refreshTokenExpiry
+            Date refreshTokenExpiry,
+            String role
     ) { }
 
-    private String generateSocialAuthenticationURL(String provider) {
+    @Override
+    public String generateSocialAuthenticationURL(String provider) {
         provider = provider.trim().toLowerCase();
         if (provider.equals("google")) {
             return String.format("https://accounts.google.com/o/oauth2/v2/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=openid%%20email%%20profile", clientId, redirectUri);
@@ -274,10 +292,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .expiryTime(token.accessTokenExpiry)
                 .refreshToken(token.refreshToken)
                 .refreshTokenExpiryTime(token.refreshTokenExpiry)
+                .role(token.role)
                 .build();
     }
 
-    private Map<String, Object> authenticationAndFetchProfile(String provider, String code) throws JsonProcessingException {
+    @Override
+    public Map<String, Object> authenticationAndFetchProfile(String provider, String code) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper objectMapper = new ObjectMapper();
         String accessToken;
