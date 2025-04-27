@@ -1,7 +1,7 @@
 server:
-    port: 8080
-    servlet:
-        context-path: /identity
+  port: 8080
+  servlet:
+    context-path: /identity
 
 spring:
   data:
@@ -26,23 +26,29 @@ spring:
     oauth2:
       client:
         registration:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-            scope:
-              - openid
-              - profile
-              - email
-            redirect-uri: "http://localhost:3000/auth/google/callback"
-            authorization-grant-type: authorization_code
-            client-name: Google
+          client-id: ${GOOGLE_CLIENT_ID}
+          client-secret: ${GOOGLE_CLIENT_SECRET}
+          scope:
+            - openid
+            - profile
+            - email
+          redirect-uri: "http://localhost:3000/auth/google/callback"
+          authorization-grant-type: authorization_code
+          client-name: Google
         provider:
-            google:
-                authorization-uri: https://accounts.google.com/o/oauth2/auth
-                token-uri: https://oauth2.googleapis.com/token
-                user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+
+  kafka:
+    bootstrap-servers: localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 jwt:
-    signerKey: "1Tj5jmm5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
+  signerKey: "1Tj5jmm5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
 
 springdoc:
   swagger-ui:

@@ -3,34 +3,42 @@ server:
   servlet:
     context-path: /notification
 
+app:
+  mongodb:
+    username: ${MONGO_USERNAME}
+    password: ${MONGO_PASSWORD}
+
 spring:
   application:
     name: notification-service
 
-  data:
-    mongodb:
-      uri: mongodb://root:root@localhost:27017/notification-service?authSource=admin
-  #        uri: mongodb://notification-user:secure-password@mongo:27017/notification-service?authSource=admin
-
+#  data:
+#    mongodb: mongodb+srv://phanngochuy9220172018:amit123@cluster0.x82shea.mongodb.net/notification-service?retryWrites=true&w=majority&appName=Cluster0
+#"mongodb+srv://phanngochuy9220172018:amit123@cluster0.x82shea.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+#      uri: mongodb://root:root@localhost:27017/notification-service?authSource=admin
+#       uri: mongodb://notification-user:secure-password@mongo:27017/notification-service?authSource=admin
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:9094
     consumer:
       group-id: notification-group
-      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       properties:
-        spring.json.trusted.packages: "*"
-        enable.auto.commit: false
-    listener:
-      ack-mode: manual_immediate
-    template:
-      default-topic: order_success_topic
-    dlq:
-      topic: order_success_topic.dlq
+        spring:
+          deserializer:
+            value:
+              delegate:
+                class: org.springframework.kafka.support.serializer.JsonDeserializer
+              trusted:
+                packages: "*"
+          json:
+            trusted:
+              packages: "*"
 
 
 brevo:
   api-key: ${BREVO_API_KEY}  # Thay thế bằng API Key của bạn
-  sender-email: ${GMAIL}  # Email người gửi
+  sender-email: ${SENDER_EMAIL}  # Email người gửi
 
 logging:
   level:

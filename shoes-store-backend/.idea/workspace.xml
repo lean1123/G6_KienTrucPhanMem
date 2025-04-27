@@ -5,34 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d1c3a83-a38e-4d24-9cf3-b317d05e5733" name="Changes" comment="feature/update/payment: resolved conflict">
-      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/event/dto/NotificationEvent.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/event/dto/NotificationEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/configurations/CustomJwtDecoder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/configurations/JwtAuthenticationEntryPoint.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/configurations/MongoConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/configurations/SecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/controllers/EmailController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/controllers/NotificationController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/dtos/ApiResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/dtos/requests/EmailRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/dtos/requests/MailUserObject.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/dtos/requests/SendEmailRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/dtos/responses/EmailResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/entities/Notification.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/exceptions/AppException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/exceptions/ErrorCode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/exceptions/GlobalExceptionHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/repositories/NotificationRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/repositories/httpClients/BrevoEmailServiceClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/services/EmailService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/services/Impl/EmailServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/services/Impl/NotificationServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/services/NotificationService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/event/dto/OrderEventDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.kafka.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.kafka.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/identity-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/pom.xml" afterDir="false" />
@@ -58,7 +34,6 @@
       <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/kafka/OrderEventProducer.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,7 +160,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Application.NotificationServiceApplication">
+  <component name="RunManager">
     <configuration name="IdentityServiceApplication" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -353,8 +328,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.ProductServiceApplication" />
         <item itemvalue="Application.OrderServiceApplication" />
+        <item itemvalue="Application.ProductServiceApplication" />
         <item itemvalue="Application.UserServiceApplication" />
         <item itemvalue="Application.PaymentServiceApplication" />
       </list>
