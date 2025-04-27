@@ -5,35 +5,217 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d1c3a83-a38e-4d24-9cf3-b317d05e5733" name="Changes" comment="feature/update/payment: resolved conflict">
-      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/event/dto/NotificationEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/.prettierrc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/eslint.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/postcss.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/ThuongHieu/Adidas.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/ThuongHieu/MLB.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/ThuongHieu/NIKE.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/ThuongHieu/cros.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/ThuongHieu/newbalence.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/banner/banner.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/banner1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/banner2.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/banner3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/banner_web_1920x750px_master.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/chonsize.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/defaultAvatar.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/heart.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/logo/logo.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/loop.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/market.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/people.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/search.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/vanchuyen.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/vite.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/public/voucher.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/App.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/App.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/api/accountApi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/api/addressApi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/api/authApi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/api/axiosClient.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/api/brandApi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/api/cartApi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/api/categoryApi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/api/collectionApi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/api/orderApi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/api/orderDetailApi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/api/productApi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/api/productItemApi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/api/userApi.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/assets/logo/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/assets/react.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/auth/LoginForm.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/auth/SignUpForm.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/cart/Cart.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/cart/CartDetailItem.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/cart/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/cart/pay/FailedPayment.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/cart/pay/Pay.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/cart/pay/SuccessfullyPayment.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/common/admin/CardDataStats.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/common/admin/ClickOutside.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/common/admin/DragDropImageUploader.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/common/header/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/filters/FilterByActive.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/filters/FilterByBrand.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/filters/FilterByCategory.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/filters/FilterByCollection.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/filters/FilterByColor.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/filters/FilterByPrice.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/filters/FilterBySize.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/footer/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/header/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/header/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/home/SliderBar.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/home/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/order/OrderDetails.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/post/ListPosts.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/post/PostDetail.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/post/PostItem.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/product/ListAllProducts.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/product/ListProduct.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/product/ProductItem.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/product/detail/DescriptionInfo.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/product/detail/ProductDetail.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/product/detail/ReturnPolicy.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/product/detail/Style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/product/detail/SubProductDetail.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/product/detail/WarrantyPolicy.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/product/new/ListNewProducts.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/product/recent/ListRecentProducts.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/product/review/ListReview.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/product/topSale/ListTopSaleProducts.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/profile/Address.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/profile/AddressForm.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/profile/Profile.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/components/profile/UpdateProfile.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/hooks/auth/authSlice.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/hooks/cart/cartSlice.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/hooks/filter/filterSlice.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/hooks/order/orderSlice.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/hooks/product/productItemSlice.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/hooks/product/useProductItem.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/hooks/redux/store.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/hooks/user/userSlice.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/main.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/middleware/ProtectLauout.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/service/localStorageService.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/utils/dateFormat.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/src/utils/formatPrice.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/tailwind.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shoes-store-app-fe/vite.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/CartServiceApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/configuration/CustomJwtDecoder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/configuration/FeignClientConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/configuration/JwtAuthenticationEntryPoint.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/configuration/ObjectMapperConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/configuration/SecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/controller/CartController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/request/CartDetailPKRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/request/CartDetailRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/request/DeleteCartDetailRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/ApiResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/CartDetailPKResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/CartDetailResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/CartDetailSessionDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/Gender.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/ProductItemResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/ProductResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/QuantityOfSizeResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/dto/response/UserResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/enties/Cart.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/enties/CartDetail.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/enties/CartDetailPK.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/feign/ProductFeignClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/feign/UserFeignClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/repository/CartDetailRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/repository/CartRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/CartDetailService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/CartService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/implement/CartDetailServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/java/ktpm17ctt/g6/cart/service/implement/CartServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/main/resources/application.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cart-service/src/test/java/ktpm17ctt/g6/cart/CartServiceApplicationTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/eureka-server/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/eureka-server/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/eureka-server/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/eureka-server/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/eureka-server/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/eureka-server/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/eureka-server/src/main/java/ktpm17ctt/g6/eurekaserver/EurekaServerApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/eureka-server/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/eureka-server/src/test/java/ktpm17ctt/g6/eurukaserver/EurukaServerApplicationTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/identity-service/.env.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/.envrc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/exception/EmailSendingException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/configurations/KafkaProducerConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/configuration/AWSConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/S3Service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shoes-store-backend.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.kafka.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.kafka.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/AuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/configuration/AuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/controller/FallbackController.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/java/ktpm17ctt/g6/gateway/controller/FallbackController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-dto/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-dto/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-dto/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/common-dto/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/identity-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/AccountServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/AccountServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/ApplicationInitConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/configuration/ApplicationInitConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/LoginSocialRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/LoginSocialRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/RegistrationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/dto/request/RegistrationRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/entity/Account.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/identity-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/.envrc" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/.envrc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/NotificationServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/NotificationServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/configuration/KafkaConsumerConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/controller/NotificationController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/dto/EmailRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/exception/EmailSendingException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/exception/GlobalExceptionHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/listener/AccountEventListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/listener/OrderEventListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/listener/PaymentEventListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/model/Notification.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/repository/NotificationRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/service/EmailService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/event/dto/NotificationEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/event/dto/NotificationEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/configurations/KafkaProducerConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/kafka/OrderEventProducer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/DockerFile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/OrderServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/OrderServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/.envrc" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/.envrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/configurations/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/configurations/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/controllers/internals/PaymentInternalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/controllers/internals/PaymentInternalController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/services/impl/PaymentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/java/ktpm17ctt/g6/paymentservice/services/impl/PaymentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/env.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/configuration/CloudinaryConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/configuration/MongoConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/configuration/MongoConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/configuration/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/configuration/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/ProductItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/ProductItemController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/internal/ProductItemInternalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/controller/internal/ProductItemInternalController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/request/ProductRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/request/ProductRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/response/ProductResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/dto/response/ProductResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/entity/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/entity/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/CloudinaryService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/ProductItemService.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/ProductItemService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductItemServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductItemServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/ktpm17ctt/g6/product/service/implement/ProductServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shoes-store-frontend-admin/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../shoes-store-frontend-admin/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,7 +292,7 @@
     &quot;Spring Boot.ApiGatewayApplication.executor&quot;: &quot;Run&quot;,
     &quot;Spring Boot.IdentityServiceApplication.executor&quot;: &quot;Run&quot;,
     &quot;Spring Boot.ProductServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/notification/initialize2&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Merging feature/notification/initialize2&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/HOCKY8/KIENTRUC/Project_Noti/G6_KienTrucPhanMem/shoes-store-backend/identity-service&quot;,
@@ -160,7 +342,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.PaymentServiceApplication">
     <configuration name="IdentityServiceApplication" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -319,10 +501,10 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.PaymentServiceApplication" />
-      <item itemvalue="Application.NotificationServiceApplication" />
       <item itemvalue="Application.IdentityServiceApplication" />
+      <item itemvalue="Application.NotificationServiceApplication" />
       <item itemvalue="Application.OrderServiceApplication" />
+      <item itemvalue="Application.PaymentServiceApplication" />
       <item itemvalue="Application.ProductServiceApplication" />
       <item itemvalue="Application.UserServiceApplication" />
     </list>

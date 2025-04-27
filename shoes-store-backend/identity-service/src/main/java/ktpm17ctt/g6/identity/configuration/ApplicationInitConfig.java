@@ -35,7 +35,7 @@ public class ApplicationInitConfig {
     @ConditionalOnProperty(
             prefix = "spring",
             value = "datasource.driverClassName",
-            havingValue = "org.mariadb.jdbc.Driver")
+            havingValue = "org.postgresql.Driver")
     ApplicationRunner applicationRunner(AccountRepository accountRepository, RoleRepository roleRepository) {
         log.info("Initializing application.....");
         return args -> {

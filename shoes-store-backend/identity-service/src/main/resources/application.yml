@@ -1,9 +1,12 @@
 server:
-  port: 8080
-  servlet:
-    context-path: /identity
+    port: 8080
+    servlet:
+        context-path: /identity
+
 
 spring:
+  application:
+    name: identity-service
   data:
     redis:
       host: 127.0.0.1
@@ -12,34 +15,35 @@ spring:
       timeout: 6000ms
       client-type: lettuce
   datasource:
-    url: "jdbc:mariadb://localhost:3306/shoes_store_identity?createDatabaseIfNotExist=true"
-    driverClassName: org.mariadb.jdbc.Driver
-    username: root
-    password: root
+    url: ${POSTGRESQL_URL}
+    driverClassName: org.postgresql.Driver
+    username: ${POSTGRESQL_USER}
+    password: ${POSTGRESQL_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
     properties:
-      hibernate.dialect: org.hibernate.dialect.MariaDBDialect
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   security:
     oauth2:
       client:
         registration:
-          client-id: ${GOOGLE_CLIENT_ID}
-          client-secret: ${GOOGLE_CLIENT_SECRET}
-          scope:
-            - openid
-            - profile
-            - email
-          redirect-uri: "http://localhost:3000/auth/google/callback"
-          authorization-grant-type: authorization_code
-          client-name: Google
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: "http://localhost:3000/auth/google/callback"
+            authorization-grant-type: authorization_code
+            client-name: Google
         provider:
-          google:
-            authorization-uri: https://accounts.google.com/o/oauth2/auth
-            token-uri: https://oauth2.googleapis.com/token
-            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            google:
+                authorization-uri: https://accounts.google.com/o/oauth2/auth
+                token-uri: https://oauth2.googleapis.com/token
+                user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
 
   kafka:
     bootstrap-servers: localhost:9094
@@ -48,7 +52,7 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 jwt:
-  signerKey: "1Tj5jmm5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
+    signerKey: "1Tj5jmm5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
 
 springdoc:
   swagger-ui:
@@ -60,3 +64,11 @@ app:
   services:
     user: http://localhost:8081/user
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
