@@ -5,14 +5,60 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d1c3a83-a38e-4d24-9cf3-b317d05e5733" name="Changes" comment="feature/update/payment: resolved conflict">
-      <change beforePath="$PROJECT_DIR$/../.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/G6_KienTrucPhanMem.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/event/dto/NotificationEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/event/dto/NotificationEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/configurations/CustomJwtDecoder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/configurations/JwtAuthenticationEntryPoint.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/configurations/MongoConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/configurations/SecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/controllers/EmailController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/controllers/NotificationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/dtos/ApiResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/dtos/requests/EmailRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/dtos/requests/MailUserObject.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/dtos/requests/SendEmailRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/dtos/responses/EmailResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/entities/Notification.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/exceptions/AppException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/exceptions/ErrorCode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/exceptions/GlobalExceptionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/repositories/NotificationRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/repositories/httpClients/BrevoEmailServiceClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/services/EmailService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/services/Impl/EmailServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/services/Impl/NotificationServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/services/NotificationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/event/dto/OrderEventDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.kafka.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.kafka.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/AccountServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/java/ktpm17ctt/g6/identity/service/implement/AccountServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identity-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/identity-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/.envrc" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/.envrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/NotificationServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/NotificationServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/configuration/KafkaConsumerConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/controller/NotificationController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/dto/EmailRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/exception/EmailSendingException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/exception/GlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/listener/AccountEventListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/listener/OrderEventListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/listener/PaymentEventListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/model/Notification.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/repository/NotificationRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/ktpm17ctt/g6/notification/service/EmailService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/event/dto/NotificationEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/event/dto/NotificationEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/configurations/KafkaProducerConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/kafka/OrderEventProducer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/java/ktpm17ctt/g6/orderservice/services/impl/OrderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/product-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,8 +69,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Dockerfile" />
-        <option value="Interface" />
         <option value="AnnotationType" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -48,6 +94,9 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProblemsViewState">
+    <option name="showPreview" value="true" />
+  </component>
   <component name="ProjectColorInfo">{
         &quot;customColor&quot;: &quot;&quot;,
         &quot;associatedIndex&quot;: 6
@@ -68,6 +117,9 @@
     &quot;Application.ProductServiceApplication.executor&quot;: &quot;Run&quot;,
     &quot;Application.UserServiceApplication.executor&quot;: &quot;Run&quot;,
     &quot;Maven.common-dto [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.identity-service [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.notification-service [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.notification-service [install].executor&quot;: &quot;Run&quot;,
     &quot;Maven.order-service [clean].executor&quot;: &quot;Run&quot;,
     &quot;Maven.order-service [compile].executor&quot;: &quot;Run&quot;,
     &quot;Maven.order-service [install].executor&quot;: &quot;Run&quot;,
@@ -96,7 +148,7 @@
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.2.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -133,19 +185,15 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Application.IdentityServiceApplication">
-    <configuration name="IdentityServiceApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Application.NotificationServiceApplication">
+    <configuration name="IdentityServiceApplication" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="envFilePaths">
         <option value="$PROJECT_DIR$/identity-service/.env.propertities" />
       </option>
       <option name="MAIN_CLASS_NAME" value="ktpm17ctt.g6.identity.IdentityServiceApplication" />
       <module name="identity-service" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ktpm17ctt.g6.identity.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -175,30 +223,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PaymentServiceApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+    <configuration name="PaymentServiceApplication" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="envFilePaths">
+        <option value="$PROJECT_DIR$/payment-service/.envrc" />
+      </option>
       <option name="MAIN_CLASS_NAME" value="ktpm17ctt.g6.paymentservice.PaymentServiceApplication" />
       <module name="payment-service" />
-      <extension name="com.fapiko.jetbrains.plugins.better_direnv.runconfigs.IdeaRunConfigurationExtension">
-        <option name="DIRENV_ENABLED" value="true" />
-        <option name="DIRENV_TRUSTED" value="false" />
-      </extension>
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ktpm17ctt.g6.paymentservice.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <extension name="net.ashald.envfile">
-        <option name="IS_ENABLED" value="true" />
-        <option name="IS_SUBST" value="false" />
-        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
-        <option name="IS_IGNORE_MISSING_FILES" value="false" />
-        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
-        <ENTRIES>
-          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
-          <ENTRY IS_ENABLED="true" PARSER="env" IS_EXECUTABLE="false" PATH="payment-service/.envrc" />
-        </ENTRIES>
-      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -230,11 +262,6 @@
           <ENTRY IS_ENABLED="true" PARSER="env" IS_EXECUTABLE="false" PATH="product-service/env.properties" />
         </ENTRIES>
       </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -317,20 +344,18 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.Unnamed" />
+      <item itemvalue="Application.PaymentServiceApplication" />
       <item itemvalue="Application.NotificationServiceApplication" />
       <item itemvalue="Application.IdentityServiceApplication" />
       <item itemvalue="Application.OrderServiceApplication" />
       <item itemvalue="Application.ProductServiceApplication" />
-      <item itemvalue="Application.PaymentServiceApplication" />
       <item itemvalue="Application.UserServiceApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.IdentityServiceApplication" />
         <item itemvalue="Application.ProductServiceApplication" />
-        <item itemvalue="Application.UserServiceApplication" />
         <item itemvalue="Application.OrderServiceApplication" />
+        <item itemvalue="Application.UserServiceApplication" />
         <item itemvalue="Application.PaymentServiceApplication" />
       </list>
     </recent_temporary>
