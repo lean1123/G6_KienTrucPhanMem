@@ -13,6 +13,7 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductResponse {
     String id;
+    String code;
     String name;
     String description;
     double rating;

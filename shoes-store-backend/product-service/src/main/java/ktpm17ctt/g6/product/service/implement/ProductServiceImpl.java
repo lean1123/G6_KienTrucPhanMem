@@ -33,6 +33,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new NotFoundException("Category ID", productRequest.getCategoryId()));
         Product product = productMapper.toProduct(productRequest);
         product.setCategory(category);
+        product.setCode(generateCode());
         productRepository.save(product);
         return productMapper.toProductResponse(product);
     }
@@ -41,12 +42,13 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse update(String id, ProductRequest productRequest) {
         Category category = categoryRepository.findById(productRequest.getCategoryId())
                 .orElseThrow(() -> new NotFoundException("Category ID", productRequest.getCategoryId()));
-        productRepository.findById(id)
+        Product db = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product ID", id));
         Product product;
         product = productMapper.toProduct(productRequest);
         product.setCategory(category);
         product.setId(id);
+        product.setCode(db.getCode());
         productRepository.save(product);
         return productMapper.toProductResponse(product);
     }
@@ -74,4 +76,23 @@ public class ProductServiceImpl implements ProductService {
         var products = productRepository.findByNameContainingIgnoreCase(keyword);
         return products.stream().map(productMapper::toProductResponse).toList();
     }
+
+    private String generateCode() {
+        StringBuilder code = new StringBuilder("SP");
+
+        // Lấy ngày giờ hiện tại theo định dạng yyyyMMddHHmm
+        String dateTime = java.time.LocalDateTime.now()
+                .format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+
+        code.append(dateTime);
+
+        // Đếm số sản phẩm trong DB
+        int count = Math.toIntExact(productRepository.count());
+
+        // Thêm số thứ tự 4 chữ số (zero padding)
+        code.append(String.format("%04d", count + 1));
+
+        return code.toString();
+    }
+
 }

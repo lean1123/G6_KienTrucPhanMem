@@ -12,6 +12,7 @@ import productItemApi from "../../api/productItemApi";
 
 interface Product {
   id?: string;
+  code: string;
   name: string;
   description: string;
   category: {
@@ -107,7 +108,9 @@ function TableProductItem() {
     <div className="rounded-md border border-gray-300 bg-white shadow-sm ">
       <div className="py-6 px-4 md:px-6 xl:px-7 flex flex-row justify-between">
         <div>
-          <p className="text-xl font-semibold text-black">ID: {id}</p>
+          <p className="text-lg font-semibold text-black">
+            Code: {product?.code}
+          </p>
           <p className="text-lg font-medium text-black">{product?.name}</p>
           <p className="text-lg font-medium text-black">
             Rating: {product?.rating}⭐
@@ -126,7 +129,7 @@ function TableProductItem() {
         </div>
       </div>
       <div className="max-w-full overflow-x-auto">
-        {productItems ? (
+        {productItems && productItems.length > 0 ? (
           productItems.map((item, key) => (
             <div
               className="border-t-2 border-gray-300 bg-white mb-4 flex flex-row justify-between overflow-hidden relative"
@@ -155,12 +158,12 @@ function TableProductItem() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <div className="flex flex-row gap-2">
+                  {/* <div className="flex flex-row gap-2">
                     <p className="text-base font-semibold text-black">ID:</p>
                     <p className="text-base font-semibold text-black">
                       {item.id}
                     </p>
-                  </div>
+                  </div> */}
                   <div className="flex flex-row gap-2">
                     <p className="text-base font-semibold text-black">Color:</p>
                     <p className="text-base font-medium text-black">

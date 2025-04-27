@@ -17,13 +17,12 @@ import ktpm17ctt.g6.product.mapper.ProductMapper;
 import ktpm17ctt.g6.product.repository.ColorRepository;
 import ktpm17ctt.g6.product.repository.ProductItemRepository;
 import ktpm17ctt.g6.product.repository.ProductRepository;
-import ktpm17ctt.g6.product.service.CloudinaryService;
 import ktpm17ctt.g6.product.service.ProductItemService;
+import ktpm17ctt.g6.product.service.S3Service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
     @Service
@@ -47,7 +45,7 @@ import java.util.Optional;
         ProductMapper productMapper;
         ColorMapper colorMapper;
 
-    CloudinaryService cloudinaryService;
+    S3Service s3Service;
 
     @Transactional
     @Override
@@ -66,12 +64,8 @@ import java.util.Optional;
         if (productItemRequest.getImages() != null && !productItemRequest.getImages().isEmpty()) {
             log.info("Product item: {}", productItem.getProduct().getId());
             try {
-                List<Map> uploadResult = cloudinaryService.uploadFiles(productItemRequest.getImages(), "Product-Item", productItem.getProduct().getId());
-                List<String> listDetailImages = new ArrayList<>();
-                for (Map map : uploadResult) {
-                    listDetailImages.add(map.get("url").toString());
-                }
-                productItem.setImages(listDetailImages);
+                List<String> uploadResult = s3Service.uploadFiles(productItemRequest.getImages());
+                productItem.setImages(uploadResult);
             } catch (Exception e) {
                 throw new AppException(ErrorCode.ITEM_IMAGE_CANT_UPLOAD);
             }
@@ -119,13 +113,8 @@ import java.util.Optional;
             }
 
             try {
-                List<Map> uploadResult = cloudinaryService.uploadFiles(List.of(nonEmptyFiles.toArray(new MultipartFile[0])),
-                        "Product-Item", productItem.getId());
-                List<String> listDetailImages = new ArrayList<>();
-                for (Map map : uploadResult) {
-                    listDetailImages.add(map.get("url").toString());
-                }
-                productItem.setImages(listDetailImages);
+                List<String> uploadResult = s3Service.uploadFiles(productItemRequest.getImages());
+                productItem.setImages(uploadResult);
             } catch (Exception e) {
                 throw new AppException(ErrorCode.ITEM_IMAGE_INVALID);
             }

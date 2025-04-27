@@ -3,7 +3,10 @@ server:
     servlet:
         context-path: /identity
 
+
 spring:
+  application:
+    name: identity-service
   data:
     redis:
       host: 127.0.0.1
@@ -12,16 +15,17 @@ spring:
       timeout: 6000ms
       client-type: lettuce
   datasource:
-    url: "jdbc:mariadb://localhost:3306/shoes_store_identity?createDatabaseIfNotExist=true"
-    driverClassName: org.mariadb.jdbc.Driver
-    username: root
-    password: root
+    url: ${POSTGRESQL_URL}
+    driverClassName: org.postgresql.Driver
+    username: ${POSTGRESQL_USER}
+    password: ${POSTGRESQL_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
     properties:
-      hibernate.dialect: org.hibernate.dialect.MariaDBDialect
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   security:
     oauth2:
       client:
@@ -54,3 +58,11 @@ app:
   services:
     user: http://localhost:8081/user
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30

@@ -7,10 +7,12 @@ app:
   mongodb:
     username: ${MONGO_USERNAME}
     password: ${MONGO_PASSWORD}
-  cloudinary:
-    cloud-name: ${CLOUDINARY_CLOUD_NAME}
-    api-key: ${CLOUDINARY_API_KEY}
-    api-secret: ${CLOUDINARY_API_SECRET}
+  aws:
+    access-key-id: ${AWS_ACCESS_KEY_ID}
+    secret-access-key: ${AWS_SECRET_ACCESS_KEY}
+    region: ${AWS_REGION}
+    s3-bucket-name: ${AWS_S3_BUCKET_NAME}
+    cloudfront-url: ${AWS_CLOUDFRONT_URL}
 
 spring:
   application:
@@ -26,3 +28,12 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30

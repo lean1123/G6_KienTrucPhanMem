@@ -78,7 +78,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         return identityService.introspectToken(token).flatMap(response -> {
             if (response.getResult().isValid()) {
-                redisTemplate.opsForValue().set("token:"+token, "valid", Duration.ofMinutes(10));
+                redisTemplate.opsForValue().set("token:"+token, "valid", Duration.ofMinutes(5));
                 return chain.filter(exchange);
             }
             log.info("Token is invalid");
