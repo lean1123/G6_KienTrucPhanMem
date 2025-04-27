@@ -1,42 +1,29 @@
+import CancelIcon from '@mui/icons-material/Cancel';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Link } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { fetchOrderByUserId, fetchUser } from '../../hooks/user/userSlice';
-import CancelIcon from '@mui/icons-material/Cancel';
+import { fetchUser } from '../../hooks/user/userSlice';
 import { convertTimestampToDateTime } from '../../utils/dateFormat';
 
 function Profile() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-
-	const { userId } = useSelector((state) => state.persistedReducer.user);
-	const { user, orders } = useSelector(
-		(state) => state.persistedReducer.userInfo,
-	);
+	const { user, orders } = useSelector((state) => state.userInfo);
 
 	useEffect(() => {
-		const fetchUserInfo = async () => {
-			if (userId) {
-				await dispatch(fetchUser(userId));
-				await dispatch(fetchOrderByUserId(userId));
-			}
-		};
-
-		fetchUserInfo();
-	}, [dispatch, userId]);
+		dispatch(fetchUser());
+	}, [dispatch]);
 
 	const handleUpdateProfile = () => navigate('/updateProfile');
-	const handleBackAddress = () => navigate('/address');
-	const handleBackProfile = () => navigate('/profile');
 
 	return (
 		<div className='flex p-5 font-sans'>
 			{/* Sidebar */}
 			<div className='w-64 mr-5'>
 				<div className='bg-orange-500 p-5 text-center rounded-full w-24 h-24 text-4xl text-white mx-auto flex items-center justify-center'>
-					{user?.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'}
+					{user?.fullName?.charAt(0).toUpperCase() || 'U'}
 				</div>
 				<p className='text-center mt-3'>
 					Xin chào{' '}
@@ -44,26 +31,30 @@ function Profile() {
 						{user?.fullName || 'Khách'}
 					</span>
 				</p>
-				<ul className='list-none p-0 text-center mt-5 space-y-2'>
-					<li className='text-blue-500'>
-						<i className='fa fa-user-circle-o' aria-hidden='true'></i>
-						<a href='#' onClick={handleBackProfile}>
+				<ul className='list-none p-0 text-center mt-5 space-y-4'>
+					<li>
+						<Link to='/profile' className='text-blue-500 hover:underline'>
+							<i className='fa fa-user-circle-o mr-2' aria-hidden='true'></i>
 							Thông tin tài khoản
-						</a>
+						</Link>
 					</li>
-					<li className='text-blue-500'>
-						<i className='fa fa-list-alt' aria-hidden='true'></i>
-						<Link href='#'>Quản lý đơn hàng</Link>
+					<li>
+						<Link to='/orders' className='text-blue-500 hover:underline'>
+							<i className='fa fa-list-alt mr-2' aria-hidden='true'></i>
+							Quản lý đơn hàng
+						</Link>
 					</li>
-					<li className='text-blue-500'>
-						<i className='fa fa-map-marker' aria-hidden='true'></i>
-						<a href='#' onClick={handleBackAddress}>
+					<li>
+						<Link to='/address' className='text-blue-500 hover:underline'>
+							<i className='fa fa-map-marker mr-2' aria-hidden='true'></i>
 							Danh sách địa chỉ
-						</a>
+						</Link>
 					</li>
-					<li className='text-red-500'>
-						<i className='fa fa-sign-out' aria-hidden='true'></i>
-						<a href='#'>Đăng xuất</a>
+					<li>
+						<Link to='/logout' className='text-red-500 hover:underline'>
+							<i className='fa fa-sign-out mr-2' aria-hidden='true'></i>
+							Đăng xuất
+						</Link>
 					</li>
 				</ul>
 			</div>
@@ -71,76 +62,76 @@ function Profile() {
 			{/* Main Content */}
 			<div className='flex-1'>
 				{/* Account Information */}
-				<div className='mb-5'>
-					<h2 className='text-2xl font-bold text-gray-800'>THÔNG TIN TÀI KHOẢN</h2>
+				<div className='mb-10'>
+					<h2 className='text-2xl font-bold text-gray-800 mb-4'>
+						THÔNG TIN TÀI KHOẢN
+					</h2>
 					{user && (
-						<>
+						<div className='space-y-2'>
 							<p>
-								<span>Họ và tên: </span>
-								{user?.firstName} {user?.lastName}
+								<strong>Họ và tên:</strong> {user.firstName} {user.lastName}
 							</p>
 							<p>
-								<span>Email: </span>
-								{user.email}
-							</p>
-
-							<p>
-								<span>Ngày sinh: </span>
-								{user.dateOfBirth}
+								<strong>Email:</strong> {user.email}
 							</p>
 							<p>
-								<span>Điện thoại: </span>
-								{user.phone}
+								<strong>Ngày sinh:</strong> {user.dob}
 							</p>
-							<div className='mt-3 space-x-4'>
+							<p>
+								<strong>Điện thoại:</strong> {user.phone}
+							</p>
+							<div className='mt-4'>
 								<button
 									onClick={handleUpdateProfile}
-									className='bg-blue-500 text-white py-2 px-4 rounded font-semibold hover:bg-blue-600'
+									className='bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition-all'
 								>
-									CẬP NHẬT
+									Cập nhật
 								</button>
 							</div>
-						</>
+						</div>
 					)}
 				</div>
 
+				{/* Recent Orders */}
 				<div>
-					<h2 className='text-2xl font-bold text-gray-800'>
+					<h2 className='text-2xl font-bold text-gray-800 mb-4'>
 						DANH SÁCH ĐƠN HÀNG GẦN ĐÂY
 					</h2>
 					{orders.length > 0 ? (
-						<table className='w-full border-collapse mt-2'>
+						<table className='w-full border-collapse'>
 							<thead>
 								<tr className='border-b bg-gray-100 text-gray-700'>
 									<th className='p-2 text-left'>Mã đơn hàng</th>
 									<th className='p-2 text-left'>Ngày đặt</th>
 									<th className='p-2 text-left'>Thành tiền</th>
 									<th className='p-2 text-left'>Phương thức thanh toán</th>
-									<th className='p-2 text-left'>Vận chuyển</th>
-									<th className='p-2 text-left'>Hành động</th>
+									<th className='p-2 text-left'>Trạng thái</th>
+									<th className='p-2 text-center'>Hành động</th>
 								</tr>
 							</thead>
 							<tbody>
 								{orders.map((order) => (
-									<tr key={order?.id} className='border-b'>
-										<td className='p-2'># {order?.id}</td>
+									<tr key={order.id} className='border-b'>
+										<td className='p-2'>#{order.id}</td>
 										<td className='p-2'>
-											{convertTimestampToDateTime(order?.createdDate)}
+											{convertTimestampToDateTime(order.createdDate)}
 										</td>
-										<td className='p-2'>{order?.totalPrice} đ</td>
-										<td className='p-2'>{order?.paymentMethod}</td>
-										<td className='p-2'>{order?.orderStatus}</td>
-										<td colSpan={2} className='p-2 text-center'>
+										<td className='p-2'>{order.totalPrice} đ</td>
+										<td className='p-2'>{order.paymentMethod}</td>
+										<td className='p-2'>{order.orderStatus}</td>
+										<td className='p-2 text-center space-x-2'>
 											<button
-												className='text-gray-600'
-												onClick={() => navigate(`/order/${order?.id}`)}
+												title='Xem chi tiết'
+												className='text-blue-600 hover:text-blue-800'
+												onClick={() => navigate(`/order/${order.id}`)}
 											>
 												<VisibilityIcon />
 											</button>
-											{order?.orderStatus === 'PENDING' && (
+											{order.orderStatus === 'PENDING' && (
 												<button
-													className='text-red-600'
-													onClick={() => navigate(`/order/${order?.id}`)}
+													title='Hủy đơn hàng'
+													className='text-red-600 hover:text-red-800'
+													onClick={() => navigate(`/order/${order.id}`)}
 												>
 													<CancelIcon />
 												</button>
@@ -151,7 +142,7 @@ function Profile() {
 							</tbody>
 						</table>
 					) : (
-						<p>Không có đơn hàng nào gần đây.</p>
+						<p className='text-gray-600'>Không có đơn hàng nào gần đây.</p>
 					)}
 				</div>
 			</div>

@@ -27,7 +27,7 @@ function ListAllProducts() {
 		returnProducts,
 		error,
 		loading,
-	} = useSelector((state) => state.persistedReducer.filter);
+	} = useSelector((state) => state.filter);
 
 	useEffect(() => {
 		const fetchProductItemsByFilter = async () => {
@@ -79,7 +79,7 @@ function ListAllProducts() {
 	return (
 		<div className='topSale-container'>
 			<div className='flex justify-center items-center mt-5'>
-				<h1 className='text-4xl font-bold'>Giày Sneaker</h1>
+				<h1 className='text-4xl font-bold'>Tất Cả Sản Phẩm</h1>
 			</div>
 			<div className='flex justify-center items-center mt-5'>
 				<div className='p-2 border rounded-md border-slate-800'>

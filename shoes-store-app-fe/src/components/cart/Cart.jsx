@@ -9,13 +9,14 @@ import CartDetailItem from './CartDetailItem';
 import { useNavigate } from 'react-router';
 import { enqueueSnackbar } from 'notistack';
 import { fetchUser } from '../../hooks/user/userSlice';
+import { initialOrderStep } from '../../hooks/orderProgressStore';
 
 const Cart = () => {
 	const dispatch = useDispatch();
 	const navigation = useNavigate();
 
-	const { cartItems } = useSelector((state) => state.persistedReducer.cart);
-	const { userId, user } = useSelector((state) => state.persistedReducer.user);
+	const { cartItems } = useSelector((state) => state.cart);
+	const { userId, user } = useSelector((state) => state.user);
 
 	const totalPrice = useMemo(() => {
 		if (cartItems?.length === 0 || typeof cartItems === 'string') return 0;
@@ -33,6 +34,7 @@ const Cart = () => {
 	useEffect(() => {
 		dispatch(viewCart());
 		dispatch(fetchUser(userId));
+		dispatch(initialOrderStep());
 	}, [dispatch, userId]);
 
 	const handleQuantityChange = (item, newQuantity) => {
@@ -41,28 +43,29 @@ const Cart = () => {
 		}
 		const updatedItem = {
 			cartId: item?.cartDetailPK?.cartId || null,
-			productId: item?.productItem?.id,
+			productItemId: item?.productItem?.id,
 			quantity: newQuantity,
+			size: item?.cartDetailPK?.size,
 		};
 
 		console.log('updatedItem', updatedItem);
 
 		if (updatedItem.quantity === 0) {
-			dispatch(deleteCartDetail(updatedItem.productId));
+			dispatch(deleteCartDetail(updatedItem));
 			return;
 		}
 
 		dispatch(updateQuantity(updatedItem));
 	};
 
-	const handleRemoveProduct = (productId) => {
-		console.log('productId', productId);
+	const handleRemoveProduct = (productItemId, size) => {
+		console.log('productId', productItemId);
 
-		dispatch(deleteCartDetail(productId));
+		dispatch(deleteCartDetail({ productItemId, size }));
 	};
 
 	return (
-		<div className='flex justify-center p-6 bg-gray-100'>
+		<div className='flex justify-center p-6 '>
 			<div className='w-2/3 bg-white p-6 shadow-md rounded-lg mr-6'>
 				<form action='/cart' method='post'>
 					<h2 className='text-xl font-semibold mb-4'>GIỎ HÀNG CỦA BẠN</h2>
@@ -83,20 +86,6 @@ const Cart = () => {
 							/>
 						))
 					)}
-
-					<div className='mb-6'>
-						<label className='block mb-2 text-gray-700'>Ghi chú đơn hàng</label>
-						<input
-							type='text'
-							className='w-full border p-2 rounded-md'
-							placeholder='Thêm ghi chú cho đơn hàng...'
-						/>
-					</div>
-
-					<div className='flex items-center'>
-						<input type='checkbox' className='mr-2' />
-						<label>Xuất hoá đơn cho đơn hàng</label>
-					</div>
 				</form>
 			</div>
 
@@ -109,23 +98,10 @@ const Cart = () => {
 						{totalPrice?.toLocaleString()} ₫
 					</span>
 				</div>
-				<p className='text-gray-500 mb-6'>
-					Phí vận chuyển sẽ được tính ở trang thanh toán.
-				</p>
-				<p className='text-gray-500 mb-6'>
-					Bạn cũng có thể nhập mã giảm giá ở trang thanh toán.
-				</p>
 
 				<button
-					className='w-full bg-red-500 text-white py-2 rounded mb-4 font-semibold'
+					className='w-full bg-blue-400 text-white py-2 rounded mb-4 font-semibold'
 					onClick={() => {
-						if (user === null || userId === null) {
-							enqueueSnackbar('Vui lòng đăng nhập để tiếp tục!', {
-								variant: 'info',
-							});
-							return;
-						}
-
 						if (cartItems?.length === 0 || typeof cartItems === 'string') {
 							enqueueSnackbar('Không có sản phẩm nào trong giỏ hàng của bạn!', {
 								variant: 'error',
@@ -136,7 +112,7 @@ const Cart = () => {
 						}
 					}}
 				>
-					ĐẶT HÀNG NGAY (Áp dụng cho Việt Nam)
+					ĐẶT HÀNG NGAY
 				</button>
 			</div>
 		</div>

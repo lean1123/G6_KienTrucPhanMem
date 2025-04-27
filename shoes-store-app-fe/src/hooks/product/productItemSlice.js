@@ -55,6 +55,13 @@ const ProductItemSlice = createSlice({
 		setProductItem: (state, action) => {
 			state.productItem = action.payload;
 		},
+		productItemInitialState: () => {
+			return {
+				productItem: null,
+				error: null,
+				loading: false,
+			};
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -79,5 +86,6 @@ const ProductItemSlice = createSlice({
 	},
 });
 
-export const { setProductItem } = ProductItemSlice.actions;
+export const { setProductItem, productItemInitialState } =
+	ProductItemSlice.actions;
 export default ProductItemSlice.reducer;

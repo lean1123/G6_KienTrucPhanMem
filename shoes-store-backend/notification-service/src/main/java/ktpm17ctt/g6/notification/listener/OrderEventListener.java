@@ -1,7 +1,5 @@
 package ktpm17ctt.g6.notification.listener;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ktpm17ctt.g6.notification.service.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,23 +21,27 @@ public class OrderEventListener {
     @KafkaListener(topics = "order_success_topic", groupId = "notification-group")
     public void listenOrderSuccessEvent(String message, Acknowledgment acknowledgment) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode json = mapper.readTree(message);
-            if (!json.has("userEmail")) {
-                log.error("Missing userEmail field in message: {}", message);
+            // Parse message dạng topic|userEmail|userId
+            String[] parts = message.split("\\|");
+            if (parts.length != 3) {
+                log.error("Invalid message format: {}", message);
                 acknowledgment.acknowledge();
                 return;
             }
-            String userEmail = json.get("userEmail").asText();
+
+            String topic = parts[0];
+            String userEmail = parts[1];
+            String userId = parts[2];
+
             if (!isValidEmail(userEmail)) {
                 log.error("Invalid email format: {}", userEmail);
                 acknowledgment.acknowledge();
                 return;
             }
-            String userId = json.has("userId") ? json.get("userId").asText() : "unknown"; // Lấy userId hoặc mặc định
+
             String subject = "Order Confirmation";
             String content = "Your order has been successfully placed.";
-            emailService.sendEmail(userEmail, subject, content, userId); // Thêm userId
+            emailService.sendEmail(userEmail, subject, content, userId);
             acknowledgment.acknowledge();
         } catch (Exception e) {
             log.error("Error processing Kafka message: {}", message, e);

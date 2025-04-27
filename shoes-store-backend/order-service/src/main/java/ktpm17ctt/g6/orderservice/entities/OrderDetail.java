@@ -17,6 +17,7 @@ public class OrderDetail {
     private int quantity;
     private double price;
     private String productItemId;
+    private int size;
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;

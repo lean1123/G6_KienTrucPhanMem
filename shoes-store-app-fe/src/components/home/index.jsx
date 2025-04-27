@@ -2,9 +2,12 @@ import { useEffect, useState } from 'react';
 import ListProduct from '../product/ListProduct';
 import SliderBar from './SliderBar';
 import productItemApi from '../../api/productItemApi';
+import { useDispatch, useSelector } from 'react-redux';
+import { setBannerShow } from '../../hooks/bannerStore';
 
 function HomePage() {
-	const [isVisible, setIsVisible] = useState(true);
+	const { isBannerShow } = useSelector((state) => state.bannerShow);
+	const dispatch = useDispatch();
 
 	const [listRecentProducts, setListRecentProducts] = useState([]);
 	const [listNewProducts, setListNewProducts] = useState([]);
@@ -59,13 +62,13 @@ function HomePage() {
 	}, []);
 
 	const closePopup = () => {
-		setIsVisible(false);
+		dispatch(setBannerShow(false));
 	};
 
 	return (
 		<div className='w-full flex flex-col items-center'>
 			{/* Banner */}
-			{isVisible && (
+			{isBannerShow && (
 				<div className='w-full flex flex-col items-center'>
 					<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
 						<div className='relative bg-white p-0 m-0 rounded-lg shadow-lg max-w-lg w-full'>

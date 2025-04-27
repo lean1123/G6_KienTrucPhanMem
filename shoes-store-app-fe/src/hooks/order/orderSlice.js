@@ -13,7 +13,9 @@ export const createOrder = createAsyncThunk(
 				);
 			}
 
-			return response?.data?.data;
+			console.log('Order created successfully:', response);
+
+			return response?.data;
 		} catch (error) {
 			console.error('Error creating order:', error);
 			return rejectWithValue('Error creating order');
@@ -48,7 +50,18 @@ const orderSlice = createSlice({
 		current: {},
 		error: null,
 	},
-	reducers: {},
+	reducers: {
+		setOrder: (state, action) => {
+			state.current = action.payload;
+		},
+		orderInitialState: () => {
+			return {
+				productItem: null,
+				error: null,
+				loading: false,
+			};
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(createOrder.pending, (state) => {
@@ -71,5 +84,5 @@ const orderSlice = createSlice({
 	},
 });
 
-export const { setOrder } = orderSlice.actions;
+export const { setOrder, orderInitialState } = orderSlice.actions;
 export const orderReducer = orderSlice.reducer;

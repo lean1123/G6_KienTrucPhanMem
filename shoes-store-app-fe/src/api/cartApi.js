@@ -21,10 +21,10 @@ const cartApi = {
 		});
 	},
 
-	deleteCartDetail: (productId) => {
+	deleteCartDetail: (productItemId, size) => {
 		const url = `/cart/delete`;
-		return AdminAxiosClient.get(url, {
-			params: { productId },
+		return AdminAxiosClient.delete(url, {
+			data: { productItemId, size },
 			withCredentials: true,
 		});
 	},
