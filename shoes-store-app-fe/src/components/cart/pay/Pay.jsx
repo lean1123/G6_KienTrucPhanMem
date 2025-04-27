@@ -2,7 +2,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
 	Box,
 	FormControlLabel,
-	FormGroup,
 	Radio,
 	RadioGroup,
 	Typography,
@@ -14,9 +13,11 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import * as yup from 'yup';
-import { viewCart } from '../../../hooks/cart/cartSlice';
+import { cartInitializeState } from '../../../hooks/cart/cartSlice';
 import { createOrder } from '../../../hooks/order/orderSlice';
+import { setProgress } from '../../../hooks/orderProgressStore';
 import { fetchAddress } from '../../../hooks/user/userSlice';
+import PaymentDialog from './PaymentDialog';
 
 const schema = yup.object().shape({
 	paymentMethod: yup.string().required('Vui lòng chọn phương thức thanh toán'),
@@ -29,17 +30,17 @@ const Pay = () => {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [paymentMethod, setPaymentMethod] = useState('');
 
-	const { cartItems } = useSelector((state) => state.persistedReducer.cart);
-	const { userId } = useSelector((state) => state.persistedReducer.user);
-	const { address } = useSelector((state) => state.persistedReducer.userInfo);
+	const { cartItems } = useSelector((state) => state.cart);
+	const { address } = useSelector((state) => state.userInfo);
 	const [selectedAddress, setSelectedAddress] = useState('');
+	const [showModal, setShowModal] = useState(false);
+	const [vnpayUrl, setVnPayUrl] = useState('');
 
 	useEffect(() => {
-		if (userId) {
-			dispatch(fetchAddress(userId));
-			return;
+		if (!address || address.length === 0) {
+			dispatch(fetchAddress());
 		}
-	}, [dispatch, userId]);
+	}, [dispatch, address]);
 
 	const [isShow, setIsShow] = useState(false);
 	useEffect(() => {
@@ -62,9 +63,8 @@ const Pay = () => {
 			orderDetails: cartItems?.map((item) => ({
 				productItemId: item?.productItem?.id,
 				quantity: item?.quantity,
-				pricePerItem: item?.productItem?.price,
+				size: item?.cartDetailPK?.size,
 			})),
-			userId: userId,
 			addressId: selectedAddress,
 		},
 		resolver: yupResolver(schema),
@@ -77,41 +77,35 @@ const Pay = () => {
 	} = form;
 
 	const onSubmit = async (data) => {
-		// if (data.paymentMethod.trim().length() !== 0) {
-		// 	data.paymentMethod = 'CASH';
-		// } else {
-		// 	enqueueSnackbar('Vui lòng chọn phương thức thanh toán', {
-		// 		variant: 'error',
-		// 	});
-		// 	return;
-		// }
-
-		// if (data.orderDetails.length === 0) {
-		// 	enqueueSnackbar('Vui lòng chọn sản phẩm vào giỏ hàng trước khi đặt hàng!', {
-		// 		variant: 'error',
-		// 	});
-		// 	return;
-		// }
-
-		console.log('data', data);
-
-		// try {
-		// 	const orderResult = await dispatch(createOrder(data));
-		// 	const resultUnwrapped = unwrapResult(orderResult);
-		// 	if (resultUnwrapped?.id) {
-		// 		enqueueSnackbar('Đặt hàng thành công', { variant: 'success' });
-		// 		dispatch(viewCart());
-		// 		navigation('/orderSuccess');
-		// 		return;
-		// 	}
-		// 	enqueueSnackbar('Đặt hàng thất bại', { variant: 'error' });
-		// 	navigation('/orderFail');
-		// } catch (error) {
-		// 	console.error('Error creating order:', error);
-		// 	enqueueSnackbar('Đặt hàng thất bại', { variant: 'error' });
-		// 	navigation('/orderFail');
-		// }
+		try {
+			const orderResult = await dispatch(createOrder(data));
+			const resultUnwrapped = unwrapResult(orderResult);
+			if (resultUnwrapped?.paymentMethod === 'VNPAY') {
+				setVnPayUrl(resultUnwrapped?.paymentUrl);
+				setShowModal(true);
+				return;
+			}
+			if (resultUnwrapped?.id && resultUnwrapped?.paymentMethod === 'CASH') {
+				enqueueSnackbar('Đặt hàng thành công', { variant: 'success' });
+				dispatch(cartInitializeState());
+				navigation('/orderSuccess');
+				dispatch(setProgress('Thực hiện đặt hàng'));
+				return;
+			}
+			enqueueSnackbar('Đặt hàng thất bại', { variant: 'error' });
+			navigation('/orderFail');
+			return;
+		} catch (error) {
+			console.error('Error creating order:', error);
+			enqueueSnackbar('Đặt hàng thất bại', { variant: 'error' });
+			navigation('/orderFail');
+			return;
+		}
 	};
+
+	if (showModal) {
+		return <PaymentDialog isOpen={showModal} url={vnpayUrl} />;
+	}
 
 	return (
 		<div className='w-full flex justify-between'>
@@ -190,27 +184,26 @@ const Pay = () => {
 						<input
 							type='submit'
 							value='Hoàn tất đơn hàng'
-							className='h-10 bg-red-500 rounded-lg text-white w-2/4 my-2'
+							className='h-10 bg-blue-400 rounded-lg text-white w-2/4 my-2'
 						/>
 					</div>
 				</Box>
 				<hr className='mt-10 mb-2 text-grey-300' />
-				<div className='flex flex-col h-full justify-end text-center'>
-					<div className='border-1'></div>
-					<p className='text-2xl text-stone-300'>Power by github huynnthinh</p>
-				</div>
 			</div>
-			<div id='right' className='w-1/2 bg-stone-100 pt-10 px-10'>
+			<div
+				id='right'
+				className='w-1/2 pt-10 px-10 rounded-2xl shadow-lg bg-white/30 backdrop-blur-md border border-white/20'
+			>
 				<div
 					id='items'
-					className={`${isExpanded ? 'h-fit' : 'h-60'} overflow-y-scroll`}
+					className={`${isExpanded ? 'h-fit' : 'h-60'} overflow-y-scroll custom-scrollbar`}
 				>
 					{cartItems?.map((item) => (
 						<div
-							key={item?.productItem.id}
-							className='flex justify-between items-center py-2'
+							key={item?.productItem.id + item?.cartDetailPK.size}
+							className='flex justify-between items-center p-2 border rounded-2xl my-1'
 						>
-							<div className='flex items-center'>
+							<div className='flex items-center '>
 								<img
 									src={item?.productItem?.images[0]}
 									alt={item?.product?.name}
@@ -256,31 +249,6 @@ const Pay = () => {
 					<div className='border-1 flex-grow'></div>
 
 					<div className='border-1 flex-grow'></div>
-				</div>
-				<div className='mt-4'>
-					<div className='flex'>
-						<img src='vanchuyen.png' alt='vanchuyen' className='mr-2 ' />
-						<p>
-							<strong>
-								Hơn 800.000 đơn hàng được Thịnh vận chuyển đến tay khách hàng thành
-								công.
-							</strong>
-							<br />
-							Thịnh luôn làm đảm bảo khách hàng hài lòng khi nhận sản phẩm. Bạn chỉ cần
-							đặt hàng giao hàng hãy để đội ngũ Thịnh lo.
-						</p>
-					</div>
-					<div className='flex mt-3'>
-						<img src='loop.png' className='mr-2' alt='loop' />
-						<p>
-							<strong>
-								Đổi trả hàng dễ dàng trong 30 ngày với sản phẩm không hài lòng.
-							</strong>
-							<br />
-							Thịnh cam kết đổi trả hàng dễ dàng trong 30 ngày nếu sản phẩm không hài
-							lòng. Bạn chỉ cần liên hệ với Thịnh qua hotline hoặc email.
-						</p>
-					</div>
 				</div>
 			</div>
 		</div>

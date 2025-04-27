@@ -78,7 +78,7 @@ function ProductDetail() {
 	}
 
 	return (
-		<div className='grid grid-cols-2 my-6 font-calibri'>
+		<div className='grid grid-cols-2 font-calibri py-10'>
 			<div className='flex flex-row justify-center'>
 				<div className='flex-col h-96 overflow-auto scrollbar-hidden p-2 mr-2'>
 					{productItem?.images.map((item, index) => (

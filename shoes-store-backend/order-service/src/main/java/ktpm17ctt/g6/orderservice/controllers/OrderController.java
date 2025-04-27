@@ -3,6 +3,7 @@ package ktpm17ctt.g6.orderservice.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import ktpm17ctt.g6.orderservice.dto.request.OrderCreationRequest;
+import ktpm17ctt.g6.orderservice.dto.response.OrderResponse;
 import ktpm17ctt.g6.orderservice.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -49,5 +50,10 @@ public class OrderController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/get-order-by-id/{id}")
+    public  ResponseEntity<OrderResponse> getOrderById(@PathVariable String id) throws Exception {
+        return ResponseEntity.ok(orderService.findById(id));
     }
 }

@@ -63,6 +63,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     public List<OrderDetailResponse> findOrderDetailByOrder_Id(String orderId) {
         return orderDetailRepository.findOrderDetailByOrder_Id(orderId)
                 .stream()
-                .map(orderDetailMapper::orderDetailToOrderDetailResponse).toList();
+                .map(orderDetail -> OrderDetailResponse.builder()
+                        .productItem(productItemClient.getProductItem(orderDetail.getProductItemId()).getResult())
+                        .size(orderDetail.getSize())
+                        .quantity(orderDetail.getQuantity())
+                        .id(orderDetail.getId())
+                        .price(orderDetail.getPrice())
+                        .build()).toList();
     }
 }

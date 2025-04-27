@@ -56,9 +56,6 @@ export const logout = createAsyncThunk(
 				return rejectWithValue(response.data);
 			}
 
-			localStorage.removeItem('accessToken');
-			localStorage.removeItem('refreshToken');
-
 			return response.data;
 		} catch (error) {
 			console.error('Error in logout', error);
@@ -73,7 +70,20 @@ const AuthSlice = createSlice({
 		accessToken: null,
 		userId: null,
 	},
-	reducers: {},
+	reducers: {
+		setAccessToken: (state, action) => {
+			state.accessToken = action.payload;
+		},
+		setUserId: (state, action) => {
+			state.userId = action.payload;
+		},
+		authInitialState: () => {
+			return {
+				accessToken: null,
+				userId: null,
+			};
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(register.fulfilled, (state, action) => {
@@ -101,4 +111,7 @@ const AuthSlice = createSlice({
 			});
 	},
 });
+
+export const { setAccessToken, setUserId, authInitialState } =
+	AuthSlice.actions;
 export default AuthSlice.reducer;

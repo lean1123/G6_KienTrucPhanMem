@@ -107,6 +107,15 @@ const userSlice = createSlice({
 		setUser: (state, action) => {
 			state.user = action.payload;
 		},
+		userInitialState: () => {
+			return {
+				user: null,
+				address: [],
+				error: null,
+				status: 'idle',
+				orders: [],
+			};
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -157,5 +166,5 @@ const userSlice = createSlice({
 	},
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, userInitialState } = userSlice.actions;
 export const userInfoReducer = userSlice.reducer;

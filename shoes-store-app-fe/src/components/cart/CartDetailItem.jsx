@@ -1,3 +1,4 @@
+import { Close } from '@mui/icons-material';
 import PropTypes from 'prop-types';
 import { useMemo, useState } from 'react';
 
@@ -27,7 +28,8 @@ function CartDetailItem({ item, onQuantityChange, onRemoveProduct }) {
 	};
 
 	const handleRemoveProduct = () => {
-		if (onRemoveProduct) onRemoveProduct(item?.productItem?.id);
+		if (onRemoveProduct)
+			onRemoveProduct(item?.productItem?.id, item?.cartDetailPK?.size);
 	};
 
 	return (
@@ -41,13 +43,17 @@ function CartDetailItem({ item, onQuantityChange, onRemoveProduct }) {
 				<div className='flex-1 ml-4'>
 					<p className='font-medium'>{item?.productItem?.product?.name}</p>
 					<div className='flex justify-start items-center space-x-4 text-gray-500 mt-2'>
-						<p>
-							Màu sắc: <span className='ml-2'>{item.productItem?.color?.name}</span>
-						</p>
+						<div className='flex justify-start'>
+							<p>Màu sắc: </p>
+							<span
+								className='shadow-md border-2 border-gray-300 rounded-full w-6 h-6 ml-1'
+								style={{ backgroundColor: item?.productItem?.color?.code }}
+							></span>
+						</div>
 						<p>Kích thước: {item.cartDetailPK?.size}</p>
 					</div>
 					{/* Price per item */}
-					<p className='font-semibold text-red-500 mt-2'>
+					<p className='font-semibold text-blue-400 mt-2'>
 						Giá: {item.productItem?.price.toLocaleString()} ₫
 					</p>
 				</div>
@@ -55,16 +61,16 @@ function CartDetailItem({ item, onQuantityChange, onRemoveProduct }) {
 				<div className='flex flex-col items-start mt-4 space-y-2 relative'>
 					<button
 						type='button'
-						className='bg-red-400 text-red-700 hover:text-black absolute -top-11 -right-5 rounded-lg px-2 py-1 text-center'
+						className='bg-red-500 text-white absolute -top-11 -right-5 rounded-md px-2 py-1 text-center'
 						onClick={handleRemoveProduct}
 					>
-						Remove
+						<Close fontSize='small' />
 					</button>
 					<div className='flex items-center space-x-2'>
 						<button
 							type='button'
 							onClick={decreaseQuantity}
-							className='px-2 py-1 bg-gray-200 rounded'
+							className='w-8 h-8 bg-blue-400 rounded text-center'
 						>
 							-
 						</button>
@@ -72,12 +78,12 @@ function CartDetailItem({ item, onQuantityChange, onRemoveProduct }) {
 						<button
 							type='button'
 							onClick={increaseQuantity}
-							className='px-2 py-1 bg-gray-200 rounded'
+							className='w-8 h-8 bg-blue-400 rounded text-center'
 						>
 							+
 						</button>
 					</div>
-					<p className='font-semibold text-red-500'>
+					<p className='font-semibold text-blue-400'>
 						{totalPrice.toLocaleString()} ₫
 					</p>
 				</div>

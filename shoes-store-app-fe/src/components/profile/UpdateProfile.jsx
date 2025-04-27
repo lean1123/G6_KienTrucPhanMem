@@ -7,19 +7,14 @@ function UpdateProfile() {
 	const [avatar, setAvatar] = useState(null);
 	const [previewUrl, setPreviewUrl] = useState(null);
 
-	const handleBackToProfile = () => {
-		navigate('/profile');
-	};
-	const handleBackAddress = () => {
-		navigate('/address');
-	};
+	const handleBackProfile = () => navigate('/profile');
+	const handleBackAddress = () => navigate('/address');
 
 	const handleAvatarChange = (e) => {
 		const file = e.target.files[0];
 		if (file) {
 			setAvatar(file);
-			const url = URL.createObjectURL(file);
-			setPreviewUrl(url);
+			setPreviewUrl(URL.createObjectURL(file));
 		}
 	};
 
@@ -36,23 +31,18 @@ function UpdateProfile() {
 				<ul className='list-none p-0 text-center mt-5 space-y-2'>
 					<li className='text-blue-500'>
 						<i className='fa fa-user-circle-o' aria-hidden='true'></i>{' '}
-						<a href='' onClick={handleBackToProfile}>
-							Thông tin tài khoản
-						</a>
+						<a onClick={handleBackProfile}>Thông tin tài khoản</a>
 					</li>
 					<li className='text-blue-500'>
 						<i className='fa fa-list-alt' aria-hidden='true'></i>{' '}
-						<a href=''>Quản lý đơn hàng</a>
+						<a>Quản lý đơn hàng</a>
 					</li>
 					<li className='text-blue-500'>
 						<i className='fa fa-map-marker' aria-hidden='true'></i>{' '}
-						<a href='' onClick={handleBackAddress}>
-							Danh sách địa chỉ
-						</a>
+						<a onClick={handleBackAddress}>Danh sách địa chỉ</a>
 					</li>
 					<li className='text-red-500'>
-						<i className='fa fa-sign-out' aria-hidden='true'></i>{' '}
-						<a href=''>Đăng xuất</a>
+						<i className='fa fa-sign-out' aria-hidden='true'></i> <a>Đăng xuất</a>
 					</li>
 				</ul>
 			</div>
@@ -60,8 +50,6 @@ function UpdateProfile() {
 			{/* Main Content */}
 			<div className='flex-1'>
 				<h2 className='text-2xl font-bold mb-5'>THÔNG TIN TÀI KHOẢN</h2>
-
-				{/* Form */}
 				<form className='space-y-4'>
 					{/* Avatar upload */}
 					<div className='mb-4'>
@@ -96,39 +84,36 @@ function UpdateProfile() {
 						</div>
 					</div>
 
+					{/* Form fields */}
 					<div>
 						<label className='block text-sm font-semibold'>Họ:</label>
-						<input type='text' className='w-full border p-2' placeholder='Lê' />
+						<input type='text' className='w-full border p-2' placeholder='Họ' />
 					</div>
 					<div>
 						<label className='block text-sm font-semibold'>Tên:</label>
-						<input type='text' className='w-full border p-2' placeholder='Thanh An' />
+						<input type='text' className='w-full border p-2' placeholder='Tên' />
 					</div>
-
-					{/* Giới tính */}
 					<div>
 						<label className='block text-sm font-semibold mb-2'>Giới tính:</label>
 						<div className='flex space-x-4'>
 							<label className='flex items-center'>
-								<input type='radio' name='gender' value='male' className='mr-2' />
-								Nam
+								<input type='radio' name='gender' value='male' className='mr-2' /> Nam
 							</label>
 							<label className='flex items-center'>
-								<input type='radio' name='gender' value='female' className='mr-2' />
-								Nữ
+								<input type='radio' name='gender' value='female' className='mr-2' /> Nữ
 							</label>
 						</div>
 					</div>
-
 					<div>
 						<label className='block text-sm font-semibold'>Số điện thoại:</label>
 						<input
 							type='text'
 							className='w-full border p-2'
-							placeholder='Số điện thoại (*)'
+							placeholder='Số điện thoại'
 						/>
 					</div>
 
+					{/* Submit */}
 					<button
 						type='submit'
 						className='w-full bg-blue-600 text-white py-2 mt-5 rounded'

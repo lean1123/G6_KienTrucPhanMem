@@ -14,7 +14,6 @@ export const viewCart = createAsyncThunk(
 				);
 			}
 
-			console.log('response of view cart', response);
 			return response.data;
 		} catch (error) {
 			console.error('Error viewing cart:', error);
@@ -47,12 +46,13 @@ export const addToCart = createAsyncThunk(
 // Update the quantity of an item in the cart
 export const updateQuantity = createAsyncThunk(
 	'cart/updateQuantity',
-	async ({ cartId, productId, quantity }, { rejectWithValue }) => {
+	async ({ cartId, productItemId, quantity, size }, { rejectWithValue }) => {
 		try {
 			const response = await cartApi.updateQuantity({
 				cartId,
-				productId,
+				productItemId,
 				quantity,
+				size,
 			});
 
 			if (response.status !== 200) {
@@ -73,10 +73,10 @@ export const updateQuantity = createAsyncThunk(
 
 export const deleteCartDetail = createAsyncThunk(
 	'cart/deleteCartDetail',
-	async (productId, { rejectWithValue }) => {
+	async ({ productItemId, size }, { rejectWithValue }) => {
 		try {
-			console.log('Product id', productId);
-			const response = await cartApi.deleteCartDetail(productId);
+			console.log('Product id', productItemId);
+			const response = await cartApi.deleteCartDetail(productItemId, size);
 
 			if (response.status !== 200) {
 				return rejectWithValue(
@@ -112,6 +112,15 @@ const cartSlice = createSlice({
 				return (total += item.productItem.price * item.quantity);
 			}, 0);
 		},
+		cartInitializeState: () => {
+			return {
+				cartItems: [],
+				totalPrice: 0,
+				totalQuantity: 0,
+				loading: false,
+				error: null,
+			};
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -146,6 +155,6 @@ const cartSlice = createSlice({
 	},
 });
 
-export const { clearCart } = cartSlice.actions;
+export const { clearCart, cartInitializeState } = cartSlice.actions;
 
 export const cartReducer = cartSlice.reducer;

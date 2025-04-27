@@ -16,7 +16,7 @@ const orderApi = {
 		return AdminAxiosClient.get(url);
 	},
 	getOrderById: (orderId) => {
-		const url = `/orders/${orderId}`;
+		const url = `/orders/get-order-by-id/${orderId}`;
 		return AdminAxiosClient.get(url);
 	},
 	search: (keyword) => {

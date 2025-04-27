@@ -11,7 +11,7 @@ function Address() {
 	const [editingAddress, setEditingAddress] = useState(null);
 
 	// Thay đổi cách lấy address từ userInfo
-	const userInfo = useSelector((state) => state.persistedReducer.userInfo);
+	const userInfo = useSelector((state) => state.userInfo);
 	const address = userInfo?.address || [];
 
 	useEffect(() => {
@@ -28,8 +28,6 @@ function Address() {
 	};
 
 	const handleBackToProfile = () => {
-		console.log(userId);
-
 		navigate('/profile');
 	};
 
