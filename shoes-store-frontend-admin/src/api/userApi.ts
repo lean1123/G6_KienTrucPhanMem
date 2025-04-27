@@ -2,17 +2,17 @@ import AdminAxiosClient from "./axiosClient";
 
 const userApi = {
   getAll: async () => {
-    return AdminAxiosClient.get("/users");
+    return AdminAxiosClient.get("/user");
   },
   getAccount: async (id: any) => {
-    return AdminAxiosClient.get(`/accounts/${id}`);
+    return AdminAxiosClient.get(`/identity/accounts/${id}`);
   },
   getById: async (id: any) => {
-    return AdminAxiosClient.get(`/users/${id}`);
+    return AdminAxiosClient.get(`/user/${id}`);
   },
   getUserInfo: async (userId: any) => {
     // Bỏ /api vì đã có trong baseURL
-    const url = `/users/${userId}`;
+    const url = `/user/${userId}`;
     console.log("Calling getUserInfo with URL:", url);
     console.log("UserId received:", userId);
 
@@ -31,7 +31,7 @@ const userApi = {
     }
   },
   update: async (id: any, userData: any) => {
-    return AdminAxiosClient.put(`/users/${id}`, userData, {
+    return AdminAxiosClient.put(`/user/${id}`, userData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -39,18 +39,18 @@ const userApi = {
   },
 
   search: async (keyword: any) => {
-    return AdminAxiosClient.get(`/users/search`, {
+    return AdminAxiosClient.get(`/user/search`, {
       params: { keyword },
     });
   },
 
   delete: async (id: any) => {
-    return AdminAxiosClient.delete(`/users/${id}`);
+    return AdminAxiosClient.delete(`/user/${id}`);
   },
 
   // Thêm các phương thức mới cho địa chỉ
   updateAddress: async (userId: any, addressId: any, addressData: any) => {
-    const url = `/users/${userId}/addresses/${addressId}`;
+    const url = `/user/${userId}/addresses/${addressId}`;
 
     // Đảm bảo gửi đúng format
     const formattedData = {
@@ -81,7 +81,7 @@ const userApi = {
   },
 
   addAddress: async (userId: any, addressData: any) => {
-    const url = `/users/${userId}/addresses`;
+    const url = `/user/${userId}/addresses`;
     return AdminAxiosClient.post(url, addressData, {
       headers: {
         "Content-Type": "application/json",

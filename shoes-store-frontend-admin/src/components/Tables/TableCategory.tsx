@@ -24,6 +24,9 @@ const TableCategory = () => {
       const response = await categoryApi.getAll();
       console.log(response.data);
       setCategories(response.data.result);
+      if (response.data.code === 503) {
+        enqueueSnackbar(response.data.message, { variant: "error" });
+      }
     } catch (error) {
       console.error("Failed to fetch category:", error);
     } finally {
@@ -37,6 +40,9 @@ const TableCategory = () => {
       const response = await categoryApi.search(keyword);
       console.log(response.data);
       setCategories(response.data.result);
+      if (response.data.code === 503) {
+        enqueueSnackbar(response.data.message, { variant: "error" });
+      }
     } catch (error) {
       console.error("Failed to fetch category:", error);
     } finally {
@@ -112,16 +118,18 @@ const TableCategory = () => {
             </tr>
           </thead>
           <tbody>
-            {categories.map((categoryItem, key) => (
-              <tr key={key}>
-                <td className="border-b border-[#eee] py-2 px-4 pl-9 xl:pl-11">
-                  <p className="text-sm text-black">{categoryItem.name}</p>
-                </td>
+            {categories &&
+              categories.length > 0 &&
+              categories.map((categoryItem, key) => (
+                <tr key={key}>
+                  <td className="border-b border-[#eee] py-2 px-4 pl-9 xl:pl-11">
+                    <p className="text-sm text-black">{categoryItem.name}</p>
+                  </td>
 
-                <td className="border-b border-[#eee] py-2 px-4">
-                  <div className="flex items-center space-x-3.5">
-                    {/* Add button */}
-                    {/* <div className='relative group'>
+                  <td className="border-b border-[#eee] py-2 px-4">
+                    <div className="flex items-center space-x-3.5">
+                      {/* Add button */}
+                      {/* <div className='relative group'>
 											<button
 												className='hover:text-green-500'
 												onClick={() => navigate('/admin/brands/add-collection')}
@@ -133,37 +141,37 @@ const TableCategory = () => {
 											</span>
 										</div> */}
 
-                    {/* Edit button */}
-                    <div className="relative group">
-                      <button
-                        className="hover:text-yellow-500"
-                        onClick={() => {
-                          navigate(`/categories/${categoryItem.id}/edit`);
-                        }}
-                      >
-                        <EditOutlined className="w-5 h-5" />
-                      </button>
-                      <span className="absolute opacity-0 group-hover:opacity-100 bg-black text-white text-xs rounded py-1 px-2 -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                        Edit
-                      </span>
-                    </div>
+                      {/* Edit button */}
+                      <div className="relative group">
+                        <button
+                          className="hover:text-yellow-500"
+                          onClick={() => {
+                            navigate(`/categories/${categoryItem.id}/edit`);
+                          }}
+                        >
+                          <EditOutlined className="w-5 h-5" />
+                        </button>
+                        <span className="absolute opacity-0 group-hover:opacity-100 bg-black text-white text-xs rounded py-1 px-2 -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                          Edit
+                        </span>
+                      </div>
 
-                    {/* Delete button */}
-                    <div className="relative group">
-                      <button
-                        className="hover:text-red-500"
-                        onClick={() => handleDelete(categoryItem.id)}
-                      >
-                        <DeleteForeverOutlined className="w-5 h-5" />
-                      </button>
-                      <span className="absolute opacity-0 group-hover:opacity-100 bg-black text-white text-xs rounded py-1 px-2 -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                        Remove
-                      </span>
+                      {/* Delete button */}
+                      <div className="relative group">
+                        <button
+                          className="hover:text-red-500"
+                          onClick={() => handleDelete(categoryItem.id)}
+                        >
+                          <DeleteForeverOutlined className="w-5 h-5" />
+                        </button>
+                        <span className="absolute opacity-0 group-hover:opacity-100 bg-black text-white text-xs rounded py-1 px-2 -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                          Remove
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

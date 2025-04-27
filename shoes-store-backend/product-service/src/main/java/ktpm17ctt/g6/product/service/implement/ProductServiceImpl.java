@@ -42,12 +42,13 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse update(String id, ProductRequest productRequest) {
         Category category = categoryRepository.findById(productRequest.getCategoryId())
                 .orElseThrow(() -> new NotFoundException("Category ID", productRequest.getCategoryId()));
-        productRepository.findById(id)
+        Product db = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product ID", id));
         Product product;
         product = productMapper.toProduct(productRequest);
         product.setCategory(category);
         product.setId(id);
+        product.setCode(db.getCode());
         productRepository.save(product);
         return productMapper.toProductResponse(product);
     }

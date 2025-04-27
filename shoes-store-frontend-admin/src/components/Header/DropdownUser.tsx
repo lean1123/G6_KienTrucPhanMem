@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ClickOutside from "../../common/ClickOutside";
 import { useDispatch } from "react-redux";
 import { logout } from "../../hooks/auth/authSlice";
@@ -7,10 +7,12 @@ import { AppDispatch } from "../../hooks/redux/store";
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const router = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
   const handleLogout = () => {
     dispatch(logout());
+    router("/");
   };
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
