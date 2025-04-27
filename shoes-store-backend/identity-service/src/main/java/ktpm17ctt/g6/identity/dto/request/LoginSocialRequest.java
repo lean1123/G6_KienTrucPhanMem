@@ -12,7 +12,8 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginSocialRequest {
     String email;
-    String name;
+    String firstName;
+    String lastName;
     String avatar;
     String googleAccountId;
 }

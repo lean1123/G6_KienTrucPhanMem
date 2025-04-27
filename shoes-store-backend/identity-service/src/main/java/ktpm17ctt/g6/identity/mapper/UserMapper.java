@@ -1,5 +1,6 @@
 package ktpm17ctt.g6.identity.mapper;
 
+import ktpm17ctt.g6.identity.dto.request.LoginSocialRequest;
 import ktpm17ctt.g6.identity.dto.request.UserCreationRequest;
 import ktpm17ctt.g6.identity.dto.request.RegistrationRequest;
 import org.mapstruct.Mapper;
@@ -16,4 +17,5 @@ public interface UserMapper {
             source = "gender"
     )
     UserCreationRequest toUserCreationRequest(RegistrationRequest request);
+    UserCreationRequest toUserCreationRequest(LoginSocialRequest request);
 }
