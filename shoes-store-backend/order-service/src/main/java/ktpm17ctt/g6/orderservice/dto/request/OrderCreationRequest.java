@@ -21,4 +21,6 @@ public class OrderCreationRequest {
     String paymentMethod;
     @Valid
     List<OrderDetailRequest> orderDetails;
+    @NotNull(message = "Address id is required")
+    String addressId;
 }

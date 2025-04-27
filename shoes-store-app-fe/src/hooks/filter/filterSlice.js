@@ -58,6 +58,18 @@ const filterSlice = createSlice({
 		setProductName: (state, action) => {
 			state.productName = action.payload;
 		},
+		filterInitialState: () => {
+			return {
+				color: null,
+				size: null,
+				minPrice: null,
+				maxPrice: null,
+				productName: null,
+				returnProducts: [],
+				error: null,
+				loading: false,
+			};
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -76,6 +88,12 @@ const filterSlice = createSlice({
 	},
 });
 
-export const { setColor, setSize, setMinPrice, setMaxPrice, setProductName } =
-	filterSlice.actions;
+export const {
+	setColor,
+	setSize,
+	setMinPrice,
+	setMaxPrice,
+	setProductName,
+	filterInitialState,
+} = filterSlice.actions;
 export const filterReducer = filterSlice.reducer;

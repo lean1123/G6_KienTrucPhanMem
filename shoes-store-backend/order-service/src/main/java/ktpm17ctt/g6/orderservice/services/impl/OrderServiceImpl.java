@@ -6,6 +6,7 @@ import ktpm17ctt.g6.orderservice.dto.feinClient.identity.AccountResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.payment.PaymentResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.payment.RefundResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemResponse;
+import ktpm17ctt.g6.orderservice.dto.feinClient.user.AddressResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.user.UserResponse;
 import ktpm17ctt.g6.orderservice.dto.request.OrderCreationRequest;
 import ktpm17ctt.g6.orderservice.dto.request.OrderDetailRequest;
@@ -35,7 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
@@ -61,16 +61,18 @@ public class OrderServiceImpl implements OrderService {
         String email = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(authentication != null && authentication.isAuthenticated()){
+        if (authentication != null && authentication.isAuthenticated()) {
             email = authentication.getName();
             log.info("Email Logged: {}", email);
         }
 
         String userId = this.getUserIdFromEmail(email);
 
-        if(userId == null){
+        if (userId == null) {
             throw new Exception("User not exist in system");
         }
+
+        AddressResponse addressResponse = userClient.getAddressById(request.getAddressId()).getResult();
 
 
         List<OrderDetailRequest> orderDetails = request.getOrderDetails();
@@ -78,14 +80,16 @@ public class OrderServiceImpl implements OrderService {
 
         log.info("Total price: {}", total);
 
-        Order entity = Order.builder()
+        Order entity = entity = Order.builder()
                 .total(total)
                 .userId(userId)
                 .paymentMethod(PaymentMethod.valueOf(request.getPaymentMethod()))
                 .status(OrderStatus.PENDING)
                 .createdDate(Instant.now())
                 .total(total)
+                .addressId(request.getAddressId())
                 .build();
+
 
         entity = orderRepository.save(entity);
 
@@ -95,20 +99,36 @@ public class OrderServiceImpl implements OrderService {
             orderDetailService.save(orderDetail, entity);
         }
 
+
+        if (entity.getPaymentMethod().toString().equalsIgnoreCase(PaymentMethod.CASH.toString())) {
+
+
+            return OrderResponse.builder()
+                    .id(entity.getId())
+                    .createdDate(entity.getCreatedDate())
+                    .userId(entity.getUserId())
+                    .paymentMethod(entity.getPaymentMethod())
+                    .status(entity.getStatus())
+                    .orderDetails(orderDetailService.findOrderDetailByOrder_Id(entity.getId()))
+                    .total(entity.getTotal())
+                    .address(addressResponse)
+                    .build();
+        }
+
         String paymentUrl = "";
         if (entity.getPaymentMethod().equals(PaymentMethod.VNPAY)) {
             try {
                 paymentUrl = paymentClient
                         .createNewPayment(entity.getId(), String.valueOf(Long.valueOf((long) total)), GetIpAddress.getIpAddress(req))
                         .getBody().getPaymentUrl();
-            }catch (Exception e){
+            } catch (Exception e) {
                 log.error("Error while creating payment" + entity.getId(), e);
-                entity.setStatus(OrderStatus.PAYMENT_FAILED);
-                orderRepository.save(entity);
+                //Xoa don hang
+                orderRepository.deleteById(entity.getId());
             }
         }
 
-        if(paymentUrl == null || paymentUrl.isEmpty()) {
+        if (paymentUrl == null || paymentUrl.isEmpty()) {
             throw new Exception("Payment URL is empty in payment service");
         }
 
@@ -116,8 +136,6 @@ public class OrderServiceImpl implements OrderService {
 
         orderEventProducer.sendOrderSuccessEvent(email, userId); // Truyền cả email và userId
         log.info("Sent order success event for order {} to user {}", entity.getId(), email);
-
-
 
 
         return OrderResponse.builder()
@@ -129,14 +147,58 @@ public class OrderServiceImpl implements OrderService {
                 .orderDetails(orderDetailService.findOrderDetailByOrder_Id(entity.getId()))
                 .total(entity.getTotal())
                 .paymentUrl(paymentUrl)
+                .address(addressResponse)
                 .build();
     }
 
     @Override
     public OrderResponse findById(String s) throws Exception {
         return orderRepository.findById(s)
-                .map(orderMapper::orderToOrderResponse)
+                .map(order -> {
+                    AddressResponse addressResponse = null;
+                    try {
+                        addressResponse = userClient.getAddressById(order.getAddressId()).getResult();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    return OrderResponse.builder()
+                            .id(order.getId())
+                            .createdDate(order.getCreatedDate())
+                            .userId(order.getUserId())
+                            .paymentMethod(order.getPaymentMethod())
+                            .status(order.getStatus())
+                            .orderDetails(orderDetailService.findOrderDetailByOrder_Id(order.getId()))
+                            .total(order.getTotal())
+                            .address(addressResponse)
+                            .build();
+                })
                 .orElseThrow(() -> new Exception("Order not found"));
+    }
+
+    @Override
+    public OrderResponse handleUpdateOrderForPaymentFailed(String orderId) throws Exception {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new Exception("Order not found"));
+
+        if (order.getStatus().equals(OrderStatus.PENDING)) {
+            order.setStatus(OrderStatus.PAYMENT_FAILED);
+            order = orderRepository.save(order);
+        } else {
+            throw new Exception("Order cannot be updated for pay failed");
+        }
+
+        AddressResponse addressResponse = userClient.getAddressById(order.getAddressId()).getResult();
+
+        return OrderResponse.builder()
+                .id(order.getId())
+                .createdDate(order.getCreatedDate())
+                .userId(order.getUserId())
+                .paymentMethod(order.getPaymentMethod())
+                .status(order.getStatus())
+                .orderDetails(orderDetailService.findOrderDetailByOrder_Id(order.getId()))
+                .total(order.getTotal())
+                .address(addressResponse)
+                .build();
     }
 
     @Transactional
@@ -176,9 +238,20 @@ public class OrderServiceImpl implements OrderService {
 
         order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
-        return orderMapper.orderToOrderResponse(order);
+        AddressResponse addressResponse = userClient.getAddressById(order.getAddressId()).getResult();
+        return OrderResponse.builder()
+                .id(order.getId())
+                .createdDate(order.getCreatedDate())
+                .userId(order.getUserId())
+                .paymentMethod(order.getPaymentMethod())
+                .status(order.getStatus())
+                .orderDetails(orderDetailService.findOrderDetailByOrder_Id(order.getId()))
+                .total(order.getTotal())
+                .address(addressResponse)
+                .build();
     }
 
+    @Override
     public void deleteById(String s) {
         orderRepository.deleteById(s);
     }
@@ -187,18 +260,18 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findAll();
     }
 
-    private String getUserIdFromEmail(String email) throws  Exception{
+    private String getUserIdFromEmail(String email) throws Exception {
         log.info("Email in get user id from email: {}", email);
         ApiResponse<AccountResponse> accountResponse = identityClient.getAccountByEmail(email);
 
-        if(accountResponse.getResult() == null){
+        if (accountResponse.getResult() == null) {
             throw new NullPointerException("Account not found");
         }
 
         String accountId = accountResponse.getResult().getId();
 
         ApiResponse<UserResponse> userResponse = userClient.getUserByAccountId(accountId);
-        if(userResponse.getResult() == null){
+        if (userResponse.getResult() == null) {
             throw new NullPointerException("User not found");
         }
         return userResponse.getResult().getId();
@@ -208,7 +281,7 @@ public class OrderServiceImpl implements OrderService {
 
         double total = 0;
 
-       for (OrderDetailRequest orderDetail : orderDetails) {
+        for (OrderDetailRequest orderDetail : orderDetails) {
             ProductItemResponse productItemResponse = productItemClient.getProductItem(orderDetail.getProductItemId()).getResult();
 
             if (productItemResponse == null) {

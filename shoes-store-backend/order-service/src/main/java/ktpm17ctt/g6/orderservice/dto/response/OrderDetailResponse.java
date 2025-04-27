@@ -1,6 +1,7 @@
 package ktpm17ctt.g6.orderservice.dto.response;
 
 import jakarta.persistence.*;
+import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemResponse;
 import ktpm17ctt.g6.orderservice.entities.Order;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,6 +15,7 @@ public class OrderDetailResponse {
     String id;
     int quantity;
     double price;
-    String productItemId;
+    ProductItemResponse productItem;
     String orderId;
+    int size;
 }

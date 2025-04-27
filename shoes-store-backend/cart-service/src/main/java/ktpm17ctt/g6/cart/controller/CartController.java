@@ -6,11 +6,9 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import ktpm17ctt.g6.cart.dto.request.CartDetailRequest;
 import ktpm17ctt.g6.cart.dto.request.DeleteCartDetailRequest;
-import ktpm17ctt.g6.cart.dto.response.ApiResponse;
-import ktpm17ctt.g6.cart.dto.response.CartDetailResponse;
-import ktpm17ctt.g6.cart.dto.response.ProductItemResponse;
-import ktpm17ctt.g6.cart.dto.response.UserResponse;
-import ktpm17ctt.g6.cart.dto.response.QuantityOfSizeResponse;
+import ktpm17ctt.g6.cart.dto.response.*;
+import ktpm17ctt.g6.cart.dto.response.product.ProductItemResponse;
+import ktpm17ctt.g6.cart.dto.response.product.QuantityOfSize;
 import ktpm17ctt.g6.cart.enties.Cart;
 import ktpm17ctt.g6.cart.enties.CartDetail;
 import ktpm17ctt.g6.cart.enties.CartDetailPK;
@@ -107,11 +105,13 @@ public class CartController {
         }
 
         List<CartDetailResponse> cartDetailResponses = new ArrayList<>();
+
         for (CartDetail cartDetail : cartDetails) {
             String productItemId = cartDetail.getProductItemId();
-            cartDetailResponses.add(CartDetailResponse.builder()
+            ProductItemResponse productItemResponse = productFeignClient.getProductItemById(cartDetail.getProductItemId()).getResult();
+                    cartDetailResponses.add(CartDetailResponse.builder()
                     .cartDetailPK(cartDetail.getCartDetailPK())
-                    .productItemId(productItemId)
+                    .productItem(productItemResponse)
                     .quantity(cartDetail.getQuantity())
                     .build());
         }
@@ -158,14 +158,14 @@ public class CartController {
 
         // Kiểm tra size có trong quantityOfSize không
         ProductItemResponse productItem = productItemResponseApiResponse.getResult();
-        List<QuantityOfSizeResponse> quantityOfSize = productItem.getQuantityOfSize();
+        List<QuantityOfSize> quantityOfSize = productItem.getQuantityOfSize();
         if (quantityOfSize == null || quantityOfSize.isEmpty()) {
             response.put("status", HttpStatus.BAD_REQUEST.value());
             response.put("data", "No sizes available for productItemId " + cartDetailRequest.getProductItemId());
             return ResponseEntity.badRequest().body(response);
         }
 
-        Optional<QuantityOfSizeResponse> sizeQtyOpt = quantityOfSize.stream()
+        Optional<QuantityOfSize> sizeQtyOpt = quantityOfSize.stream()
                 .filter(sizeQty -> sizeQty.getSize() == size)
                 .findFirst();
         if (sizeQtyOpt.isEmpty()) {
@@ -238,7 +238,7 @@ public class CartController {
         List<CartDetailResponse> cartDetailResponses = cartDetails.stream()
                 .map(cartDetail -> CartDetailResponse.builder()
                         .cartDetailPK(cartDetail.getCartDetailPK())
-                        .productItemId(cartDetail.getProductItemId())
+                        .productItem(productFeignClient.getProductItemById(cartDetail.getProductItemId()).getResult())
                         .quantity(cartDetail.getQuantity())
                         .build())
                 .toList();
@@ -297,7 +297,7 @@ public class CartController {
         List<CartDetailResponse> cartDetailResponses = cartDetails.stream()
                 .map(cartDetail -> CartDetailResponse.builder()
                         .cartDetailPK(cartDetail.getCartDetailPK())
-                        .productItemId(cartDetail.getProductItemId())
+                        .productItem(productFeignClient.getProductItemById((cartDetail.getProductItemId())).getResult())
                         .quantity(cartDetail.getQuantity())
                         .build())
                 .toList();
@@ -384,7 +384,7 @@ public class CartController {
             String productItemId = cartDetail.getProductItemId();
             cartDetailResponses.add(CartDetailResponse.builder()
                     .cartDetailPK(cartDetail.getCartDetailPK())
-                    .productItemId(productItemId)
+                    .productItem(productFeignClient.getProductItemById(productItemId).getResult())
                     .quantity(cartDetail.getQuantity())
                     .build());
         }
@@ -418,12 +418,12 @@ public class CartController {
 
         // Kiểm tra size có trong quantityOfSize không
         ProductItemResponse productItem = productItemResponseApiResponse.getResult();
-        List<QuantityOfSizeResponse> quantityOfSize = productItem.getQuantityOfSize();
+        List<QuantityOfSize> quantityOfSize = productItem.getQuantityOfSize();
         if (quantityOfSize == null || quantityOfSize.isEmpty()) {
             throw new IllegalArgumentException("No sizes available for productItemId " + cartDetailRequest.getProductItemId());
         }
 
-        Optional<QuantityOfSizeResponse> sizeQtyOpt = quantityOfSize.stream()
+        Optional<QuantityOfSize> sizeQtyOpt = quantityOfSize.stream()
                 .filter(sizeQty -> sizeQty.getSize() == size)
                 .findFirst();
         if (sizeQtyOpt.isEmpty()) {

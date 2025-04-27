@@ -1,10 +1,7 @@
 package ktpm17ctt.g6.cart.service.implement;
 
-import jakarta.servlet.http.HttpSession;
-import ktpm17ctt.g6.cart.dto.request.CartDetailRequest;
 import ktpm17ctt.g6.cart.dto.response.ApiResponse;
-import ktpm17ctt.g6.cart.dto.response.CartDetailResponse;
-import ktpm17ctt.g6.cart.dto.response.ProductItemResponse;
+import ktpm17ctt.g6.cart.dto.response.product.ProductItemResponse;
 import ktpm17ctt.g6.cart.enties.Cart;
 import ktpm17ctt.g6.cart.enties.CartDetail;
 import ktpm17ctt.g6.cart.enties.CartDetailPK;
@@ -14,10 +11,10 @@ import ktpm17ctt.g6.cart.repository.CartRepository;
 import ktpm17ctt.g6.cart.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Service

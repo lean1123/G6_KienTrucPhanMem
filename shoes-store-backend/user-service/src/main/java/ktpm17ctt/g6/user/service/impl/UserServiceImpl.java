@@ -1,15 +1,20 @@
 package ktpm17ctt.g6.user.service.impl;
 
+import ktpm17ctt.g6.user.dto.ApiResponse;
 import ktpm17ctt.g6.user.dto.request.UserRequest;
 import ktpm17ctt.g6.user.dto.response.UserResponse;
+import ktpm17ctt.g6.user.dto.response.identity.AccountResponse;
 import ktpm17ctt.g6.user.entity.User;
 import ktpm17ctt.g6.user.mapper.UserMapper;
 import ktpm17ctt.g6.user.repository.UserRepository;
+import ktpm17ctt.g6.user.repository.clients.IdentityClient;
 import ktpm17ctt.g6.user.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +28,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
      UserRepository userRepository;
      UserMapper userMapper;
+     IdentityClient identityClient;
 
     @Override
     public List<UserResponse> findAll() {
@@ -81,5 +87,35 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByAccountId(accountId).map(userMapper::toUserResponse);
     }
 
+    @Override
+    public UserResponse getMyProfile() throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = null;
+
+        if(authentication != null && authentication.isAuthenticated()){
+            email = authentication.getName();
+            log.info("Email Logged: {}", email);
+        }
+
+        return this.getUserFromEmail(email);
+    }
+
+    @Override
+    public UserResponse getUserFromEmail(String email) throws  Exception{
+        log.info("Email in get user id from email: {}", email);
+        ApiResponse<AccountResponse> accountResponse = identityClient.getAccountByEmail(email);
+
+        if(accountResponse.getResult() == null){
+            throw new NullPointerException("Account not found");
+        }
+
+        String accountId = accountResponse.getResult().getId();
+
+        UserResponse userResponse = this.findByAccountId(accountId).orElse(null);
+        if(userResponse == null){
+            throw new NullPointerException("User not found");
+        }
+        return userResponse;
+    }
 
 }
