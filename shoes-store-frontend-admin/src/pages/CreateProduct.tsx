@@ -66,7 +66,7 @@ function CreateProduct() {
       description: "",
       rating: 0,
       category: { id: "", name: "" },
-      type: "",
+      type: "MALE",
     },
     validationSchema,
     onSubmit: (values) => {
@@ -98,9 +98,32 @@ function CreateProduct() {
           variant: "success",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to create product:", error);
-      enqueueSnackbar("Failed to create product!", { variant: "error" });
+
+      // Nếu BE trả về lỗi validation
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.code === 1008
+      ) {
+        const serverErrors: { [key: string]: string } = {};
+        error.response.data.result.forEach((err: any) => {
+          const key = Object.keys(err)[0];
+          const message = err[key];
+          serverErrors[key] = message;
+
+          // 🔥 Dùng enqueueSnackbar luôn cho mỗi field lỗi
+          enqueueSnackbar(`${message}`, { variant: "error" });
+        });
+        console.log("serverErrors:", serverErrors);
+
+        // Set lỗi vào Formik để highlight input đỏ
+        formik.setErrors(serverErrors);
+      } else {
+        // Các lỗi khác (không phải validation)
+        enqueueSnackbar("Failed to create product!", { variant: "error" });
+      }
     } finally {
       setLoading(false);
     }
@@ -172,7 +195,7 @@ function CreateProduct() {
               ) : null}
             </div>
 
-            <div>
+            {/* <div>
               <label className="text-black" htmlFor="description">
                 Description
               </label>
@@ -189,7 +212,7 @@ function CreateProduct() {
                   {formik.errors.description}
                 </p>
               ) : null}
-            </div>
+            </div> */}
 
             <div>
               <label className="text-black" htmlFor="category">
@@ -211,7 +234,7 @@ function CreateProduct() {
                 }}
                 onBlur={formik.handleBlur}
               >
-                <option value="" label="Select category" />
+                {/* <option value="" label="Select category" /> */}
                 {categories.map((category) => (
                   <option
                     key={category.id}
@@ -239,7 +262,7 @@ function CreateProduct() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
-                <option value="" label="Select type" />
+                {/* <option value="" label="Select type" /> */}
                 <option value="MALE" label="Male" />
                 <option value="FEMALE" label="Female" />
                 <option value="CHILDREN" label="Children" />

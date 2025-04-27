@@ -3,11 +3,11 @@ import Breadcrumb from "../components/Breadcrumbs/Breadcrumb";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useNavigate, useParams } from "react-router";
 import productItemApi from "../api/productItemApi";
 import { Replay } from "@mui/icons-material";
 import { enqueueSnackbar } from "notistack";
 import DragDropImageUploader from "../common/DragDropImageUploader";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function EditProductItem() {
   const [images, setImages] = useState<File[]>([]);
