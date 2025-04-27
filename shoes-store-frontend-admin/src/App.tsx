@@ -4,7 +4,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import AdminLayout from "./components/AdminLayout";
 import LoginForm from "./components/LoginForm";
-import { introspectToken } from "./hooks/auth/authSlice";
+import { introspectToken, refreshToken } from "./hooks/auth/authSlice";
 import { AppDispatch } from "./hooks/redux/store";
 import AddCollection from "./pages/AddCollection";
 import AddProductItem from "./pages/AddProductItem";
@@ -29,68 +29,103 @@ import OrderDetail from "./pages/OrderDetail";
 import UserDetail from "./pages/UserDetail";
 
 function App() {
-  const { isAuthenticated } = useSelector((state: any) => state.auth);
+  const { isAuthenticated, isLoading } = useSelector((state: any) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(introspectToken());
-  }, []);
+    const checkAuth = async () => {
+      try {
+        // Try to refresh token first
+        await dispatch(refreshToken()).unwrap();
+        // Then introspect the (possibly new) token
+        await dispatch(introspectToken()).unwrap();
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        // If refresh or introspect fails, isAuthenticated will be false
+      }
+    };
 
-  if (!isAuthenticated) {
-    return (
-      <Routes>
-        <Route
-          path="/"
-          element={
-            isAuthenticated ? <Navigate to="/" /> : <Navigate to="/login" />
-          }
-        />
-        <Route path="/login" element={<LoginForm />} />
-      </Routes>
-    );
+    checkAuth();
+  }, [dispatch]);
+
+  // Show loading indicator while checking authentication
+  if (isLoading) {
+    return <div>Loading...</div>; // Or a proper spinner component
   }
 
   return (
-    // <div className="App">
-    <AdminLayout>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/products/list" element={<ListProduct />} />
-        <Route path="/products/add" element={<CreateProduct />} />
-        <Route path="/products/edit/:id" element={<EditProduct />} />
-        <Route path="/products/:id/add-item" element={<AddProductItem />} />
-        <Route path="/products/:id/list-item" element={<ListProductItem />} />
-        <Route
-          path="/products/:id/list-item/:itemId/edit"
-          element={<EditProductItem />}
-        />
-        <Route path="/colors/list" element={<ListColor />} />
-        <Route path="/colors/add" element={<CreateColor />} />
-        <Route path="/colors/:id/edit" element={<EditColor />} />
-        <Route path="/colors/add-collection/:id" element={<AddCollection />} />
-        <Route
-          path="/brands/view-collection/:id"
-          element={<ListCollection />}
-        />
-        <Route
-          path="/brands/view-collection/:id/:collectionId/edit"
-          element={<EditCollection />}
-        />
-        <Route path="/categories/list" element={<ListCategory />} />
-        <Route path="/categories/add" element={<CreateCategory />} />
-        <Route path="/categories/:id/edit" element={<EditCategory />} />
-        <Route path="/users/list" element={<ListUser />} />
-        <Route path="/users/:id" element={<UserDetail />} />
-        <Route path="/users/:id/edit" element={<EditUser />} />
-        <Route path="/orders" element={<ListOrder />} />
-        <Route path="/orders/:id" element={<OrderDetail isEdit={false} />} />
-        <Route
-          path="/orders/:id/edit"
-          element={<OrderDetail isEdit={true} />}
-        />
-      </Routes>
-    </AdminLayout>
-    // </div>
+    <Routes>
+      {/* Public Routes */}
+      <Route
+        path="/login"
+        element={
+          isAuthenticated ? <Navigate to="/" replace /> : <LoginForm />
+        }
+      />
+
+      {/* Protected Routes */}
+      <Route
+        path="/*"
+        element={
+          isAuthenticated ? (
+            <AdminLayout>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/products/list" element={<ListProduct />} />
+                <Route path="/products/add" element={<CreateProduct />} />
+                <Route path="/products/edit/:id" element={<EditProduct />} />
+                <Route
+                  path="/products/:id/add-item"
+                  element={<AddProductItem />}
+                />
+                <Route
+                  path="/products/:id/list-item"
+                  element={<ListProductItem />}
+                />
+                <Route
+                  path="/products/:id/list-item/:itemId/edit"
+                  element={<EditProductItem />}
+                />
+                <Route path="/colors/list" element={<ListColor />} />
+                <Route path="/colors/add" element={<CreateColor />} />
+                <Route path="/colors/:id/edit" element={<EditColor />} />
+                <Route
+                  path="/colors/add-collection/:id"
+                  element={<AddCollection />}
+                />
+                <Route
+                  path="/brands/view-collection/:id"
+                  element={<ListCollection />}
+                />
+                <Route
+                  path="/brands/view-collection/:id/:collectionId/edit"
+                  element={<EditCollection />}
+                />
+                <Route path="/categories/list" element={<ListCategory />} />
+                <Route path="/categories/add" element={<CreateCategory />} />
+                <Route path="/categories/:id/edit" element={<EditCategory />} />
+                <Route path="/users/list" element={<ListUser />} />
+                <Route path="/users/:id" element={<UserDetail />} />
+                <Route path="/users/:id/edit" element={<EditUser />} />
+                <Route path="/orders" element={<ListOrder />} />
+                <Route
+                  path="/orders/:id"
+                  element={<OrderDetail isEdit={false} />}
+                />
+                <Route
+                  path="/orders/:id/edit"
+                  element={<OrderDetail isEdit={true} />}
+                />
+                {/* Fallback for unmatched routes */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </AdminLayout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+    </Routes>
   );
 }
 

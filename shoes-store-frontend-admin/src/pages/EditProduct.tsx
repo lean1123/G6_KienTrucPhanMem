@@ -145,7 +145,7 @@ function EditProduct() {
               ) : null}
             </div>
 
-            <div>
+            {/* <div>
               <label className="text-black" htmlFor="description">
                 Description
               </label>
@@ -162,7 +162,7 @@ function EditProduct() {
                   {formik.errors.description}
                 </p>
               ) : null}
-            </div>
+            </div> */}
 
             <div>
               <label className="text-black" htmlFor="category">
@@ -232,7 +232,7 @@ function EditProduct() {
               </button>
               <button
                 type="submit"
-                className="w-full bg-primary text-white rounded-md py-2"
+                className="w-full bg-blue-500 text-white rounded-md py-2"
                 onClick={() => handleSubmit(formik.values)}
                 disabled={loading}
               >

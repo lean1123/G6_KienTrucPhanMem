@@ -21,4 +21,5 @@ public class UserResponse {
     private String phone;
     private String avatar;
     private Gender gender;
+    private String accountId;
 }

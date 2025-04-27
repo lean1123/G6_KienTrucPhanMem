@@ -20,21 +20,21 @@ resilience4j:
     instances:
       identityServiceCircuitBreaker:
         failureRateThreshold: 50
-        minimumNumberOfCalls: 5
-        slidingWindowSize: 10
-        waitDurationInOpenState: 10s
+        minimumNumberOfCalls: 15
+        slidingWindowSize: 20
+        waitDurationInOpenState: 5s
       userServiceCircuitBreaker:
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 5
-        slidingWindowSize: 10
-        waitDurationInOpenState: 10s
+        failureRateThreshold: 70
+        minimumNumberOfCalls: 15
+        slidingWindowSize: 20
+        waitDurationInOpenState: 5s
       productServiceCircuitBreaker:
-        failureRateThreshold: 90
+        failureRateThreshold: 70
         minimumNumberOfCalls: 20
         slidingWindowSize: 100
-        waitDurationInOpenState: 30s
-        slow-call-duration-threshold: 120s
-        slow-call-rate-threshold: 95
+        waitDurationInOpenState: 20s
+        slow-call-duration-threshold: 15s
+        slow-call-rate-threshold: 70
       orderServiceCircuitBreaker:
         failureRateThreshold: 50
         minimumNumberOfCalls: 5
@@ -51,9 +51,9 @@ resilience4j:
         slidingWindowSize: 10
         waitDurationInOpenState: 10s
       notificationServiceCircuitBreaker:
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 5
-        slidingWindowSize: 10
+        failureRateThreshold: 70
+        minimumNumberOfCalls: 10
+        slidingWindowSize: 20
         waitDurationInOpenState: 10s
       reviewServiceCircuitBreaker:
         failureRateThreshold: 50

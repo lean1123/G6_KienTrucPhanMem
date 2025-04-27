@@ -12,15 +12,16 @@ const AuthAPI = {
     return AdminAxiosClient.post(url, body, { withCredentials: true });
   },
 
-  refreshToken: (token: string) => {
-    const url = "/identity/auth/refresh-token";
-    const body = { token };
+  refreshToken: (refreshToken: string) => {
+    const url = "/identity/auth/refresh";
+    const body = { refreshToken };
     return AdminAxiosClient.post(url, body, { withCredentials: true });
   },
 
-  logout: (token: string) => {
+  logout: (token: string, refreshToken: string) => {
     const url = "/identity/auth/logout";
-    return AdminAxiosClient.post(url, { token }, { withCredentials: true });
+    const body = { token, refreshToken };
+    return AdminAxiosClient.post(url, body, { withCredentials: true });
   },
 
   introspectToken: (token: string) => {
