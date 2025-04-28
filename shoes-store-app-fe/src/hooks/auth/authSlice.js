@@ -94,6 +94,9 @@ export const loginSocialCallback = createAsyncThunk(
 			if (response.status.valueOf() !== 200) {
 				return rejectWithValue(response.data);
 			}
+			if (response.data.code === 503) {
+				return rejectWithValue(response.data);
+			}
 			const accessToken = response.data.result.token;
 			const refreshToken = response.data.result.refreshToken;
 

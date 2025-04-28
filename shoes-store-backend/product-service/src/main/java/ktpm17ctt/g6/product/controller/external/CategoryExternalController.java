@@ -24,6 +24,7 @@ public class CategoryExternalController {
     // public endpoint
     @GetMapping()
     ApiResponse<List<CategoryResponse>> getAllCategories() {
+        log.info("Get all categories");
         return ApiResponse.<List<CategoryResponse>>builder()
                 .result(categoryService.findAll())
                 .build();
