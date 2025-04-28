@@ -29,7 +29,7 @@ public class ProductItemController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<ProductItemResponse> createProductItem(@ModelAttribute @Valid ProductItemRequest productItemRequest) {
-//        log.info("Create product item: {}", productItemRequest);
+        log.info("Create product item by product id: {}", productItemRequest.getProductId());
         ProductItemResponse productItemResponse = productItemService.save(productItemRequest);
         return ApiResponse.<ProductItemResponse>builder()
                 .result(productItemResponse)
@@ -39,7 +39,7 @@ public class ProductItemController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<ProductItemResponse> updateProductItem(@PathVariable String id, @RequestBody @Valid ProductItemRequest productItemRequest) {
-        log.info("Update product item: {}", productItemRequest);
+        log.info("Update product item with ID: {}", id);
         ProductItemResponse productItemResponse = productItemService.update(id, productItemRequest);
         return ApiResponse.<ProductItemResponse>builder()
                 .result(productItemResponse)
@@ -49,7 +49,7 @@ public class ProductItemController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<Void> deleteProductItem(@PathVariable String id) {
-        log.info("Delete product item: {}", id);
+        log.info("Delete product item with ID: {}", id);
         productItemService.delete(id);
         return ApiResponse.<Void>builder()
                 .build();
@@ -57,7 +57,7 @@ public class ProductItemController {
 
     @GetMapping("/{id}")
     ApiResponse<ProductItemResponse> getProductItem(@PathVariable String id) {
-        log.info("Get product item: {}", id);
+        log.info("Get product item with ID: {}", id);
         return ApiResponse.<ProductItemResponse>builder()
                 .result(productItemService.findById(id).orElse(null))
                 .build();

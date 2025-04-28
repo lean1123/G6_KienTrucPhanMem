@@ -39,7 +39,9 @@ const GoogleLoginCallBack = () => {
 					enqueueSnackbar('Đăng nhập thất bại', { variant: 'error' });
 					return;
 				} catch (error) {
-					// console.error('Login social callback error:', error);
+					enqueueSnackbar(error?.message || 'Đăng nhập thất bại', {
+						variant: 'error',
+					});
 					router('/login');
 				}
 			}
