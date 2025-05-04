@@ -6,6 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import App from './App.jsx';
 import { persistor, store } from './hooks/redux/store.js';
 import './index.css';
+import './resource/resources.js';
 
 createRoot(document.getElementById('root')).render(
 	// 	<StrictMode>
@@ -21,9 +22,9 @@ createRoot(document.getElementById('root')).render(
 			<BrowserRouter>
 				<SnackbarProvider
 					maxSnack={3}
-					anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
 					autoHideDuration={3000}
-					style={{ zIndex: 9999 }}
+					style={{ zIndex: 99999 }}
 				>
 					<App />
 				</SnackbarProvider>

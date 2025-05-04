@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,7 @@ public class OrderController {
     @PostMapping("/canceling-order/{id}")
     public ResponseEntity<?> cancelingOrder(@PathVariable String id, HttpServletRequest httpServletRequest){
         try {
-            return ResponseEntity.ok(orderService.canclingOrder(id, httpServletRequest));
+            return ResponseEntity.ok(orderService.cancelingOrder(id, httpServletRequest));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -56,4 +57,10 @@ public class OrderController {
     public  ResponseEntity<OrderResponse> getOrderById(@PathVariable String id) throws Exception {
         return ResponseEntity.ok(orderService.findById(id));
     }
+
+    @GetMapping("/get-my-orders")
+    public ResponseEntity<List<OrderResponse>> getMyOrders() throws Exception {
+        return ResponseEntity.ok(orderService.getMyOrders());
+    }
+
 }

@@ -92,6 +92,26 @@ export const deleteCartDetail = createAsyncThunk(
 	},
 );
 
+// Clear the cart
+export const clearCartFromSession = createAsyncThunk(
+	'cart/clearCart',
+	async (_, { rejectWithValue }) => {
+		try {
+			const response = await cartApi.clearCart();
+			if (response.status !== 200) {
+				return rejectWithValue(
+					`Failed to delete item. Status: ${response.status}, Message: ${response.statusText}`,
+				);
+			}
+
+			return response.data;
+		} catch (error) {
+			console.error('Error deleting cart item:', error);
+			return rejectWithValue('Error deleting cart item');
+		}
+	},
+);
+
 const cartSlice = createSlice({
 	name: 'cart',
 	initialState: {
@@ -151,6 +171,14 @@ const cartSlice = createSlice({
 			})
 			.addCase(deleteCartDetail.fulfilled, (state, action) => {
 				state.cartItems = action.payload.data;
+			})
+			.addCase(clearCartFromSession.fulfilled, (state) => {
+				state.cartItems = [];
+				state.totalPrice = 0;
+				state.totalQuantity = 0;
+			})
+			.addCase(clearCartFromSession.rejected, (state, action) => {
+				state.error = action.payload;
 			});
 	},
 });

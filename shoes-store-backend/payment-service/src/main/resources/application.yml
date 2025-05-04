@@ -39,3 +39,15 @@ server:
 vnpay:
   vnp_TmnCode: ${VNPAY_TMNCODE}
   vnp_secretKey: ${VNPAY_HASH_SECRET}
+
+frontend:
+    url: ${FRONTEND_URL}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30

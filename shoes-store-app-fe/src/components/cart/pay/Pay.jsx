@@ -13,8 +13,11 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import * as yup from 'yup';
-import { cartInitializeState } from '../../../hooks/cart/cartSlice';
-import { createOrder } from '../../../hooks/order/orderSlice';
+import {
+	cartInitializeState,
+	clearCartFromSession,
+} from '../../../hooks/cart/cartSlice';
+import { createOrder, setOrder } from '../../../hooks/order/orderSlice';
 import { setProgress } from '../../../hooks/orderProgressStore';
 import { fetchAddress } from '../../../hooks/user/userSlice';
 import PaymentDialog from './PaymentDialog';
@@ -80,13 +83,17 @@ const Pay = () => {
 		try {
 			const orderResult = await dispatch(createOrder(data));
 			const resultUnwrapped = unwrapResult(orderResult);
-			if (resultUnwrapped?.paymentMethod === 'VNPAY') {
+			if (resultUnwrapped?.id && resultUnwrapped?.paymentMethod === 'VNPAY') {
 				setVnPayUrl(resultUnwrapped?.paymentUrl);
 				setShowModal(true);
+				dispatch(setOrder(resultUnwrapped));
+				dispatch(clearCartFromSession());
+				dispatch(cartInitializeState());
 				return;
 			}
 			if (resultUnwrapped?.id && resultUnwrapped?.paymentMethod === 'CASH') {
 				enqueueSnackbar('Đặt hàng thành công', { variant: 'success' });
+				dispatch(clearCartFromSession());
 				dispatch(cartInitializeState());
 				navigation('/orderSuccess');
 				dispatch(setProgress('Thực hiện đặt hàng'));
@@ -165,8 +172,6 @@ const Pay = () => {
 										label={
 											address?.homeNumber +
 											'/' +
-											address?.street +
-											'/' +
 											address?.ward +
 											'/' +
 											address?.district +
@@ -210,7 +215,7 @@ const Pay = () => {
 									className='h-20 w-20 rounded-lg mr-2'
 								/>
 								<div>
-									<p>{item?.product?.name}</p>
+									<p>{item?.productItem?.product?.name}</p>
 									<div className='flex'>
 										<p className='text-stone-500'>{item?.productItem?.color?.name}</p>
 										<p className='text-stone-500 ml-1'> {item?.cartDetailPK?.size}</p>

@@ -17,6 +17,7 @@ import Profile from './components/profile/Profile';
 import UpdateProfile from './components/profile/UpdateProfile';
 import ProtectedLayout from './middleware/ProtectLauout';
 import VNPayOrderResult from './components/cart/pay/VNPayOrderResult';
+import ChatControll from './components/chat';
 
 function App() {
 	return (
@@ -46,6 +47,7 @@ function App() {
 
 					<Route path='*' element={<h1>404 Not Found</h1>} />
 				</Routes>
+				<ChatControll />
 			</main>
 
 			<Footer />

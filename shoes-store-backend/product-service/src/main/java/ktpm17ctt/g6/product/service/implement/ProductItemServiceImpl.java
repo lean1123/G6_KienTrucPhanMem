@@ -1,4 +1,4 @@
-    package ktpm17ctt.g6.product.service.implement;
+package ktpm17ctt.g6.product.service.implement;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,17 +33,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-    @Service
-    @RequiredArgsConstructor
-    @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-    @Slf4j
-    public class ProductItemServiceImpl implements ProductItemService {
-        ProductItemRepository productItemRepository;
-        ProductRepository productRepository;
-        ColorRepository colorRepository;
-        ProductItemMapper productItemMapper;
-        ProductMapper productMapper;
-        ColorMapper colorMapper;
+@Service
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Slf4j
+public class ProductItemServiceImpl implements ProductItemService {
+    ProductItemRepository productItemRepository;
+    ProductRepository productRepository;
+    ColorRepository colorRepository;
+    ProductItemMapper productItemMapper;
+    ProductMapper productMapper;
+    ColorMapper colorMapper;
 
     S3Service s3Service;
 
@@ -150,6 +150,8 @@ import java.util.Optional;
                 .map(productItemMapper::toProductItemResponse)
                 .toList();
 
+        log.info("Length of product item list: {}", itemList.size());
+
         return PageResponse.<ProductItemResponse>builder()
                 .currentPage(page)
                 .pageSize(10)
@@ -159,27 +161,29 @@ import java.util.Optional;
                 .build();
     }
 
-        @Override
-        public int getTotalQuantityByProductAndSize(String id, Integer size) {
-            ProductItem productItem = productItemRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("ffh"));
+    @Override
+    public int getTotalQuantityByProductAndSize(String id, Integer size) {
+        ProductItem productItem = productItemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("ffh"));
 
-            return productItem.getQuantityOfSize().stream()
-                    .filter(q -> q.getSize().equals(size))
-                    .mapToInt(QuantityOfSize::getQuantity)
-                    .sum();
-        }
+        return productItem.getQuantityOfSize().stream()
+                .filter(q -> q.getSize().equals(size))
+                .mapToInt(QuantityOfSize::getQuantity)
+                .sum();
+    }
 
-        @Override
-        public List<ProductItemResponse> findAll() {
-            var list= productItemRepository.findAll();
-            return list.stream().map(productItemMapper::toProductItemResponse).toList();
+    @Override
+    public List<ProductItemResponse> findAll() {
+        var list = productItemRepository.findAll();
+        return list.stream().map(productItemMapper::toProductItemResponse).toList();
 
-        }
+    }
+
     private List<QuantityOfSize> convertJsonToQuantityOfSize(String json) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(json, new TypeReference<List<QuantityOfSize>>() {});
+            return objectMapper.readValue(json, new TypeReference<List<QuantityOfSize>>() {
+            });
         } catch (Exception e) {
             throw new RuntimeException("Invalid quantityOfSize JSON format", e);
         }

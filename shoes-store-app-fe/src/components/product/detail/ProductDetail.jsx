@@ -78,108 +78,127 @@ function ProductDetail() {
 	}
 
 	return (
-		<div className='grid grid-cols-2 font-calibri py-10'>
-			<div className='flex flex-row justify-center'>
-				<div className='flex-col h-96 overflow-auto scrollbar-hidden p-2 mr-2'>
+		<div className='grid grid-cols-5 font-calibri py-10 gap-8'>
+			{/* LEFT - IMAGE PREVIEW (chiếm 3 cột) */}
+			<div className='col-span-3 flex flex-row justify-center'>
+				{/* Thumbnail Images */}
+				<div className='flex flex-col h-[550px] overflow-auto p-2 mr-4 gap-2'>
 					{productItem?.images.map((item, index) => (
 						<div
 							key={index}
-							className={`border rounded-lg object-cover p-2 mr-2 mb-2 ${selectedImage === item && 'bg-orange-300'}`}
+							className={`border rounded-lg p-1 cursor-pointer transition-transform duration-200 ${
+								selectedImage === item
+									? 'ring-2 ring-orange-400 scale-105'
+									: 'hover:ring-1 hover:ring-orange-300 hover:scale-105'
+							}`}
 							onClick={() => setSelectedImage(item)}
 						>
-							<img className={`w-20`} src={item} alt='product' />
+							<img
+								className='w-20 h-20 object-cover rounded'
+								src={item}
+								alt='product thumb'
+							/>
 						</div>
 					))}
 				</div>
-				<div className='border rounded-lg w-96 h-96 object-cover p-2'>
-					<img className='w-full h-full' src={selectedImage} alt='product avatar' />
+
+				{/* Main Image */}
+				<div className='border rounded-lg w-[550px] h-[550px] object-cover shadow-lg overflow-hidden'>
+					<img
+						className='w-full h-full object-cover transition-transform duration-300 hover:scale-105'
+						src={selectedImage}
+						alt='product large'
+					/>
 				</div>
 			</div>
-			<div className='mb-10'>
-				<h2 className='text-2xl font-bold mb-4'>{productItem?.product.name}</h2>
-				<div className='w-full flex justify-start mb-4'>
-					<p className='text-lg mr-10 font-semibold text-orange-600'>
+
+			{/* RIGHT - PRODUCT INFO (chiếm 2 cột) */}
+			<div className='col-span-2'>
+				<h2 className='text-3xl font-extrabold text-slate-900 mb-4'>
+					{productItem?.product.name}
+				</h2>
+
+				<div className='flex items-center mb-4'>
+					<p className='text-xl font-bold text-orange-600 mr-10'>
 						{formatCurrency(productItem?.price)}
 					</p>
-					<p className='text-lg text-orange-600'>
-						Tình trạng còn hàng: {quantity === 0 ? 'Hết hàng' : quantity}
+					<p className='text-lg font-semibold text-slate-800'>
+						Tình trạng: {quantity === 0 ? 'Hết hàng' : `Còn ${quantity} sản phẩm`}
 					</p>
 				</div>
-				<div className='flex justify-start mb-4'>
-					<p className='text-base font-bold mr-2'>Màu Sắc:</p>
-					<div className='flex justify-start'>
-						<span
+
+				<div className='flex justify-start'>
+					<div className='mr-10'>
+						<p className='text-base font-semibold text-slate-800 mb-1'>Màu sắc:</p>
+						<div
 							className='shadow-md border-2 border-gray-300 rounded-full w-8 h-8'
 							style={{ backgroundColor: productItem.color.code }}
-						></span>
+						></div>
+					</div>
+
+					<div>
+						<p className='text-base font-semibold text-slate-800 mb-1'>Chọn size:</p>
+						<div className='flex'>
+							{productItem?.quantityOfSize?.map((item, index) => (
+								<div
+									key={index}
+									className={`border rounded-lg w-10 h-10 flex justify-center items-center mr-2 cursor-pointer ${
+										selectedSize === item.size ? 'bg-orange-300 shadow-md' : ''
+									}`}
+									onClick={() => {
+										handleSizeSelect(item.size);
+										setQuantity(item.quantity);
+									}}
+								>
+									{item.size}
+								</div>
+							))}
+						</div>
 					</div>
 				</div>
-				<div className='flex justify-start mb-4'>
-					<p className='text-base font-bold mr-2'>Chọn size:</p>
-					<div className='flex justify-start'>
-						{productItem?.quantityOfSize?.map((item, index) => (
-							<div
-								key={index}
-								className={`border rounded-lg w-10 h-10 flex justify-center items-center mr-2 cursor-pointer ${
-									selectedSize === item.size ? 'bg-orange-300 shadow-md' : ''
-								}`}
-								onClick={() => {
-									handleSizeSelect(item.size);
-									setQuantity(item.quantity);
-								}}
-							>
-								{item.size}
-							</div>
-						))}
-					</div>
-				</div>
-				<div className='mb-8 text-base text-slate-800 ml-24'>
+
+				<div className='mb-6 ml-1'>
 					<button
-						className='font-medium text-orange-600'
+						className='text-base font-medium text-orange-600 underline z-999999'
 						onClick={() => setShowSizeChoosenGuid(true)}
 					>
 						Hướng dẫn chọn size
 					</button>
 				</div>
-				<div className='flex justify-start ml-24 mb-10'>
+
+				<div className='flex items-center gap-4 mb-10'>
 					<button
-						className='bg-orange-600 px-8 py-2 font-bold hover:bg-slate-950 hover:text-sky-50'
+						className='bg-orange-600 px-8 py-2 text-white font-bold hover:bg-slate-900 transition rounded-md shadow-md'
 						onClick={handleAddToCart}
 					>
 						THÊM VÀO GIỎ HÀNG
 					</button>
-					<div className='px-8 py-2 font-bold border w-30 text-orange-600 border-orange-600'>
+					<button className='px-8 py-2 font-bold border border-orange-600 text-orange-600'>
 						<FavoriteBorderIcon />
-					</div>
+					</button>
 				</div>
 
-				<div className='w-full flex flex-col'>
-					<div className='w-3/4 flex justify-between items-center border-t border-gray-800 py-2'>
-						<SubProductDetail
-							title='Mô tả sản phẩm'
-							content={productItem?.product.description}
-							path={`/products/${params.id}/description`}
-						/>
-					</div>
-					<div className='w-3/4 flex justify-between items-center border-t border-gray-800 py-2'>
-						<SubProductDetail
-							title='Thông tin bảo hành'
-							content='Sản phẩm được bảo hành trong vòng 3 tháng kể từ thời điểm mua hàng. Ngoài ra sản phẩm còn được bảo hành trọn đời với lỗi bong keo, đứt chỉ (vật tư của sản phẩm đủ điều kiện tái chế không bị rách,…)'
-						/>
-					</div>
-					<div className='w-3/4 flex justify-between items-center border-t border-gray-800 py-2'>
-						<SubProductDetail
-							title='Chính sách đổi trả'
-							content='Trường hợp lỗi từ Biti’s giao sai thông tin sản phẩm (không đúng kích cỡ, không đúng sản phẩm), hư hỏng trong quá trình vận chuyển hoặc từ nhà sản xuất khách hàng được miễn phí hoàn toàn chi phí vận chuyển đổi hàng. Khách hàng gửi hàng về trong thời gian 7 ngày (không tính thứ 7, Chủ nhật) kể từ ngày nhận hàng, khách mang hàng ra bưu điện và chọn người nhận thanh toán.'
-						/>
-					</div>
-					<div className='w-3/4 flex justify-between items-center border-t border-gray-800 py-2'>
-						<SubProductDetail title='Đánh giá' content={productItem.product.rating} />
-					</div>
+				{/* Sub Detail */}
+				<div className='flex flex-col gap-2'>
+					<SubProductDetail
+						title='Mô tả sản phẩm'
+						content={productItem?.product.description}
+					/>
+					<SubProductDetail
+						title='Thông tin bảo hành'
+						content='Sản phẩm được bảo hành trong vòng 3 tháng...'
+					/>
+					<SubProductDetail
+						title='Chính sách đổi trả'
+						content='Trường hợp lỗi từ Biti’s giao sai...'
+					/>
+					<SubProductDetail title='Đánh giá' content={productItem.product.rating} />
 				</div>
 			</div>
+
+			{/* Modal chọn size */}
 			{showSizeChoosenGuid && (
-				<div className='fixed inset-0 z-50 bg-gray-300 bg-opacity-70 flex justify-center items-center'>
+				<div className='fixed inset-0 z-[999999] bg-gray-300 bg-opacity-70 flex justify-center items-center'>
 					<div className='relative w-full h-full'>
 						<img
 							src='/chonsize.webp'

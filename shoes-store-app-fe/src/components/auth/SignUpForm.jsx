@@ -4,10 +4,34 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { register as registerAction } from '../../hooks/auth/authSlice';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 function SignUpForm() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+	const SignUpSchema = yup.object().shape({
+		firstName: yup.string().required('Tên đầu là bắt buộc'),
+		lastName: yup.string().required('Tên cuối là bắt buộc'),
+		email: yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
+		password: yup
+			.string()
+			.min(6, 'Mật khẩu phải có ít nhất 6 ký tự')
+			.required('Mật khẩu là bắt buộc'),
+		phone: yup
+			.string()
+			.matches(
+				/^[0-9]{10}$/,
+				'Số điện thoại hợp lệ phải có 10 chữ số: (vd: 0123456789)',
+			)
+			.required('Số điện thoại là bắt buộc'),
+		dob: yup.string().required('Ngày sinh là bắt buộc'),
+		gender: yup
+			.string()
+			.oneOf(['MALE', 'FEMALE'], 'Giới tính không hợp lệ')
+			.required('Giới tính là bắt buộc'),
+	});
 
 	const {
 		register,
@@ -20,9 +44,10 @@ function SignUpForm() {
 			email: '',
 			password: '',
 			phone: '',
-			gender: '',
+			gender: 'FEMALE', // set mặc định nếu muốn
 			dob: '',
 		},
+		resolver: yupResolver(SignUpSchema),
 	});
 
 	const onSubmit = async (data) => {
@@ -48,7 +73,7 @@ function SignUpForm() {
 	return (
 		<>
 			<div className='flex justify-center pt-5'>
-				<div className='boder-createAccount pt-3'>
+				<div className='bg-white rounded-2xl shadow-xl p-8 w-full max-w-xl'>
 					<div className='flex justify-center'>
 						<h1 className='font-bold text-xl justify-center'>Thêm Tài Khoản</h1>
 					</div>
@@ -62,7 +87,7 @@ function SignUpForm() {
 									className='w-full boder no-border py-1 input-field'
 									type='text'
 									id='firstName'
-									{...register('firstName', { required: 'Tên đầu là bắt buộc' })}
+									{...register('firstName')}
 								/>
 								{errors.firstName && (
 									<p className='text-red-500 text-sm'>{errors.firstName.message}</p>
@@ -78,7 +103,7 @@ function SignUpForm() {
 									className='w-full boder no-border py-1 input-field'
 									type='text'
 									id='lastName'
-									{...register('lastName', { required: 'Tên cuối là bắt buộc' })}
+									{...register('lastName')}
 								/>
 								{errors.lastName && (
 									<p className='text-red-500 text-sm'>{errors.lastName.message}</p>
@@ -94,13 +119,7 @@ function SignUpForm() {
 									className='w-full boder no-border py-1 input-field'
 									type='email'
 									id='email'
-									{...register('email', {
-										required: 'Email là bắt buộc',
-										pattern: {
-											value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-											message: 'Email không hợp lệ',
-										},
-									})}
+									{...register('email')}
 								/>
 								{errors.email && (
 									<p className='text-red-500 text-sm'>{errors.email.message}</p>
@@ -116,13 +135,7 @@ function SignUpForm() {
 									className='w-full boder no-border py-1 input-field'
 									type='password'
 									id='password'
-									{...register('password', {
-										required: 'Mật khẩu là bắt buộc',
-										minLength: {
-											value: 6,
-											message: 'Mật khẩu phải có ít nhất 6 ký tự',
-										},
-									})}
+									{...register('password')}
 								/>
 								{errors.password && (
 									<p className='text-red-500 text-sm'>{errors.password.message}</p>
@@ -138,13 +151,7 @@ function SignUpForm() {
 									className='w-full boder no-border py-1 input-field'
 									type='text'
 									id='phone'
-									{...register('phone', {
-										required: 'Số điện thoại là bắt buộc',
-										minLength: {
-											value: 10,
-											message: 'Số điện thoại hợp lệ phải có 10 chữ số: (vd: 0123456789)',
-										},
-									})}
+									{...register('phone')}
 								/>
 								{errors.phone && (
 									<p className='text-red-500 text-sm'>{errors.phone.message}</p>
@@ -160,9 +167,7 @@ function SignUpForm() {
 									className='w-full boder no-border py-1 input-field'
 									type='date'
 									id='dob'
-									{...register('dob', {
-										required: 'Ngày sinh là bắt buộc',
-									})}
+									{...register('dob')}
 								/>
 								{errors.dob && (
 									<p className='text-red-500 text-sm'>{errors.dob.message}</p>
@@ -180,9 +185,7 @@ function SignUpForm() {
 										name='gender'
 										className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 
 										dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-										{...register('gender', {
-											required: 'Giới tính là bắt buộc',
-										})}
+										{...register('gender')}
 									/>
 									<label
 										htmlFor='default-radio-1'
@@ -200,9 +203,7 @@ function SignUpForm() {
 										name='gender'
 										className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 
 										dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-										{...register('gender', {
-											required: 'Giới tinh là bắt buộc',
-										})}
+										{...register('gender')}
 									/>
 									<label
 										htmlFor='default-radio-2'
@@ -223,6 +224,18 @@ function SignUpForm() {
 							>
 								Tạo Tài Khoản
 							</button>
+						</div>
+
+						<div className='flex justify-center mt-4'>
+							<p className='text-sm text-gray-600'>
+								Bạn đã có tài khoản?{' '}
+								<span
+									className='text-blue-600 hover:underline cursor-pointer'
+									onClick={() => navigate('/login')}
+								>
+									Đăng nhập
+								</span>
+							</p>
 						</div>
 					</form>
 				</div>

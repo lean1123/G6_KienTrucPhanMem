@@ -1,7 +1,7 @@
+import { Box, Paper } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import orderDetailApi from '../../api/orderDetailApi';
-import { Box, Paper } from '@mui/material';
+import orderApi from '../../api/orderApi';
 import { formatCurrency } from '../../utils/formatPrice';
 
 function OrderDetails() {
@@ -12,12 +12,12 @@ function OrderDetails() {
 	useEffect(() => {
 		const fetchOrderDetailsByOrderId = async () => {
 			try {
-				const response = await orderDetailApi.getOrderDetail(orderId);
+				const response = await orderApi.getOrderById(orderId);
 				if (response.status !== 200) {
 					console.error('Failed to fetch order details');
 				}
 
-				setOrderDetails(response?.data?.data);
+				setOrderDetails(response?.data?.orderDetails);
 			} catch (error) {
 				console.error('Failed to fetch order details:', error);
 			}
@@ -27,12 +27,12 @@ function OrderDetails() {
 	}, [orderId]);
 
 	return (
-		<Box className='w-full flex flex-col items-center bg-slate-200'>
+		<Box className='w-full flex flex-col items-center'>
 			{orderDetails?.map((item) => (
 				<Paper elevation={3} className='p-4 mt-4 mb-4 w-2/3 flex' key={item?.id}>
 					<img
 						className='h-60 w-60 rounded-lg mr-2'
-						src={item?.productItem?.listDetailImages[0]}
+						src={item?.productItem?.images[0]}
 						alt={item?.productItem?.product?.name}
 					/>
 					<div className='flex flex-col flex-1 p-6'>
@@ -44,20 +44,18 @@ function OrderDetails() {
 						</div>
 						<div className='flex items-center justify-around'>
 							<p className='text-lg font-semibold'>Kích cỡ: </p>
-							<p className='font-calibri font-semibold text-lg'>
-								{item?.productItem?.size}
-							</p>
+							<p className='font-calibri font-semibold text-lg'>{item?.size}</p>
 						</div>
 						<div className='flex items-center justify-around'>
 							<p className='text-lg font-semibold'>Màu sắc: </p>
 							<p className='font-calibri font-semibold text-lg'>
-								{item?.productItem?.color}
+								{item?.productItem?.color?.name}
 							</p>
 						</div>
 						<div className='flex items-center justify-around'>
 							<p className='text-lg font-semibold'>Giá: </p>
 							<p className='font-calibri font-semibold text-lg'>
-								{formatCurrency(item?.pricePerItem)}
+								{formatCurrency(item?.price)}
 							</p>
 						</div>
 						<div className='flex items-center justify-around'>

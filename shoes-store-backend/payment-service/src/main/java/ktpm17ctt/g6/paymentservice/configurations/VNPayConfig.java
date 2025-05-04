@@ -22,7 +22,7 @@ import java.security.NoSuchAlgorithmException;
 @Component
 public class VNPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:5173";
+    public static String vnp_ReturnUrl = "http://localhost:8089/internal/payments/status";
     @Value("${vnpay.vnp_TmnCode}")
     private String vnp_TmnCodeValue;
     @Value("${vnpay.vnp_secretKey}")

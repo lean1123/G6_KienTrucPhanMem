@@ -56,6 +56,7 @@ public class PaymentServiceImpl implements PaymentService {
                 log.info("Payment failed, updating order status to FAILED for orderId: {}", orderId);
             }
             paymentEntity = paymentRepository.save(paymentEntity);
+            orderClient.updatePaymentStatusForOrder(orderId, true);
         }catch (Exception e){
             log.error("Error saving payment: {}", e.getMessage());
             paymentRepository.deleteById(paymentEntity.getId());

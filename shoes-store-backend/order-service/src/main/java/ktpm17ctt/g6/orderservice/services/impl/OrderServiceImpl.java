@@ -1,5 +1,6 @@
 package ktpm17ctt.g6.orderservice.services.impl;
 
+import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import ktpm17ctt.g6.orderservice.dto.common.ApiResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.identity.AccountResponse;
@@ -29,34 +30,49 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 //import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class OrderServiceImpl implements OrderService {
-    OrderRepository orderRepository;
-    OrderMapper orderMapper;
-    OrderDetailService orderDetailService;
-    PaymentClient paymentClient;
-    UserClient userClient;
-    ProductItemClient productItemClient;
-    IdentityClient identityClient;
-    OrderEventProducer orderEventProducer;
+    private final OrderRepository orderRepository;
+    private final OrderMapper orderMapper;
+    private final OrderDetailService orderDetailService;
+    private final PaymentClient paymentClient;
+    private final UserClient userClient;
+    private final ProductItemClient productItemClient;
+    private final IdentityClient identityClient;
+    private final OrderEventProducer orderEventProducer;
 //    KafkaTemplate<String, Object> kafkaTemplate;
 //    KafkaService kafkaService;
+
+    @Value("${gateway.health.check.url}")
+    private String GATEWAY_HEALTH_CHECK_URL;
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public OrderResponse save(OrderCreationRequest request, HttpServletRequest req) throws Exception {
+        log.info("Gateway health check URL: {}", GATEWAY_HEALTH_CHECK_URL);
+
+        log.info("Gateway is healthy: {}", this.isGatewayHealthy(GATEWAY_HEALTH_CHECK_URL));
+
+//        check gateway health
+        if (!isGatewayHealthy(GATEWAY_HEALTH_CHECK_URL)) {
+            throw new Exception("Gateway is not ready!");
+        }
+
 //        Check user dat hang
         String email = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -88,6 +104,7 @@ public class OrderServiceImpl implements OrderService {
                 .createdDate(Instant.now())
                 .total(total)
                 .addressId(request.getAddressId())
+                .isPayed(false)
                 .build();
 
 
@@ -198,25 +215,45 @@ public class OrderServiceImpl implements OrderService {
                 .orderDetails(orderDetailService.findOrderDetailByOrder_Id(order.getId()))
                 .total(order.getTotal())
                 .address(addressResponse)
+                .isPayed(order.isPayed())
                 .build();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public OrderResponse canclingOrder(String orderId, HttpServletRequest request) throws Exception {
+    public OrderResponse cancelingOrder(String orderId, HttpServletRequest request) throws Exception {
+
+//        check gateway health
+        if (!isGatewayHealthy(GATEWAY_HEALTH_CHECK_URL)) {
+            throw new Exception("Gateway is not ready!");
+        }
+
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new Exception("Order not found"));
 
-        if (order.getStatus().equals(OrderStatus.PENDING)) {
+        if(!order.getStatus().toString().equalsIgnoreCase(OrderStatus.PENDING.toString())){
+            throw  new Exception("Order cannot be cancelled");
+        }
+
+        if (order.getPaymentMethod().toString().equalsIgnoreCase("VNPAY")) {
             order.setStatus(OrderStatus.CANCELLED);
 
-            PaymentResponse paymentResponse = paymentClient.getPaymentByOrderId(orderId).getBody();
+            PaymentResponse paymentResponse = null;
+            try {
+                ResponseEntity<PaymentResponse> responseEntity = paymentClient.getPaymentByOrderId(orderId);
+                if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                    paymentResponse = responseEntity.getBody();
+                }
+            } catch (FeignException.Unauthorized | FeignException.NotFound ex) {
+                log.warn("Payment not found or unauthorized for order {}", orderId);
+                // Nếu cần, bạn có thể throw 1 exception custom ở đây nếu lỗi cần fail luôn.
+                throw new Exception("Error while getting payment information for VNPay order");
+            } catch (Exception ex) {
+                log.error("Unexpected error while calling payment service", ex);
+                throw new Exception("Error while getting payment information");
+            }
 
-            log.info("Payment response: {}", paymentResponse);
-            assert paymentResponse != null;
-            log.info("Payment status: {}", paymentResponse.getStatus());
-
-            if (paymentResponse != null && paymentResponse.getStatus().toUpperCase().equalsIgnoreCase("SUCCESS")) {
+            if (paymentResponse != null && "SUCCESS".equalsIgnoreCase(paymentResponse.getStatus())) {
                 log.info("Refunding payment");
                 try {
                     RefundResponse refundResponse = paymentClient.refundPayment(
@@ -239,6 +276,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
         AddressResponse addressResponse = userClient.getAddressById(order.getAddressId()).getResult();
+
         return OrderResponse.builder()
                 .id(order.getId())
                 .createdDate(order.getCreatedDate())
@@ -248,8 +286,10 @@ public class OrderServiceImpl implements OrderService {
                 .orderDetails(orderDetailService.findOrderDetailByOrder_Id(order.getId()))
                 .total(order.getTotal())
                 .address(addressResponse)
+                .isPayed(order.isPayed())
                 .build();
     }
+
 
     @Override
     public void deleteById(String s) {
@@ -292,6 +332,76 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return total;
+    }
+
+    @Override
+    public List<OrderResponse> getMyOrders() throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        log.info("Email Logged: {}", email);
+        String userId = this.getUserIdFromEmail(email);
+
+        List<Order> orders = orderRepository.findOrdersByUserId(userId);
+
+        return orders.stream()
+                .map(order -> {
+                    AddressResponse addressResponse = null;
+                    try {
+                        addressResponse = userClient.getAddressById(order.getAddressId()).getResult();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    return OrderResponse.builder()
+                            .id(order.getId())
+                            .createdDate(order.getCreatedDate())
+                            .userId(order.getUserId())
+                            .paymentMethod(order.getPaymentMethod())
+                            .status(order.getStatus())
+                            .orderDetails(orderDetailService.findOrderDetailByOrder_Id(order.getId()))
+                            .total(order.getTotal())
+                            .address(addressResponse)
+                            .isPayed(order.isPayed())
+                            .build();
+                })
+                .toList();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public OrderResponse updatePaymentStatusForOrder(String orderId, boolean isPayed) throws Exception {
+
+        log.info("Updating payment status for orderId: {}", orderId);
+        log.info("Payment status updated to: {}", isPayed);
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        order.setPayed(isPayed);
+        order = orderRepository.save(order);
+
+        AddressResponse addressResponse = userClient.getAddressById(order.getAddressId()).getResult();
+
+        return OrderResponse.builder()
+                .id(order.getId())
+                .createdDate(order.getCreatedDate())
+                .userId(order.getUserId())
+                .paymentMethod(order.getPaymentMethod())
+                .status(order.getStatus())
+                .orderDetails(orderDetailService.findOrderDetailByOrder_Id(order.getId()))
+                .total(order.getTotal())
+                .address(addressResponse)
+                .build();
+
+    }
+
+    private boolean isGatewayHealthy(String gatewayHealthUrl) {
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity(gatewayHealthUrl, String.class);
+            return response.getStatusCode() == HttpStatus.OK;
+        } catch (Exception e) {
+            return false; // Nếu Gateway chết, timeout, lỗi 500,... thì coi như unhealthy
+        }
     }
 }
 

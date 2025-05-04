@@ -6,10 +6,12 @@ import { formatCurrency } from '../../utils/formatPrice';
 
 function ProductItem({ item }) {
 	const [isHeart, setIsHeart] = React.useState(false);
-	const [currentImage, setCurrentImage] = React.useState(item?.images[0]);
 
 	return (
-		<div className='relative h-full w-full border-1 overflow-hidden group'>
+		<div
+			className='relative h-full w-full border-1 rounded-lg shadow-md overflow-hidden group 
+		transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 bg-slate-100'
+		>
 			<Link
 				className='w-full h-fit p-0 m-0 flex flex-col items-start relative'
 				href={`/products/${item.id}`}
@@ -34,11 +36,9 @@ function ProductItem({ item }) {
 						Mới
 					</div>
 					<img
-						src={currentImage}
-						onMouseEnter={() => setCurrentImage(item.images[1] || item.images[0])}
-						onMouseLeave={() => setCurrentImage(item.images[0])}
+						src={item.images[0]}
 						alt={item?.product?.name}
-						className='w-full h-full object-cover transition duration-700 delay-150 ease-in-out'
+						className='w-full h-full object-cover'
 					/>
 				</div>
 				<div className='h-full w-full flex flex-col p-1.5'>
@@ -67,7 +67,7 @@ function ProductItem({ item }) {
 							{item.product.name}
 						</p>
 						<p className='text-lg font-mono text-orange-600 text-center'>
-							{formatCurrency(item.price)} VND
+							{formatCurrency(item.price)}
 						</p>
 					</div>
 				</div>

@@ -28,6 +28,11 @@ const cartApi = {
 			withCredentials: true,
 		});
 	},
+
+	clearCart: () => {
+		const url = '/cart/clear';
+		return AdminAxiosClient.delete(url, { withCredentials: true });
+	},
 };
 
 export default cartApi;
