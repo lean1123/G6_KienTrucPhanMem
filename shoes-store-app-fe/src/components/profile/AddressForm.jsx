@@ -6,11 +6,9 @@ import {
 	updateAddress,
 } from '../../hooks/user/userSlice';
 
-
-
 function AddressForm({ initialData, onCancel }) {
 	const dispatch = useDispatch();
-	const { userId } = useSelector((state) => state.persistedReducer.user);
+	const { userId } = useSelector((state) => state.user);
 	const [formData, setFormData] = useState({
 		...(initialData.id && { id: initialData.id }),
 		homeNumber: initialData.homeNumber || '',

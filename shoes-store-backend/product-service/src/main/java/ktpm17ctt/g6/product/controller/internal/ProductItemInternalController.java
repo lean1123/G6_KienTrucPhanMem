@@ -2,8 +2,10 @@ package ktpm17ctt.g6.product.controller.internal;
 
 import jakarta.validation.Valid;
 import ktpm17ctt.g6.product.dto.ApiResponse;
+import ktpm17ctt.g6.product.dto.PageResponse;
 import ktpm17ctt.g6.product.dto.request.ProductItemRequest;
 import ktpm17ctt.g6.product.dto.response.ProductItemResponse;
+import ktpm17ctt.g6.product.entity.enums.Type;
 import ktpm17ctt.g6.product.service.ProductItemService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +56,22 @@ public class ProductItemInternalController {
         log.info("Get all product items");
         return ApiResponse.<List<ProductItemResponse>>builder()
                 .result(productItemService.findAll())
+                .build();
+    }
+
+    @GetMapping("/search")
+    ApiResponse<PageResponse<ProductItemResponse>> searchProductItems(@RequestParam(defaultValue = "1") int page,
+                                                                      @RequestParam(required = false) String productName,
+                                                                      @RequestParam(required = false) Type type,
+                                                                      @RequestParam(required = false) String categoryName,
+                                                                      @RequestParam(required = false) String colorName,
+                                                                      @RequestParam(required = false) Integer size,
+                                                                      @RequestParam(required = false) Double minPrice,
+                                                                      @RequestParam(required = false) Double maxPrice) {
+        log.info("Search product items: productName={}, type={}, categoryName={}, colorName={}, size={}, minPrice={}, maxPrice={}",
+                productName, type, categoryName, colorName, size, minPrice, maxPrice);
+        return ApiResponse.<PageResponse<ProductItemResponse>>builder()
+                .result(productItemService.search(page, productName, type, categoryName, colorName, size, minPrice, maxPrice))
                 .build();
     }
 }

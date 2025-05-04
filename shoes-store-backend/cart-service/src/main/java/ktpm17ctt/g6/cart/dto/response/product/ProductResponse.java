@@ -14,6 +14,7 @@ import java.time.Instant;
 public class ProductResponse {
     String id;
     String name;
+    String code;
     String description;
     double rating;
     Instant createdDate;

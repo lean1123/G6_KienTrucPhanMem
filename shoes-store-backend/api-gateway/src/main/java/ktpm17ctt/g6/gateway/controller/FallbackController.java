@@ -75,4 +75,12 @@ public class FallbackController {
                 .message("Review Service is temporarily unavailable. Please try again later.")
                 .build();
     }
+
+    @RequestMapping("/chat")
+    public ApiResponse chatFallback() {
+        return ApiResponse.builder()
+                .code(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .message("Chat Service is temporarily unavailable. Please try again later.")
+                .build();
+    }
 }

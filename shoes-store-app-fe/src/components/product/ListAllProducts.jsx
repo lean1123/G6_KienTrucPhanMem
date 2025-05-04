@@ -79,11 +79,8 @@ function ListAllProducts() {
 	return (
 		<div className='topSale-container'>
 			<div className='flex justify-center items-center mt-5'>
-				<h1 className='text-4xl font-bold'>Tất Cả Sản Phẩm</h1>
-			</div>
-			<div className='flex justify-center items-center mt-5'>
-				<div className='p-2 border rounded-md border-slate-800'>
-					<SearchSharpIcon />
+				<div className='p-2 border rounded-md border-slate-800 shadow-md bg-slate-50'>
+					<SearchSharpIcon sx={{ cursor: 'pointer' }} />
 					<Input
 						sx={{ paddingX: '10px' }}
 						placeholder='Nhập tên sản phẩm'
@@ -93,7 +90,10 @@ function ListAllProducts() {
 				</div>
 			</div>
 			<div className='flex mt-4'>
-				<div className='w-1/5 bg-white ml-5 items-center text-base font-calibri font-semibold'>
+				<div
+					className='w-1/5 bg-white ml-5 items-center text-base font-calibri font-semibold 
+						p-2 rounded-md shadow-md border h-fit'
+				>
 					<FilterBySize onChange={handleSizeChange} />
 					<FilterByColor onChange={handleColorChange} />
 					<FilterByPrice onChange={handlePriceChange} />

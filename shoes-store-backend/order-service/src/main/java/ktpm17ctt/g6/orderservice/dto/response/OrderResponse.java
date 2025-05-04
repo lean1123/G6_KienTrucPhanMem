@@ -24,4 +24,5 @@ public class OrderResponse {
     List<OrderDetailResponse> orderDetails;
     String paymentUrl;
     AddressResponse address;
+    boolean isPayed;
 }

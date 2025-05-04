@@ -28,7 +28,7 @@ public interface PaymentClient {
             @RequestParam String transDate,
             @RequestParam String ipAddress,
             @RequestParam String transactionNo
-    ) throws IOException;
+    ) throws IOException, Exception;
 
     @GetMapping("/{orderId}")
     ResponseEntity<PaymentResponse> getPaymentByOrderId(@PathVariable String orderId);

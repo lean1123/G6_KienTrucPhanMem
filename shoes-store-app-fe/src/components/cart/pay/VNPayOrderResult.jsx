@@ -1,38 +1,43 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { setOrder } from '../../../hooks/order/orderSlice';
 import UseFetchOrder from '../../../hooks/order/useFetchOrder';
 import { formatISODate, formatVNPayDate } from '../../../utils/dateFormat';
 import { formatCurrency } from '../../../utils/formatPrice';
 import OrderDetailHorizaltal from '../../product/OrderDetailHorizal';
+import paymentApi from '../../../api/paymentApi';
 
 function VNPayOrderResult() {
-	const navigatetion = useNavigate();
-
-	const urlParams = new URLSearchParams(window.location.search);
-
-	const vnpAmount = urlParams.get('vnp_Amount');
-	const vnpBankCode = urlParams.get('vnp_BankCode');
-	const vnpBankTranNo = urlParams.get('vnp_BankTranNo');
-	const vnpCardType = urlParams.get('vnp_CardType');
-	const vnpOrderInfo = decodeURIComponent(urlParams.get('vnp_OrderInfo'));
-	const vnpPayDate = urlParams.get('vnp_PayDate');
-	const vnpResponseCode = urlParams.get('vnp_ResponseCode');
-	const vnpTmnCode = urlParams.get('vnp_TmnCode');
-	const vnpTransactionNo = urlParams.get('vnp_TransactionNo');
-	const vnpTransactionStatus = urlParams.get('vnp_TransactionStatus');
-	const vnpTxnRef = urlParams.get('vnp_TxnRef');
-
+	const navigation = useNavigate();
 	const dispatch = useDispatch();
+	const [paymentInfo, setPaymentInfo] = useState(null);
 
-	const { order } = UseFetchOrder(vnpTxnRef);
+	const { current } = useSelector((state) => state.order);
+	const { order, loading } = UseFetchOrder(current?.id); // giả sử UseFetchOrder trả ra cả isLoading
+
 	useEffect(() => {
-		if (order) {
-			dispatch(setOrder(order));
-		}
-	}, [dispatch, order]);
+		if (!current.id || loading) return; // thêm điều kiện: Đừng fetch sớm khi order còn loading
 
+		dispatch(setOrder(order));
+
+		const fetchPaymentInfo = async () => {
+			try {
+				const response = await paymentApi.getPaymentInfoByOrderId(current.id);
+				if (response.status !== 200) {
+					console.error('Failed to fetch payment info');
+					return;
+				}
+				console.log('Payment info fetched successfully:', response);
+				setPaymentInfo(response.data);
+			} catch (error) {
+				console.error('Failed to fetch payment info:', error);
+				return;
+			}
+		};
+
+		fetchPaymentInfo();
+	}, [current.id, order, loading, dispatch]);
 	return (
 		<div className='max-w-6xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-6'>
 			{/* Cột thông tin thanh toán */}
@@ -43,59 +48,35 @@ function VNPayOrderResult() {
 				<div className='space-y-2'>
 					<div className='flex justify-between'>
 						<span className='font-semibold'>Số tiền thanh toán:</span>
-						<span>
-							{vnpAmount ? `${formatCurrency(vnpAmount / 100)}` : 'Không có thông tin'}
-						</span>
-					</div>
-					<div className='flex justify-between'>
-						<span className='font-semibold'>Mã ngân hàng:</span>
-						<span>{vnpBankCode || 'Không có thông tin'}</span>
-					</div>
-					<div className='flex justify-between'>
-						<span className='font-semibold'>Mã giao dịch ngân hàng:</span>
-						<span>{vnpBankTranNo || 'Không có thông tin'}</span>
-					</div>
-					<div className='flex justify-between'>
-						<span className='font-semibold'>Loại thẻ:</span>
-						<span>{vnpCardType || 'Không có thông tin'}</span>
+						<span>{formatCurrency(paymentInfo?.amount || 0)}</span>
 					</div>
 					<div className='flex justify-between'>
 						<span className='font-semibold'>Ngày thanh toán:</span>
-						<span>{formatVNPayDate(vnpPayDate) || 'Không có thông tin'}</span>
-					</div>
-					<div className='flex justify-between'>
-						<span className='font-semibold'>Mã phản hồi:</span>
-						<span>{vnpResponseCode || 'Không có thông tin'}</span>
+						<span>
+							{formatVNPayDate(paymentInfo?.transactionDate) || 'Không có thông tin'}
+						</span>
 					</div>
 					<div className='flex justify-between'>
 						<span className='font-semibold'>Thông tin đơn hàng:</span>
-						<span>{vnpOrderInfo || 'Không có thông tin'}</span>
+						<span>{paymentInfo?.orderId || 'Không có thông tin'}</span>
 					</div>
-					<div className='flex justify-between'>
-						<span className='font-semibold'>Mã máy chủ:</span>
-						<span>{vnpTmnCode || 'Không có thông tin'}</span>
-					</div>
+
 					<div className='flex justify-between'>
 						<span className='font-semibold'>Mã giao dịch VNPay:</span>
-						<span>{vnpTransactionNo || 'Không có thông tin'}</span>
+						<span>{paymentInfo?.transactionId || 'Không có thông tin'}</span>
 					</div>
 					<div className='flex justify-between'>
 						<span className='font-semibold'>Trạng thái giao dịch:</span>
 						<span
 							className={
-								vnpTransactionStatus === '00' ? 'text-green-600' : 'text-red-600'
+								paymentInfo?.status === 'SUCCESS' ? 'text-green-600' : 'text-red-600'
 							}
 						>
-							{vnpTransactionStatus === '00' ? 'Thành công' : 'Thất bại'}
+							{paymentInfo?.status === 'SUCCESS' ? 'Thành công' : 'Thất bại'}
 						</span>
-					</div>
-					<div className='flex justify-between'>
-						<span className='font-semibold'>Mã tham chiếu giao dịch:</span>
-						<span>{vnpTxnRef || 'Không có thông tin'}</span>
 					</div>
 				</div>
 			</div>
-
 			{/* Cột thông tin đơn hàng */}
 			<div className='bg-white bg-opacity-50 shadow-lg p-6 rounded-lg space-y-4'>
 				<h2 className='text-2xl font-semibold text-center mb-4'>
@@ -138,11 +119,10 @@ function VNPayOrderResult() {
 					</div>
 				</div>
 			</div>
-
 			{/* Nút quay lại trang chủ */}
 			<div className='col-span-2 text-center mt-6'>
 				<button
-					onClick={() => navigatetion('/')}
+					onClick={() => navigation('/')}
 					className='px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700'
 				>
 					Quay lại trang chủ

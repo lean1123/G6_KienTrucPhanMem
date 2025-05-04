@@ -20,6 +20,7 @@ AdminAxiosClient.interceptors.request.use(
 			{ urlPattern: /\/identity\/auth\/logout/, methods: ['POST'] },
 			{ urlPattern: /^\/product(\/.*)?$/, methods: ['GET'] },
 			{ urlPattern: /^\/cart(\/.*)?$/, methods: ['GET', 'POST', 'PUT'] },
+			{ urlPattern: /^\/chat(\/.*)?$/, methods: ['POST'] },
 			{ urlPattern: /^\/identity\/auth\/social-login/, methods: ['GET'] },
 			{
 				urlPattern: /^\/identity\/auth\/social-login\/callback/,

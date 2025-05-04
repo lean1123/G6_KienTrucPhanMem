@@ -5,6 +5,8 @@ import ktpm17ctt.g6.orderservice.dto.request.OrderCreationRequest;
 import ktpm17ctt.g6.orderservice.dto.response.OrderResponse;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface OrderService {
     OrderResponse save(OrderCreationRequest request,
                        HttpServletRequest httpServletRequest) throws Exception;
@@ -14,7 +16,12 @@ public interface OrderService {
     OrderResponse handleUpdateOrderForPaymentFailed(String orderId) throws Exception;
 
     @Transactional
-    OrderResponse canclingOrder(String orderId, HttpServletRequest request) throws Exception;
+    OrderResponse cancelingOrder(String orderId, HttpServletRequest request) throws Exception;
 
     void deleteById(String s);
+
+    List<OrderResponse> getMyOrders() throws Exception;
+
+    @Transactional(rollbackFor = Exception.class)
+    OrderResponse updatePaymentStatusForOrder(String orderId, boolean isPayed) throws Exception;
 }

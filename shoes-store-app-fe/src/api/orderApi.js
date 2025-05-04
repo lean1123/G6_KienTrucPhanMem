@@ -5,6 +5,7 @@ const orderApi = {
 		const url = '/orders/add-new-order';
 		return await AdminAxiosClient.post(url, orderRequest, {
 			withCredentials: true,
+			timeout: 120000,
 		});
 	},
 	getOrdersByUserId: (userId) => {
@@ -24,6 +25,25 @@ const orderApi = {
 		return AdminAxiosClient.get(url, {
 			params: { keyword },
 		});
+	},
+
+	getMyOrders: async () => {
+		const url = '/orders/get-my-orders';
+		return await AdminAxiosClient.get(url, {
+			withCredentials: true,
+		});
+	},
+
+	cancleOrder: async (orderId) => {
+		const url = `orders/canceling-order/${orderId}`;
+		return await AdminAxiosClient.post(
+			url,
+			{},
+			{
+				withCredentials: true,
+				timeout: 120000,
+			},
+		);
 	},
 };
 

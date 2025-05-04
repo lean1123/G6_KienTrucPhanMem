@@ -1,22 +1,54 @@
 import CancelIcon from '@mui/icons-material/Cancel';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { fetchMyOrders } from '../../hooks/order/orderSlice';
 import { fetchUser } from '../../hooks/user/userSlice';
-import { convertTimestampToDateTime } from '../../utils/dateFormat';
+import { formatISODate } from '../../utils/dateFormat';
+import orderApi from '../../api/orderApi';
+import { enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 
 function Profile() {
+	const { t } = useTranslation();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const { user, orders } = useSelector((state) => state.userInfo);
+	const { user } = useSelector((state) => state.userInfo);
+	const { orders } = useSelector((state) => state.order);
 
 	useEffect(() => {
 		dispatch(fetchUser());
+		dispatch(fetchMyOrders());
 	}, [dispatch]);
 
 	const handleUpdateProfile = () => navigate('/updateProfile');
+
+	const handleCancelOrder = async (orderId) => {
+		try {
+			const response = await orderApi.cancleOrder(orderId);
+			if (response.status !== 200) {
+				console.error('Failed to cancel order');
+				enqueueSnackbar('Hủy đơn hàng không thành công', {
+					variant: 'error',
+				});
+				return;
+			} else {
+				enqueueSnackbar('Đơn hàng đã được hủy thành công', {
+					variant: 'success',
+				});
+				return;
+			}
+		} catch (error) {
+			console.error('Failed to cancel order:', error);
+			enqueueSnackbar('Hủy đơn hàng không thành công', {
+				variant: 'error',
+			});
+			return;
+		} finally {
+			dispatch(fetchMyOrders());
+		}
+	};
 
 	return (
 		<div className='flex p-5 font-sans'>
@@ -97,7 +129,7 @@ function Profile() {
 					<h2 className='text-2xl font-bold text-gray-800 mb-4'>
 						DANH SÁCH ĐƠN HÀNG GẦN ĐÂY
 					</h2>
-					{orders.length > 0 ? (
+					{orders?.length > 0 ? (
 						<table className='w-full border-collapse'>
 							<thead>
 								<tr className='border-b bg-gray-100 text-gray-700'>
@@ -106,19 +138,27 @@ function Profile() {
 									<th className='p-2 text-left'>Thành tiền</th>
 									<th className='p-2 text-left'>Phương thức thanh toán</th>
 									<th className='p-2 text-left'>Trạng thái</th>
+									<th className='p-2 text-left'>Trạng thái thanh toán</th>
 									<th className='p-2 text-center'>Hành động</th>
 								</tr>
 							</thead>
 							<tbody>
-								{orders.map((order) => (
+								{orders?.map((order) => (
 									<tr key={order.id} className='border-b'>
 										<td className='p-2'>#{order.id}</td>
-										<td className='p-2'>
-											{convertTimestampToDateTime(order.createdDate)}
+										<td className='p-2'>{formatISODate(order.createdDate)}</td>
+										<td className='p-2'>{order.total} đ</td>
+										<td className='p-2'>{t(`payment.${order.paymentMethod}`)}</td>
+										<td
+											className={`p-2 ${order.status != 'CANCELLED' ? 'text-green-600' : 'text-red-600'}`}
+										>
+											{t(`status.${order.status}`)}
 										</td>
-										<td className='p-2'>{order.totalPrice} đ</td>
-										<td className='p-2'>{order.paymentMethod}</td>
-										<td className='p-2'>{order.orderStatus}</td>
+										<td
+											className={`p-2 ${order.payed ? 'text-green-600' : 'text-red-600'}`}
+										>
+											{order.payed ? 'Đã thanh toán' : 'Chưa thanh toán'}
+										</td>
 										<td className='p-2 text-center space-x-2'>
 											<button
 												title='Xem chi tiết'
@@ -127,11 +167,11 @@ function Profile() {
 											>
 												<VisibilityIcon />
 											</button>
-											{order.orderStatus === 'PENDING' && (
+											{order.status === 'PENDING' && (
 												<button
 													title='Hủy đơn hàng'
 													className='text-red-600 hover:text-red-800'
-													onClick={() => navigate(`/order/${order.id}`)}
+													onClick={handleCancelOrder.bind(null, order.id)}
 												>
 													<CancelIcon />
 												</button>

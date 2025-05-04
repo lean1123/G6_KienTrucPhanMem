@@ -62,25 +62,22 @@ function LoginForm() {
 				return;
 			}
 		} catch (error) {
-			// console.error('Error in loginWithGoogle', error);
+			console.error('Error in loginWithGoogle', error);
 			enqueueSnackbar('Đăng nhập thất bại', { variant: 'error' });
 			return;
 		}
 	};
 
 	return (
-		<>
-			<div className='flex justify-center p-3 text-black'>
-				<h1 className='font-bold text-2xl'>Tài Khoản</h1>
-			</div>
+		<div className='py-4'>
 			<div className='flex justify-center'>
-				<div className='boder-login mr-10 p-5'>
+				<div className='bg-white shadow-lg rounded-lg p-6 mr-10 w-[400px]'>
 					<form
 						className='flex-col items-start'
 						onSubmit={form.handleSubmit(handleOnSubmit)}
 					>
-						<p className='pt-4 pb-5 text-sl font-bold'>ĐĂNG NHẬP</p>
-						<p className='pb-5 text-sl font-calibri'>
+						<p className='pt-4 pb-5 text-sl font-bold text-center'>ĐĂNG NHẬP</p>
+						<p className='pb-5 text-sl font-calibri text-center'>
 							Nếu bạn có tài khoản, vui lòng đăng nhập.
 						</p>
 						<div className='w-full mb-4 search-container'>
@@ -103,18 +100,16 @@ function LoginForm() {
 								{...form.register('password')}
 							/>
 						</div>
-						<div className='flex justify-center'>
+						<div className='flex flex-col justify-center items-center'>
 							<button
 								type='submit'
-								className='bg-red py-2 px-4 text-white hover:bg-black'
+								className='bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow mb-2 w-full'
 							>
 								Đăng Nhập
 							</button>
-						</div>
-						<div className='flex justify-center'>
 							<button
 								type='button'
-								className='bg-red py-2 px-4 text-white hover:bg-blue-300'
+								className='bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow w-full'
 								onClick={handleGoogleLogin}
 							>
 								Đăng Nhập Với Google
@@ -125,35 +120,32 @@ function LoginForm() {
 						</div>
 					</form>
 				</div>
-				<div className='boder-login p-5'>
+				<div className='bg-white shadow-lg rounded-lg p-6 mr-10 w-[400px]'>
 					<form
 						className='flex-col items-start'
 						onSubmit={form.handleSubmit(handleOnSubmit)}
 					>
-						<p className='pt-4 pb-5 text-sl font-bold'>BẠN LÀ KHÁCH HÀNG MỚI?</p>
-						<div className='flex flex-col mt-2 text-sm'>
-							<div className='font-calibri text-sl'>
-								Đăng ký tài khoản trên trang web này giúp bạn theo
+						<p className='pb-5 text-sl font-bold text-center'>
+							BẠN LÀ KHÁCH HÀNG MỚI?
+						</p>
+						<div className='flex flex-col items-center'>
+							<div className='text-justify font-calibri text-sl max-w-[300px]'>
+								<p>
+									Đăng ký tài khoản trên trang web này giúp bạn theo dõi tình trạng và
+									lịch sử đơn hàng của mình.
+								</p>
+								<p>Chúng tôi sẽ nhanh chóng tạo một tài khoản mới cho bạn.</p>
+								<p>
+									Để làm điều này, chúng tôi chỉ yêu cầu thông tin cần thiết để giúp quá
+									trình mua hàng nhanh chóng và dễ dàng hơn.
+								</p>
 							</div>
-							<div className='font-calibri'>
-								dõi tình trạng và lịch sử đơn hàng của mình. Chúng
-							</div>
-							<div className='font-calibri'>
-								tôi sẽ nhanh chóng tạo một tài khoản mới cho bạn.
-							</div>
-							<div className='font-calibri'>
-								Để làm điều này,chúng tôi chỉ yêu cầu thông tin cần
-							</div>
-							<div className='font-calibri'>
-								thiết để giúp quá trình mua hàng nhanh chóng và dễ
-							</div>
-							<div className='font-calibri'>dàng hơn.</div>
 						</div>
-						<div className='flex justify-center pt-14'>
+						<div className='flex justify-center pt-4'>
 							<button
 								onClick={() => navigate('/signup')}
 								type='submit'
-								className='bg-red py-2 px-4 text-white hover:bg-black'
+								className='bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow'
 							>
 								Tạo Một Tài Khoản
 							</button>
@@ -161,7 +153,7 @@ function LoginForm() {
 					</form>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }
 

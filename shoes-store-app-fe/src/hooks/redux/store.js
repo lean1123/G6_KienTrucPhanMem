@@ -10,6 +10,7 @@ import { orderReducer } from '../order/orderSlice';
 import { filterReducer } from '../filter/filterSlice';
 import { bannerReducer } from '../bannerStore';
 import { orderProgressReducer } from '../orderProgressStore';
+import { messageReducer } from '../chat/messageSlice';
 
 const rootReducer = combineReducers({
 	user: userReducer,
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
 	filter: filterReducer,
 	bannerShow: bannerReducer,
 	orderStep: orderProgressReducer,
+	chat: messageReducer,
 });
 
 const persistConfig = {

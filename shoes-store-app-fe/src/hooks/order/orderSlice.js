@@ -43,6 +43,26 @@ export const fetchOrderByUserId = createAsyncThunk(
 	},
 );
 
+export const fetchMyOrders = createAsyncThunk(
+	'order/fetchMyOrders',
+	async (_, { rejectWithValue }) => {
+		try {
+			const response = await orderApi.getMyOrders();
+
+			if (response.status !== 200) {
+				return rejectWithValue(
+					`Failed to fetch order. Status: ${response.status}, Message: ${response.statusText}`,
+				);
+			}
+
+			return response?.data;
+		} catch (error) {
+			console.error('Error fetching order:', error);
+			return rejectWithValue('Error fetching order');
+		}
+	},
+);
+
 const orderSlice = createSlice({
 	name: 'order',
 	initialState: {
@@ -56,10 +76,13 @@ const orderSlice = createSlice({
 		},
 		orderInitialState: () => {
 			return {
-				productItem: null,
+				orders: [],
 				error: null,
-				loading: false,
+				current: {},
 			};
+		},
+		setMyOrders: (state, action) => {
+			state.orders = action.payload;
 		},
 	},
 	extraReducers: (builder) => {
@@ -79,6 +102,12 @@ const orderSlice = createSlice({
 				state.orders = action.payload;
 			})
 			.addCase(fetchOrderByUserId.rejected, (state, action) => {
+				state.error = action.payload;
+			})
+			.addCase(fetchMyOrders.fulfilled, (state, action) => {
+				state.orders = action.payload;
+			})
+			.addCase(fetchMyOrders.rejected, (state, action) => {
 				state.error = action.payload;
 			});
 	},

@@ -27,4 +27,5 @@ public class Order {
     private String addressId;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     List<OrderDetail> orderDetails;
+    boolean isPayed;
 }

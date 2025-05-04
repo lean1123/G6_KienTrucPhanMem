@@ -395,6 +395,7 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
+
     @SuppressWarnings("unchecked")
     private List<CartDetail> getCartFromSession(HttpSession httpSession) {
         List<CartDetail> cartDetails = new ArrayList<>();

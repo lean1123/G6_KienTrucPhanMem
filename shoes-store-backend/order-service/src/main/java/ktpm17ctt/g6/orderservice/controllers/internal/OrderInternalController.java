@@ -31,4 +31,13 @@ public class OrderInternalController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @PostMapping("/update-payment-status/{orderId}")
+    public ResponseEntity<OrderResponse> updatePaymentStatusForOrder(@PathVariable String orderId, @RequestParam boolean isPayed) {
+        try {
+            return ResponseEntity.ok(orderService.updatePaymentStatusForOrder(orderId, isPayed));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }
