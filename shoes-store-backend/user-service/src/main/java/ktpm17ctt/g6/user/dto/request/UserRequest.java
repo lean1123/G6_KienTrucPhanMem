@@ -1,9 +1,6 @@
 package ktpm17ctt.g6.user.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import ktpm17ctt.g6.user.util.ValidationConstraints;
 import ktpm17ctt.g6.user.entity.enums.Gender;
 import lombok.AllArgsConstructor;
@@ -28,6 +25,9 @@ public class UserRequest {
     @Size(min = 1, max = 50, message = "Last name must be between 1 and 50 characters")
     @Pattern(regexp = ValidationConstraints.VIETNAMESE_NAME_REGEX, message = "Last name must be valid")
     private String lastName;
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email must be valid")
+    private String email;
     @NotNull(message = "Date of birth is required")
     private LocalDate dob;
     @NotBlank(message = "Phone is required")

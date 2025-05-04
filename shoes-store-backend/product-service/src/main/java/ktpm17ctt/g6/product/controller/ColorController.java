@@ -25,6 +25,7 @@ public class ColorController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<ColorResponse> createColor(@RequestBody @Valid ColorRequest colorRequest) {
+        log.info("Create new color: {}", colorRequest.getName());
         return ApiResponse.<ColorResponse>builder()
                 .result(colorService.save(colorRequest))
                 .build();
@@ -33,6 +34,7 @@ public class ColorController {
     @PutMapping("/{colorId}")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<ColorResponse> updateColor(@PathVariable String colorId,@RequestBody @Valid ColorRequest colorRequest) {
+        log.info("Update color with ID: {}", colorId);
         return ApiResponse.<ColorResponse>builder()
                 .result(colorService.update(colorId, colorRequest))
                 .build();
@@ -41,12 +43,14 @@ public class ColorController {
     @DeleteMapping("/{colorId}")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<String> deleteColor(@PathVariable String colorId) {
+        log.info("Delete color with ID: {}", colorId);
         colorService.delete(colorId);
         return ApiResponse.<String>builder().result("Color has been deleted").build();
     }
 
     @GetMapping("/{colorId}")
     ApiResponse<ColorResponse> getColor(@PathVariable String colorId) {
+        log.info("Get color with ID: {}", colorId);
         return ApiResponse.<ColorResponse>builder()
                 .result(colorService.findById(colorId).orElse(null))
                 .build();
@@ -56,6 +60,7 @@ public class ColorController {
     @GetMapping("/search")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<List<ColorResponse>> searchColors(@RequestParam String keyword) {
+        log.info("Search colors with keyword: {}", keyword);
         return ApiResponse.<List<ColorResponse>>builder()
                 .result(colorService.search(keyword))
                 .build();

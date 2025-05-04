@@ -35,6 +35,17 @@ const AuthAPI = {
 		const url = '/auth/test';
 		return AdminAxiosClient.get(url);
 	},
+
+	loginWithGoogle: () => {	
+		const url = '/identity/auth/social-login?provider=google';
+		return AdminAxiosClient.get(url, { withCredentials: true });
+	},
+
+	loginSocialCallback: (provider, code) => {
+		const url = `/identity/auth/social-login/callback?provider=${provider}&code=${code}`;
+		return AdminAxiosClient.get(url, { withCredentials: true });
+	}
+
 };
 
 export default AuthAPI;

@@ -28,6 +28,7 @@ public class User implements Serializable {
     private String accountId;
     private String firstName;
     private String lastName;
+    private String email;
     private LocalDate dob;
     private String phone;
     @Enumerated(EnumType.STRING)

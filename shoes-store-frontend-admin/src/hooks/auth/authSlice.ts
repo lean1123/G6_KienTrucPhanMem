@@ -15,6 +15,10 @@ export const login = createAsyncThunk(
       if (response.status.valueOf() !== 200)
         return rejectWithValue(response.data);
 
+      if (!response.data.result.role.includes("ADMIN")) {
+        return rejectWithValue(response.data);
+      }
+
       const accessToken = response.data.result.token;
       const refreshToken = response.data.result.refreshToken;
 
@@ -23,7 +27,6 @@ export const login = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      console.error("Error in login", error);
       return rejectWithValue(error);
     }
   }
@@ -67,7 +70,7 @@ export const introspectToken = createAsyncThunk(
       }
       return response.data.result.valid;
     } catch (error) {
-      console.error("Error in introspectToken", error);
+      // console.error("Error in introspectToken", error);
       return rejectWithValue(error);
     }
   }

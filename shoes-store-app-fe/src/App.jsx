@@ -17,6 +17,7 @@ import Profile from './components/profile/Profile';
 import UpdateProfile from './components/profile/UpdateProfile';
 import ProtectedLayout from './middleware/ProtectLauout';
 import VNPayOrderResult from './components/cart/pay/VNPayOrderResult';
+import GoogleLoginCallBack from './components/auth/GoogleLoginCallBack';
 import ChatControll from './components/chat';
 
 function App() {
@@ -31,7 +32,7 @@ function App() {
 					<Route path='/' element={<HomePage />} />
 					<Route path='/products/:id' element={<ProductDetail />} />
 					<Route path='/products' element={<ListAllProducts />} />
-
+					<Route path='/auth/google/callback' element={<GoogleLoginCallBack />} />
 					<Route path='/cart' element={<Cart />} />
 
 					<Route element={<ProtectedLayout />}>

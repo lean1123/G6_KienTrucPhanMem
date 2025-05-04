@@ -25,7 +25,7 @@ public class ProductItemInternalController {
 
     @GetMapping("/{id}")
     ApiResponse<ProductItemResponse> getProductItem(@PathVariable String id) {
-        log.info("Get product item: {}", id);
+        log.info("Get product item with ID: {}", id);
         return ApiResponse.<ProductItemResponse>builder()
                 .result(productItemService.findById(id).orElse(null))
                 .build();
@@ -33,7 +33,7 @@ public class ProductItemInternalController {
 
     @PutMapping("/update/{id}")
     ApiResponse<ProductItemResponse> updateProductItem(@PathVariable String id, @RequestBody @Valid ProductItemRequest productItemRequest) {
-        log.info("Update product item: {}", productItemRequest);
+        log.info("Update product item with ID: {}", id);
         ProductItemResponse productItemResponse = productItemService.update(id, productItemRequest);
         return ApiResponse.<ProductItemResponse>builder()
                 .result(productItemResponse)

@@ -19,15 +19,17 @@ resilience4j:
   circuitbreaker:
     instances:
       identityServiceCircuitBreaker:
-        failureRateThreshold: 50
+        failureRateThreshold: 60
         minimumNumberOfCalls: 15
-        slidingWindowSize: 20
-        waitDurationInOpenState: 5s
+        slidingWindowSize: 30
+        waitDurationInOpenState: 20s
+        slow-call-duration-threshold: 20s
+        slow-call-rate-threshold: 60
       userServiceCircuitBreaker:
         failureRateThreshold: 70
         minimumNumberOfCalls: 15
         slidingWindowSize: 20
-        waitDurationInOpenState: 5s
+        waitDurationInOpenState: 10s
       productServiceCircuitBreaker:
         failureRateThreshold: 70
         minimumNumberOfCalls: 20
@@ -72,23 +74,24 @@ resilience4j:
   timelimiter:
     instances:
       productServiceCircuitBreaker:
-        timeoutDuration: 20s
+        timeoutDuration: 30s
       orderServiceCircuitBreaker:
+        timeoutDuration: 30s
+      paymentServiceCircuitBreaker:
+        timeoutDuration: 30s
+      chatServiceCircuitBreaker:
         timeoutDuration: 30s
       identityServiceCircuitBreaker:
         timeoutDuration: 30s
       userServiceCircuitBreaker:
-        timeoutDuration: 30s
-      paymentServiceCircuitBreaker:
-        timeout-duration: 30s
+          timeoutDuration: 30s
       cartServiceCircuitBreaker:
-        timeout-duration: 30s
+        timeoutDuration: 30s
       notificationServiceCircuitBreaker:
-        timeout-duration: 30s
+        timeoutDuration: 30s
       reviewServiceCircuitBreaker:
-        timeout-duration: 30s
-      chatServiceCircuitBreaker:
-        timeout-duration: 30s
+          timeoutDuration: 30s
+
 
 #logging:
 #  level:
@@ -116,6 +119,17 @@ spring:
             - Path=${app.api-prefix}/identity/**
           filters:
             - StripPrefix=2
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+#            - name: Retry
+#              args:
+#                retries: 3
+#                backoff:
+#                firstBackoff: 100ms
+#                maxBackoff: 500ms
             - name: CircuitBreaker
               args:
                 name: identityServiceCircuitBreaker

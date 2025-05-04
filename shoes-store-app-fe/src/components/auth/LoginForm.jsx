@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { login } from '../../hooks/auth/authSlice';
+import { login, loginWithGoogle } from '../../hooks/auth/authSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -36,7 +36,7 @@ function LoginForm() {
 			console.log('Result:', resultUnwrapped);
 
 			if (resultUnwrapped?.token) {
-				await dispatch(fetchUser(resultUnwrapped.userId));
+				await dispatch(fetchUser());
 				enqueueSnackbar('Đăng nhập thành công', { variant: 'success' });
 				navigate('/');
 				return;
@@ -46,6 +46,23 @@ function LoginForm() {
 			return;
 		} catch (error) {
 			console.log('Error: ', error);
+			enqueueSnackbar('Đăng nhập thất bại', { variant: 'error' });
+			return;
+		}
+	};
+
+	const handleGoogleLogin = async () => {
+		try {
+			const action = loginWithGoogle();
+			const result = await dispatch(action);
+			const resultUnwrapped = unwrapResult(result);
+			if (resultUnwrapped) {
+				console.log(resultUnwrapped);
+				window.location.href = resultUnwrapped;
+				return;
+			}
+		} catch (error) {
+			console.error('Error in loginWithGoogle', error);
 			enqueueSnackbar('Đăng nhập thất bại', { variant: 'error' });
 			return;
 		}
@@ -83,13 +100,23 @@ function LoginForm() {
 								{...form.register('password')}
 							/>
 						</div>
-						<div className='flex justify-center'>
+						<div className='flex flex-col justify-center items-center'>
 							<button
 								type='submit'
-								className='bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow'
+								className='bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow mb-2 w-full'
 							>
 								Đăng Nhập
 							</button>
+							<button
+								type='button'
+								className='bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow w-full'
+								onClick={handleGoogleLogin}
+							>
+								Đăng Nhập Với Google
+							</button>
+						</div>
+						<div className='flex justify-center text-sl mt-3 hover:text-red-500'>
+							<button>Bạn quên mật khẩu?</button>
 						</div>
 					</form>
 				</div>

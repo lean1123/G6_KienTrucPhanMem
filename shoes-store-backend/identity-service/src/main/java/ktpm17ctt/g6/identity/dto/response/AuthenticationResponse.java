@@ -15,4 +15,5 @@ public class AuthenticationResponse {
     Date expiryTime;
     String refreshToken;
     Date refreshTokenExpiryTime;
+    String role;
 }

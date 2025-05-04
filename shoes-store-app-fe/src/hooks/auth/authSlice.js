@@ -58,7 +58,53 @@ export const logout = createAsyncThunk(
 
 			return response.data;
 		} catch (error) {
-			console.error('Error in logout', error);
+			// console.error('Error in logout', error);
+			return rejectWithValue(error);
+		}
+	},
+);
+
+export const loginWithGoogle = createAsyncThunk(
+	'/loginWithGoogle',
+	async (_, { rejectWithValue }) => {
+		try {
+			const response = await AuthAPI.loginWithGoogle();
+
+			if (response.status.valueOf() !== 200) {
+				return rejectWithValue(response.data);
+			}
+
+			return response.data.result;
+		} catch (error) {
+			// console.error('Error in loginWithGoogle', error);
+			return rejectWithValue(error);
+		}
+	},
+);
+
+export const loginSocialCallback = createAsyncThunk(
+	'/loginSocialCallback',
+	async (payload, { rejectWithValue }) => {
+		try {
+			const response = await AuthAPI.loginSocialCallback(
+				payload.provider,
+				payload.code,
+			);
+
+			if (response.status.valueOf() !== 200) {
+				return rejectWithValue(response.data);
+			}
+			if (response.data.code === 503) {
+				return rejectWithValue(response.data);
+			}
+			const accessToken = response.data.result.token;
+			const refreshToken = response.data.result.refreshToken;
+
+			localStorage.setItem('accessToken', accessToken);
+			localStorage.setItem('refreshToken', refreshToken);
+			return response.data.result;
+		} catch (error) {
+			// console.error('Error in loginSocialCallback', error);
 			return rejectWithValue(error);
 		}
 	},
@@ -108,6 +154,14 @@ const AuthSlice = createSlice({
 				state.accessToken = null;
 				state.userId = null;
 				console.error('Error in logout', action.payload);
+			})
+			.addCase(loginSocialCallback.fulfilled, (state, action) => {
+				state.accessToken = action.payload.token;
+				state.userId = action.payload.userId;
+			})
+			.addCase(loginSocialCallback.rejected, (state, action) => {
+				state.accessToken = null;
+				state.userId = null;
 			});
 	},
 });

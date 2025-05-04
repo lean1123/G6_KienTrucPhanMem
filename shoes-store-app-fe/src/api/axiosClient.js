@@ -21,6 +21,11 @@ AdminAxiosClient.interceptors.request.use(
 			{ urlPattern: /^\/product(\/.*)?$/, methods: ['GET'] },
 			{ urlPattern: /^\/cart(\/.*)?$/, methods: ['GET', 'POST', 'PUT'] },
 			{ urlPattern: /^\/chat(\/.*)?$/, methods: ['POST'] },
+			{ urlPattern: /^\/identity\/auth\/social-login/, methods: ['GET'] },
+			{
+				urlPattern: /^\/identity\/auth\/social-login\/callback/,
+				methods: ['GET'],
+			},
 		];
 
 		const isPublicEndpoint = publicEndpoints.some(

@@ -15,6 +15,12 @@ export const sendMessage = createAsyncThunk(
 				);
 			}
 
+			if (response.data.code === 503) {
+				return rejectWithValue(
+					`Failed to send message. Status: ${response.status}, Message: ${response.statusText}`,
+				);
+			}
+
 			const data = response?.data;
 
 			return {

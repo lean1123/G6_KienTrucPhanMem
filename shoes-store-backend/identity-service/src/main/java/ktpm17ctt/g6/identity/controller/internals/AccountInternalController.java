@@ -22,6 +22,7 @@ public class AccountInternalController {
 
     @GetMapping("/get-account-by-email")
     public ApiResponse<AccountResponse> getAccountByEmail(@RequestParam String email) {
+        log.info("Get account by email: {}", email);
         return ApiResponse.<AccountResponse>builder()
                 .result(accountService.getAccountByEmail(email))
                 .build();

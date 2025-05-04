@@ -30,26 +30,7 @@ const TableUser = () => {
       if (response.data.code === 503) {
         enqueueSnackbar(response.data.message, { variant: "error" });
       }
-
-      const accountWithUser = await Promise.all(
-        users.map(async (user: User) => {
-          if (user.id) {
-            const accountResponse = await userApi.getAccount(user.accountId);
-            return {
-              ...user,
-              email: accountResponse.data.result.email,
-            };
-          } else {
-            // If no collection or brandId exists, handle accordingly (e.g., return product as is)
-            return {
-              ...user,
-              email: "Unknown", // Or any fallback value
-            };
-          }
-        })
-      );
-
-      setUsers(accountWithUser);
+      setUsers(users);
     } catch (error) {
       console.error("Failed to fetch user:", error);
     } finally {

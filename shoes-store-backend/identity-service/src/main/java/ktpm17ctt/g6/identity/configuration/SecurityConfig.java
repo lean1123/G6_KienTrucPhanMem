@@ -24,6 +24,8 @@ public class SecurityConfig {
             "/auth/refresh",
             "/auth/logout",
             "/internal/**",
+            "/auth/social-login",
+            "/auth/social-login/callback",
     };
 
     private final CustomJwtDecoder customJwtDecoder;
@@ -38,7 +40,7 @@ public class SecurityConfig {
 
                 authorizeRequests
                         .requestMatchers(HttpMethod.GET, "/internal/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
                         .anyRequest().authenticated());
         http.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(jwt -> jwt
