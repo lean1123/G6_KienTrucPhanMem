@@ -193,6 +193,22 @@ public class ProductItemServiceImpl implements ProductItemService {
     }
 
     @Override
+    public PageResponse<ProductItemResponse> newestProductItems(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        var itemPage = productItemRepository.findAllByOrderByCreatedAtDesc(pageable);
+        List<ProductItemResponse> itemList = itemPage.getContent().stream()
+                .map(productItemMapper::toProductItemResponse)
+                .toList();
+        return PageResponse.<ProductItemResponse>builder()
+                .currentPage(page)
+                .pageSize(size)
+                .totalPages(itemPage.getTotalPages())
+                .totalElements(itemPage.getTotalElements())
+                .data(itemList)
+                .build();
+    }
+
+    @Override
     public List<ProductItemResponse> findAll() {
         var list = productItemRepository.findAll();
         return list.stream().map(productItemMapper::toProductItemResponse).toList();

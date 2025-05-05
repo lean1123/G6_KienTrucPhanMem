@@ -87,6 +87,24 @@ public class ProductItemController {
                 .build();
     }
 
+    @GetMapping("/newest")
+    ApiResponse<PageResponse<ProductItemResponse>> getNewestProductItems(@RequestParam(defaultValue = "1") int page,
+                                                                  @RequestParam(defaultValue = "10") int size) {
+        log.info("Get newest product items: page={}, size={}", page, size);
+        return ApiResponse.<PageResponse<ProductItemResponse>>builder()
+                .result(productItemService.newestProductItems(page, size))
+                .build();
+    }
+
+    @GetMapping("/top-sale")
+    ApiResponse<PageResponse<ProductItemResponse>> getTopSaleProductItems(@RequestParam(defaultValue = "1") int page,
+                                                                         @RequestParam(defaultValue = "10") int size) {
+        log.info("Get top sale product items: page={}, size={}", page, size);
+        return ApiResponse.<PageResponse<ProductItemResponse>>builder()
+                .result(productItemService.newestProductItems(page, size))
+                .build();
+    }
+
     @GetMapping("/quantity")
     ApiResponse<Integer> getTotalQuantityByProductItemAndSize(
             @RequestParam String id,

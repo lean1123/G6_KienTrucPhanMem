@@ -5,6 +5,7 @@ import ktpm17ctt.g6.product.entity.enums.Type;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -75,4 +76,12 @@ public class CustomProductItemRepositoryImpl implements CustomProductItemReposit
         return new PageImpl<>(items, pageable, total);
     }
 
+    @Override
+    public Page<ProductItem> findAllByOrderByCreatedAtDesc(Pageable pageable) {
+        Query query = new Query();
+        query.with(pageable).with(Sort.by(Sort.Direction.DESC, "createdAt"));
+        List<ProductItem> items = mongoTemplate.find(query, ProductItem.class);
+        long total = mongoTemplate.count(query, ProductItem.class);
+        return new PageImpl<>(items, pageable, total);
+    }
 }
