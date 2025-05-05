@@ -37,14 +37,14 @@ const productItemApi = {
 		});
 	},
 
-	getTopSaleProductItems: (page = 0, size = 10) => {
-		return AdminAxiosClient.get('/product-items/top-sale', {
+	getTopSaleProductItems: (page = 1, size = 8) => {
+		return AdminAxiosClient.get('/product/item/top-sale', {
 			params: { page, size },
 		});
 	},
 
-	getNewProductItems: (page = 0, size = 9) => {
-		return AdminAxiosClient.get('/product-items/new', {
+	getNewProductItems: (page = 1, size = 8) => {
+		return AdminAxiosClient.get('/product/item/newest', {
 			params: { page, size },
 		});
 	},
