@@ -22,7 +22,7 @@ function ChatContent() {
 						<Assistant sx={{ width: 14, height: 14, color: '#3b82f6' }} />
 					</div>
 					<div className='bg-slate-100 p-2 rounded-md shadow-md'>
-						<p className='text-sm'>Bạn cần tìm kiếm sản phẩm như thế nào?y</p>
+						<p className='text-sm'>Bạn cần tìm kiếm sản phẩm như thế nào?</p>
 					</div>
 				</div>
 			) : (
