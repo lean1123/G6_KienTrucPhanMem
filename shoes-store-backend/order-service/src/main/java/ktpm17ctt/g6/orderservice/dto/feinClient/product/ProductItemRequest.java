@@ -18,7 +18,7 @@ public class ProductItemRequest {
     double price;
     List<String> images;
     String colorId;
-    List<QuantityOfSize> quantityOfSize;
+    String quantityOfSize;
     String productId;
     Status status;
 }
