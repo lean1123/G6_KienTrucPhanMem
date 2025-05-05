@@ -1,4 +1,5 @@
 import { Close } from '@mui/icons-material';
+import { enqueueSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
 import { useMemo, useState } from 'react';
 
@@ -17,6 +18,17 @@ function CartDetailItem({ item, onQuantityChange, onRemoveProduct }) {
 	);
 
 	const increaseQuantity = () => {
+		const currentQuantity = item?.productItem?.quantityOfSize?.find(
+			(internalItem) => internalItem.size === item?.cartDetailPK?.size,
+		)?.quantity;
+
+		if (quantity >= currentQuantity) {
+			// Show a message to the user that they can't add more than available
+			enqueueSnackbar('Số lượng sản phẩm không đủ', {
+				variant: 'error',
+			});
+			return;
+		}
 		setQuantity(quantity + 1);
 		if (onQuantityChange) onQuantityChange(item, quantity + 1);
 	};

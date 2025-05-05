@@ -1,5 +1,6 @@
 package ktpm17ctt.g6.orderservice.services.impl;
 
+import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemRequest;
 import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemResponse;
 import ktpm17ctt.g6.orderservice.dto.request.OrderDetailRequest;
 import ktpm17ctt.g6.orderservice.dto.response.OrderDetailResponse;
@@ -47,6 +48,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                 .size(request.getSize())
                 .order(order)
                 .build());
+
+//        create a new ProductItemRequest to change the quantity of the product item
+        ProductItemRequest productItemRequest =
+                ProductItemRequest.builder()
+
+                        .build();
 
         return orderDetailMapper.orderDetailToOrderDetailResponse(orderDetailResponse);
     }

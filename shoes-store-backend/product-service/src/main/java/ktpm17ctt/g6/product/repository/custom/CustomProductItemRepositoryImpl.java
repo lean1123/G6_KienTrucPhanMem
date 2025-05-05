@@ -74,4 +74,5 @@ public class CustomProductItemRepositoryImpl implements CustomProductItemReposit
 
         return new PageImpl<>(items, pageable, total);
     }
+
 }
