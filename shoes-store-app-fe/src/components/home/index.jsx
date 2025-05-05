@@ -36,7 +36,7 @@ function HomePage() {
 					throw new Error('Error fetching new products');
 				}
 
-				setListNewProducts(response.data?.data?.data);
+				setListNewProducts(response.data?.result?.data);
 			} catch (error) {
 				console.error('Error fetching new products: ', error);
 			}
@@ -50,7 +50,7 @@ function HomePage() {
 					throw new Error('Error fetching top sale products');
 				}
 
-				setListTopSaleProducts(response.data?.data?.data);
+				setListTopSaleProducts(response.data?.result?.data);
 			} catch (error) {
 				console.error('Error fetching top sale products: ', error);
 			}
