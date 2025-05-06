@@ -18,4 +18,6 @@ public class SearchIntentDTO {
     private long priceMin;
     private List<String> size;
     private String type;
+    private String message;
+    private String sizeResult;
 }

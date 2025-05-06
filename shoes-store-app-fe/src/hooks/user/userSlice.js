@@ -64,13 +64,14 @@ export const updateAddress = createAsyncThunk(
 );
 export const addAddress = createAsyncThunk(
 	'user/addAddress',
-	async ({ userId, addressData }, { rejectWithValue }) => {
+	async (addressData, { rejectWithValue }) => {
 		try {
-			const response = await addressApi.addAddress(userId, addressData);
+			const response = await addressApi.addAddress(addressData);
 			if (response.status !== 201) {
 				return rejectWithValue('Failed to add address');
 			}
-			return response.data;
+
+			return response.data.result;
 		} catch (error) {
 			return rejectWithValue(error.message);
 		}

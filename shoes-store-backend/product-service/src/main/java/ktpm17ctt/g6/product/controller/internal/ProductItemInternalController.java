@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import ktpm17ctt.g6.product.dto.ApiResponse;
 import ktpm17ctt.g6.product.dto.PageResponse;
 import ktpm17ctt.g6.product.dto.request.ProductItemRequest;
+import ktpm17ctt.g6.product.dto.request.ProductItemUpdationRequest;
 import ktpm17ctt.g6.product.dto.response.ProductItemResponse;
 import ktpm17ctt.g6.product.entity.enums.Type;
 import ktpm17ctt.g6.product.service.ProductItemService;
@@ -32,9 +33,9 @@ public class ProductItemInternalController {
     }
 
     @PutMapping("/update/{id}")
-    ApiResponse<ProductItemResponse> updateProductItem(@PathVariable String id, @RequestBody @Valid ProductItemRequest productItemRequest) {
+    ApiResponse<ProductItemResponse> updateProductItem(@PathVariable String id, @RequestBody @Valid ProductItemUpdationRequest productItemRequest) {
         log.info("Update product item with ID: {}", id);
-        ProductItemResponse productItemResponse = productItemService.update(id, productItemRequest);
+        ProductItemResponse productItemResponse = productItemService.updateQuantity(id, productItemRequest);
         return ApiResponse.<ProductItemResponse>builder()
                 .result(productItemResponse)
                 .build();

@@ -36,12 +36,10 @@ const addressApi = {
 		}
 	},
 
-	addAddress: async (userId, addressData) => {
-		const url = `/addresses/user/${userId}`;
+	addAddress: async (addressData) => {
+		const url = `/user/create-address`;
 		return await AdminAxiosClient.post(url, addressData, {
-			headers: {
-				'Content-Type': 'application/json',
-			},
+			withCredentials: true,
 		});
 	},
 

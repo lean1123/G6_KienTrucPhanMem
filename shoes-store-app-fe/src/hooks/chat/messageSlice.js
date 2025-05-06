@@ -3,13 +3,13 @@ import ChatApi from '../../api/chatApi';
 
 export const sendMessage = createAsyncThunk(
 	'chat/analyze',
-	async (message, { rejectWithValue }) => {
+	async (userMessage, { rejectWithValue }) => {
 		try {
-			const response = await ChatApi.sendMessage(message);
+			const response = await ChatApi.sendMessage(userMessage);
 
 			console.log('response', response);
 
-			if (response.status !== 200 || !Array.isArray(response.data)) {
+			if (response.status !== 200) {
 				return rejectWithValue(
 					`Failed to send message. Status: ${response.status}, Message: ${response.statusText}`,
 				);
@@ -21,10 +21,11 @@ export const sendMessage = createAsyncThunk(
 				);
 			}
 
-			const data = response?.data;
+			const { results, message } = response?.data;
 
 			return {
-				result: data,
+				results,
+				message,
 				isAI: true,
 			};
 		} catch (error) {

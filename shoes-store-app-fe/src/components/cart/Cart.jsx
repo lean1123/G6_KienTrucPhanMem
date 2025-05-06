@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router';
 import { enqueueSnackbar } from 'notistack';
 import { fetchUser } from '../../hooks/user/userSlice';
 import { initialOrderStep } from '../../hooks/orderProgressStore';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const Cart = () => {
 	const dispatch = useDispatch();
@@ -37,10 +38,11 @@ const Cart = () => {
 		dispatch(initialOrderStep());
 	}, [dispatch, userId]);
 
-	const handleQuantityChange = (item, newQuantity) => {
+	const handleQuantityChange = async (item, newQuantity) => {
 		if (newQuantity < 0) {
 			return;
 		}
+
 		const updatedItem = {
 			cartId: item?.cartDetailPK?.cartId || null,
 			productItemId: item?.productItem?.id,
@@ -48,14 +50,12 @@ const Cart = () => {
 			size: item?.cartDetailPK?.size,
 		};
 
-		console.log('updatedItem', updatedItem);
-
 		if (updatedItem.quantity === 0) {
 			dispatch(deleteCartDetail(updatedItem));
 			return;
 		}
 
-		dispatch(updateQuantity(updatedItem));
+		await dispatch(updateQuantity(updatedItem));
 	};
 
 	const handleRemoveProduct = (productItemId, size) => {

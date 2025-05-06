@@ -1,10 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { HeartOutlined } from '@ant-design/icons';
 import { Link } from '@mui/material';
+
+import { ProductItemType } from '../../types/productItemType';
 import { formatCurrency } from '../../utils/formatPrice';
 
-function ProductItem({ item }) {
+type ProductItemProps = {
+	item: ProductItemType;
+};
+
+function ProductItem({ item }: ProductItemProps) {
 	const [isHeart, setIsHeart] = React.useState(false);
 
 	return (
@@ -78,35 +83,5 @@ function ProductItem({ item }) {
 		</div>
 	);
 }
-
-ProductItem.propTypes = {
-	item: PropTypes.shape({
-		id: PropTypes.string.isRequired,
-		price: PropTypes.number.isRequired,
-		images: PropTypes.array.isRequired,
-		color: {
-			id: PropTypes.string,
-			name: PropTypes.string,
-			code: PropTypes.string,
-		},
-		quantityOfSize: [
-			{
-				size: PropTypes.number.isRequired,
-				quantity: PropTypes.number.isRequired,
-			},
-		],
-		product: PropTypes.shape({
-			id: PropTypes.string.isRequired,
-			name: PropTypes.string.isRequired,
-			description: PropTypes.string,
-			warrantyInformation: PropTypes.string,
-			returnInformation: PropTypes.string,
-			avatar: PropTypes.string.isRequired,
-			shippingInformation: PropTypes.string,
-			rating: PropTypes.number,
-			createdDate: PropTypes.string,
-		}),
-	}),
-};
 
 export default ProductItem;

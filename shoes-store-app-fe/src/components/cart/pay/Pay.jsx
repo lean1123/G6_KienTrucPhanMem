@@ -31,7 +31,7 @@ const Pay = () => {
 	const dispatch = useDispatch();
 	const navigation = useNavigate();
 	const [isExpanded, setIsExpanded] = useState(false);
-	const [paymentMethod, setPaymentMethod] = useState('');
+	const [paymentMethod, setPaymentMethod] = useState('CASH');
 
 	const { cartItems } = useSelector((state) => state.cart);
 	const { address } = useSelector((state) => state.userInfo);
@@ -40,10 +40,24 @@ const Pay = () => {
 	const [vnpayUrl, setVnPayUrl] = useState('');
 
 	useEffect(() => {
-		if (!address || address.length === 0) {
-			dispatch(fetchAddress());
-		}
-	}, [dispatch, address]);
+		const fetchAddressData = async () => {
+			try {
+				const result = await dispatch(fetchAddress());
+				const resultUnwrapped = unwrapResult(result);
+				if (resultUnwrapped?.length > 0) {
+					setSelectedAddress(resultUnwrapped[0]?.id);
+				} else {
+					navigation('/address');
+					enqueueSnackbar('Vui lòng thêm địa chỉ giao hàng', {
+						variant: 'info',
+					});
+				}
+			} catch (error) {
+				console.error('Error fetching address:', error);
+			}
+		};
+		fetchAddressData();
+	}, [dispatch, address, navigation]);
 
 	const [isShow, setIsShow] = useState(false);
 	useEffect(() => {

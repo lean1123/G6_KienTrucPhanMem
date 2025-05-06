@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ktpm17ctt.g6.product.dto.PageResponse;
 import ktpm17ctt.g6.product.dto.request.ProductItemRequest;
+import ktpm17ctt.g6.product.dto.request.ProductItemUpdationRequest;
 import ktpm17ctt.g6.product.dto.response.ProductItemResponse;
+import ktpm17ctt.g6.product.entity.Product;
 import ktpm17ctt.g6.product.entity.ProductItem;
 import ktpm17ctt.g6.product.entity.QuantityOfSize;
 import ktpm17ctt.g6.product.entity.enums.Type;
@@ -124,6 +126,24 @@ public class ProductItemServiceImpl implements ProductItemService {
 
         return productItemMapper.toProductItemResponse(productItemRepository.save(productItem));
     }
+
+
+    @Override
+    public ProductItemResponse updateQuantity(String id, ProductItemUpdationRequest productItemRequest) {
+        ProductItem productItem = productItemRepository.findById(id).orElseThrow(() -> new NotFoundException("Product Item ID", id));
+        if (productItemRequest.getQuantityOfSize() != null) {
+            List<QuantityOfSize> quantityOfSizes = convertJsonToQuantityOfSize(productItemRequest.getQuantityOfSize());
+            for (QuantityOfSize quantityOfSize : quantityOfSizes) {
+                for (QuantityOfSize existingQuantity : productItem.getQuantityOfSize()) {
+                    if (existingQuantity.getSize().equals(quantityOfSize.getSize())) {
+                        existingQuantity.setQuantity(quantityOfSize.getQuantity());
+                    }
+                }
+            }
+        }
+        return productItemMapper.toProductItemResponse(productItemRepository.save(productItem));
+    }
+
 
     @Override
     public void delete(String id) {

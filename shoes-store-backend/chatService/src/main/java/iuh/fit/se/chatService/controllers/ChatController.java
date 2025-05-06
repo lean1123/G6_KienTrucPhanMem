@@ -1,6 +1,7 @@
 package iuh.fit.se.chatService.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import iuh.fit.se.chatService.dtos.AIResponse;
 import iuh.fit.se.chatService.dtos.SearchIntentDTO;
 import iuh.fit.se.chatService.dtos.common.ApiResponse;
 import iuh.fit.se.chatService.dtos.common.PageResponse;
@@ -26,9 +27,9 @@ public class ChatController {
     private final GeminiAIService geminiAIService;
 
     @PostMapping("/analyze")
-    public ResponseEntity<List<ProductItemResponse>> analyze(@RequestBody Map<String, String> body) {
-        List<ProductItemResponse> aiResponse = geminiAIService.searchProductsByIntent(body.get("message"));
-
+    public ResponseEntity<AIResponse> analyze(@RequestBody Map<String, String> body) {
+        AIResponse aiResponse = null;
+        aiResponse = geminiAIService.searchProductsByIntent(body.get("message"));
         return ResponseEntity.ok(aiResponse);
     }
 }
