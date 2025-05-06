@@ -32,8 +32,6 @@ function Address() {
 	};
 
 	const handleBackAddress = () => {
-		console.log(userId);
-
 		navigate('/address');
 	};
 	const handleCancelForm = () => {
@@ -57,10 +55,7 @@ function Address() {
 							Thông tin tài khoản
 						</a>
 					</li>
-					<li className='text-blue-500'>
-						<i className='fa fa-list-alt' aria-hidden='true'></i>{' '}
-						<a href=''>Quản lý đơn hàng</a>
-					</li>
+
 					<li className='text-blue-500'>
 						<i className='fa fa-map-marker' aria-hidden='true'></i>{' '}
 						<a href='#' onClick={handleBackAddress}>

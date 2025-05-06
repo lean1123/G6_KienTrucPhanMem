@@ -70,12 +70,7 @@ function Profile() {
 							Thông tin tài khoản
 						</Link>
 					</li>
-					<li>
-						<Link to='/orders' className='text-blue-500 hover:underline'>
-							<i className='fa fa-list-alt mr-2' aria-hidden='true'></i>
-							Quản lý đơn hàng
-						</Link>
-					</li>
+
 					<li>
 						<Link to='/address' className='text-blue-500 hover:underline'>
 							<i className='fa fa-map-marker mr-2' aria-hidden='true'></i>

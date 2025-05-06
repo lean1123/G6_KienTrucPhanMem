@@ -24,24 +24,15 @@ function ChatControll() {
 			setIsSending(true);
 			dispatch(setCurrent({ message, isAI: false }));
 			dispatch(addMessage({ message, isAI: false }));
-			const response = await dispatch(sendMessage(message));
-			if (response.error) {
-				console.error('Error sending message:', response.error.message);
-				enqueueSnackbar('Gửi tin nhắn thất bại', {
-					variant: 'error',
-				});
-				return;
-			}
-			dispatch(setCurrent(unwrapResult(response)));
 
+			const response = await dispatch(sendMessage(message));
+			const data = unwrapResult(response);
+
+			dispatch(setCurrent(data));
 			setMessage('');
-			return;
 		} catch (error) {
-			console.error('Error sending message:', error.message);
-			enqueueSnackbar('Gửi tin nhắn thất bại', {
-				variant: 'error',
-			});
-			return;
+			console.error('Gửi tin nhắn thất bại:', error);
+			enqueueSnackbar('Gửi tin nhắn thất bại', { variant: 'error' });
 		} finally {
 			setIsSending(false);
 		}

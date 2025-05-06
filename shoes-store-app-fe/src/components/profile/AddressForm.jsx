@@ -1,14 +1,12 @@
+import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-	addAddress,
-	fetchAddress,
-	updateAddress,
-} from '../../hooks/user/userSlice';
+import { addAddress, fetchAddress } from '../../hooks/user/userSlice';
+import PropTypes from 'prop-types';
 
 function AddressForm({ initialData, onCancel }) {
 	const dispatch = useDispatch();
-	const { userId } = useSelector((state) => state.user);
+	const { id } = useSelector((state) => state.userInfo.user);
 	const [formData, setFormData] = useState({
 		...(initialData.id && { id: initialData.id }),
 		homeNumber: initialData.homeNumber || '',
@@ -46,6 +44,16 @@ function AddressForm({ initialData, onCancel }) {
 			return;
 		}
 
+		if (!id) {
+			enqueueSnackbar(
+				'Có lỗi xảy ra trong quá trình xác thực người dùng. Vui lòng đăng nhập lại',
+				{
+					variant: 'error',
+				},
+			);
+			return;
+		}
+
 		try {
 			const addressData = {
 				homeNumber: formData.homeNumber.trim(),
@@ -53,28 +61,22 @@ function AddressForm({ initialData, onCancel }) {
 				ward: formData.ward.trim(),
 				district: formData.district.trim(),
 				city: formData.city.trim(),
+				userId: id,
 			};
 
-			console.log('Submitting address data:', addressData);
+			// if (initialData.id) {
+			// 	await dispatch(
+			// 		updateAddress({
+			// 			userId,
+			// 			addressId: initialData.id,
+			// 			addressData,
+			// 		}),
+			// 	).unwrap();
+			// } else {
+			// }
+			await dispatch(addAddress(addressData));
 
-			if (initialData.id) {
-				await dispatch(
-					updateAddress({
-						userId,
-						addressId: initialData.id,
-						addressData,
-					}),
-				).unwrap();
-			} else {
-				await dispatch(
-					addAddress({
-						userId,
-						addressData,
-					}),
-				).unwrap();
-			}
-
-			await dispatch(fetchAddress(userId));
+			await dispatch(fetchAddress());
 			onCancel();
 		} catch (error) {
 			console.error('Form submission error:', error);
@@ -168,5 +170,17 @@ function AddressForm({ initialData, onCancel }) {
 		</form>
 	);
 }
+
+AddressForm.propTypes = {
+	initialData: PropTypes.shape({
+		id: PropTypes.string,
+		homeNumber: PropTypes.string,
+		street: PropTypes.string,
+		ward: PropTypes.string,
+		district: PropTypes.string,
+		city: PropTypes.string,
+	}),
+	onCancel: PropTypes.func.isRequired,
+};
 
 export default AddressForm;

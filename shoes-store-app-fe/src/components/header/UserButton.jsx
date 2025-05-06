@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { persistor } from '../../hooks/redux/store';
 import { authInitialState, logout } from '../../hooks/auth/authSlice';
 import { bannerShowInitialState } from '../../hooks/bannerStore';
-import { cartInitializeState } from '../../hooks/cart/cartSlice';
 import { filterInitialState } from '../../hooks/filter/filterSlice';
 import { orderInitialState } from '../../hooks/order/orderSlice';
 import { initialOrderStep } from '../../hooks/orderProgressStore';
 import { productItemInitialState } from '../../hooks/product/productItemSlice';
+import { persistor } from '../../hooks/redux/store';
 
-import { userInitialState } from '../../hooks/user/userSlice';
 import { chatInitialize } from '../../hooks/chat/messageSlice';
+import { userInitialState } from '../../hooks/user/userSlice';
 
 function UserButton() {
 	const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +30,6 @@ function UserButton() {
 		await persistor.purge();
 		const action = logout();
 		dispatch(action);
-		dispatch(cartInitializeState());
 		dispatch(authInitialState());
 		dispatch(userInitialState());
 		dispatch(productItemInitialState());
@@ -40,6 +38,8 @@ function UserButton() {
 		dispatch(initialOrderStep());
 		dispatch(orderInitialState());
 		dispatch(chatInitialize());
+
+		setIsOpen(false);
 		navigate('/');
 	};
 	return (
@@ -78,21 +78,14 @@ function UserButton() {
 						role='menuitem'
 						tabIndex={-1}
 						id='user-menu-item-0'
-						onClick={() => navigate('/profile')}
+						onClick={() => {
+							setIsOpen(false);
+							navigate('/profile');
+						}}
 					>
 						Thông Tin Của Tôi
 					</a>
-					{user?.role === 'ADMIN' && (
-						<a
-							className='block px-4 py-2 text-sm text-gray-700 hover:cursor-pointer hover:bg-gray-300'
-							role='menuitem'
-							tabIndex={-1}
-							id='user-menu-item-1'
-							onClick={() => navigate('/admin')}
-						>
-							Chuyển trang quản lý
-						</a>
-					)}
+
 					<a
 						className='block px-4 py-2 text-sm text-gray-700 hover:cursor-pointer hover:bg-gray-300'
 						role='menuitem'

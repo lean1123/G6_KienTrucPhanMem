@@ -8,7 +8,7 @@ function ListProduct({ items, title = '', path = '' }) {
 			{title && (
 				<p className='text-3xl text-black font-sans font-bold my-4'>{title}</p>
 			)}
-			<div className='grid grid-cols-4 gap-4'>
+			<div className='grid grid-cols-5 gap-4'>
 				{items.map((item) => (
 					<ProductItem item={item} key={item.id} />
 				))}
