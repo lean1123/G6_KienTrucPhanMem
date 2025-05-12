@@ -6,7 +6,6 @@ import ktpm17ctt.g6.product.dto.PageResponse;
 import ktpm17ctt.g6.product.dto.request.ProductItemRequest;
 import ktpm17ctt.g6.product.dto.request.ProductItemUpdationRequest;
 import ktpm17ctt.g6.product.dto.response.ProductItemResponse;
-import ktpm17ctt.g6.product.entity.Product;
 import ktpm17ctt.g6.product.entity.ProductItem;
 import ktpm17ctt.g6.product.entity.QuantityOfSize;
 import ktpm17ctt.g6.product.entity.enums.Type;
@@ -27,6 +26,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -224,5 +225,34 @@ public class ProductItemServiceImpl implements ProductItemService {
             throw new RuntimeException("Invalid quantityOfSize JSON format", e);
         }
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public ProductItemResponse likeProduct(String id) {
+
+        JwtAuthenticationToken authentication =
+                (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+
+        String userId = authentication.getToken().getClaimAsString("accountId");
+
+        ProductItem productItem = productItemRepository.findById(id).orElseThrow(() -> new NotFoundException("Product Item ID", id));
+
+        List<String> likes = productItem.getLikes();
+
+        if (likes == null){
+            likes = new ArrayList<>();
+        }
+
+        if (likes.contains(userId)) {
+            likes.remove(userId);
+        } else {
+            likes.add(userId);
+        }
+
+        productItem.setLikes(likes);
+        return productItemMapper.toProductItemResponse(productItemRepository.save(productItem));
+    }
+
+
 
 }

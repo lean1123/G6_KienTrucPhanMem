@@ -2,13 +2,15 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { enqueueSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
+import productItemApi from '../../../api/productItemApi';
 import { addToCart } from '../../../hooks/cart/cartSlice';
 import useProductItem from '../../../hooks/product/useProductItem';
 import { formatCurrency } from '../../../utils/formatPrice';
 import './Style.css';
 import SubProductDetail from './SubProductDetail';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 function ProductDetail() {
 	const params = useParams();
@@ -19,6 +21,8 @@ function ProductDetail() {
 	const [selectedSize, setSelectedSize] = useState(null);
 	const [quantity, setQuantity] = useState(null);
 	const [showSizeChoosenGuid, setShowSizeChoosenGuid] = useState(false);
+	const [isLiked, setIsLiked] = useState(false);
+	const { user } = useSelector((state) => state.userInfo);
 
 	useEffect(() => {
 		if (productItem?.images?.length) {
@@ -30,6 +34,12 @@ function ProductDetail() {
 			setQuantity(productItem.quantityOfSize[0].quantity);
 		}
 	}, [productItem]);
+
+	useEffect(() => {
+		if (user) {
+			setIsLiked(true);
+		}
+	}, [user]);
 
 	const handleSizeSelect = (size) => {
 		setSelectedSize(size);
@@ -76,6 +86,32 @@ function ProductDetail() {
 			</div>
 		);
 	}
+
+	const handleLikeProduct = async () => {
+		try {
+			const result = await productItemApi.likeProductItem(productItem.id);
+
+			const data = unwrapResult(result);
+
+			if (data?.length > 0 || typeof data !== 'string') {
+				enqueueSnackbar('Đã thêm vào danh sách sản phẩm yêu thích', {
+					variant: 'success',
+				});
+				return;
+			}
+
+			enqueueSnackbar('Thêm vào danh sách yêu thích thất bại', {
+				variant: 'error',
+			});
+			return;
+		} catch (error) {
+			console.error('Error adding to cart:', error);
+			enqueueSnackbar('Thêm vào danh sách yêu thích thất bại', {
+				variant: 'error',
+			});
+			return;
+		}
+	};
 
 	return (
 		<div className='grid grid-cols-5 font-calibri py-10 gap-8'>
@@ -173,8 +209,11 @@ function ProductDetail() {
 					>
 						THÊM VÀO GIỎ HÀNG
 					</button>
-					<button className='px-8 py-2 font-bold border border-orange-600 text-orange-600'>
-						<FavoriteBorderIcon />
+					<button
+						className={`px-8 py-2 font-bold border border-orange-600 text-orange-600 `}
+						onClick={handleLikeProduct}
+					>
+						{isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
 					</button>
 				</div>
 

@@ -124,4 +124,13 @@ public class ProductItemController {
                 .build();
     }
 
+    @PostMapping("/{id}/like")
+    ApiResponse<ProductItemResponse> likeProductItem(@PathVariable String id) {
+        log.info("Like product item with ID: {}", id);
+        ProductItemResponse productItemResponse = productItemService.likeProduct(id);
+        return ApiResponse.<ProductItemResponse>builder()
+                .result(productItemResponse)
+                .build();
+    }
+
 }

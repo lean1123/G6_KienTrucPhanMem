@@ -6,6 +6,7 @@ import ktpm17ctt.g6.product.dto.request.ProductItemUpdationRequest;
 import ktpm17ctt.g6.product.dto.response.ProductItemResponse;
 import ktpm17ctt.g6.product.entity.enums.Type;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,4 +24,7 @@ public interface ProductItemService {
     int getTotalQuantityByProductAndSize(String id, Integer size);
     PageResponse<ProductItemResponse> newestProductItems(int page, int size);
     List<ProductItemResponse> findAll();
+
+    @Transactional(rollbackFor = Exception.class)
+    ProductItemResponse likeProduct(String id);
 }

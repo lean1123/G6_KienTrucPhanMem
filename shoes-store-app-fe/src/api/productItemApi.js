@@ -64,6 +64,14 @@ const productItemApi = {
 			params: { color, size, minPrice, maxPrice, productName, page, pageSize },
 		});
 	},
+
+	likeProductItem: (productItemId) => {
+		const url = `/product/item/${productItemId}/like`;
+
+		return AdminAxiosClient.post(url, null, {
+			withCredentials: true,
+		});
+	},
 };
 
 export default productItemApi;

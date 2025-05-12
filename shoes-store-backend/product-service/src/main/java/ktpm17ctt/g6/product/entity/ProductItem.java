@@ -31,4 +31,6 @@ public class ProductItem {
     Product product;
     @Field("status")
     Status status;
+    @Field("likes")
+    List<String> likes;
 }
