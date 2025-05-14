@@ -5,6 +5,7 @@ import ktpm17ctt.g6.product.dto.ApiResponse;
 import ktpm17ctt.g6.product.dto.PageResponse;
 import ktpm17ctt.g6.product.dto.request.ProductItemRequest;
 import ktpm17ctt.g6.product.dto.response.ProductItemResponse;
+import ktpm17ctt.g6.product.dto.response.ProductItemResponseHasLikes;
 import ktpm17ctt.g6.product.entity.enums.Type;
 import ktpm17ctt.g6.product.service.ProductItemService;
 import lombok.AccessLevel;
@@ -56,10 +57,10 @@ public class ProductItemController {
     }
 
     @GetMapping("/{id}")
-    ApiResponse<ProductItemResponse> getProductItem(@PathVariable String id) {
+    ApiResponse<ProductItemResponseHasLikes> getProductItem(@PathVariable String id) {
         log.info("Get product item with ID: {}", id);
-        return ApiResponse.<ProductItemResponse>builder()
-                .result(productItemService.findById(id).orElse(null))
+        return ApiResponse.<ProductItemResponseHasLikes>builder()
+                .result(productItemService.findProdItemHasLikeById(id).orElse(null))
                 .build();
     }
 
@@ -121,6 +122,24 @@ public class ProductItemController {
         log.info("Get all product items");
         return ApiResponse.<List<ProductItemResponse>>builder()
                 .result(productItemService.findAll())
+                .build();
+    }
+
+    @PostMapping("/{id}/like")
+    ApiResponse<ProductItemResponse> likeProductItem(@PathVariable String id) {
+        log.info("Like product item with ID: {}", id);
+        ProductItemResponse productItemResponse = productItemService.likeProduct(id);
+        return ApiResponse.<ProductItemResponse>builder()
+                .result(productItemResponse)
+                .build();
+    }
+
+    @PostMapping("/{id}/unlike")
+    ApiResponse<ProductItemResponse> unlikeProductItem(@PathVariable String id) {
+        log.info("Unlike product item with ID: {}", id);
+        ProductItemResponse productItemResponse = productItemService.unlikeProduct(id);
+        return ApiResponse.<ProductItemResponse>builder()
+                .result(productItemResponse)
                 .build();
     }
 

@@ -1,8 +1,26 @@
-import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setColor } from '../../hooks/filter/filterSlice';
 
-function FilterByColor({ onChange }) {
+function FilterByColor() {
+	const { color } = useSelector((state) => state.filter);
+	const [selectedColor, setSelectedColor] = useState(color || 'All Color');
+	const disPatch = useDispatch();
+
+	useEffect(() => {
+		setSelectedColor(color || 'All Color');
+	}, [color]);
+
+	const colorOptions = ['All Color', 'RED', 'BLUE', 'GREEN', 'WHITE', 'BLACK'];
+
 	const handleColorChange = (e) => {
-		onChange({ color: e.target.value });
+		const value = e.target.value;
+		setSelectedColor(value);
+		if (value === 'All Color') {
+			disPatch(setColor(null));
+		} else {
+			disPatch(setColor(value));
+		}
 	};
 
 	return (
@@ -11,25 +29,16 @@ function FilterByColor({ onChange }) {
 			<select
 				className='px-4 py-2 border rounded-md w-full'
 				onChange={handleColorChange}
+				value={selectedColor}
 			>
-				<option value='All Color'>Tất Cả</option>
-				<option className='bg-red-400' value='RED'>
-					Đỏ
-				</option>
-				<option className='bg-sky-500' value='BLUE'>
-					Xanh Dương
-				</option>
-				<option className='bg-green-500' value='GREEN'>
-					Xanh Lá
-				</option>
-				{/* Add more colors as needed */}
+				{colorOptions.map((colorOption) => (
+					<option key={colorOption} value={colorOption}>
+						{colorOption === 'All Color' ? 'Tất cả' : colorOption}
+					</option>
+				))}
 			</select>
 		</div>
 	);
 }
-
-FilterByColor.propTypes = {
-	onChange: PropTypes.func.isRequired,
-};
 
 export default FilterByColor;

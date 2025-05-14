@@ -3,10 +3,11 @@ package ktpm17ctt.g6.product.service.implement;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ktpm17ctt.g6.product.dto.PageResponse;
+import ktpm17ctt.g6.product.dto.fein.user.UserResponse;
 import ktpm17ctt.g6.product.dto.request.ProductItemRequest;
 import ktpm17ctt.g6.product.dto.request.ProductItemUpdationRequest;
 import ktpm17ctt.g6.product.dto.response.ProductItemResponse;
-import ktpm17ctt.g6.product.entity.Product;
+import ktpm17ctt.g6.product.dto.response.ProductItemResponseHasLikes;
 import ktpm17ctt.g6.product.entity.ProductItem;
 import ktpm17ctt.g6.product.entity.QuantityOfSize;
 import ktpm17ctt.g6.product.entity.enums.Type;
@@ -19,6 +20,7 @@ import ktpm17ctt.g6.product.mapper.ProductMapper;
 import ktpm17ctt.g6.product.repository.ColorRepository;
 import ktpm17ctt.g6.product.repository.ProductItemRepository;
 import ktpm17ctt.g6.product.repository.ProductRepository;
+import ktpm17ctt.g6.product.repository.fein.UserClient;
 import ktpm17ctt.g6.product.service.ProductItemService;
 import ktpm17ctt.g6.product.service.S3Service;
 import lombok.AccessLevel;
@@ -27,6 +29,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +50,7 @@ public class ProductItemServiceImpl implements ProductItemService {
     ProductItemMapper productItemMapper;
     ProductMapper productMapper;
     ColorMapper colorMapper;
+    UserClient userClient;
 
     S3Service s3Service;
 
@@ -156,10 +161,16 @@ public class ProductItemServiceImpl implements ProductItemService {
     }
 
     @Override
+    public Optional<ProductItemResponseHasLikes> findProdItemHasLikeById(String id) {
+        return productItemRepository.findById(id).map(productItemMapper::toProductItemResponseHasLikes);
+    }
+
+    @Override
     public List<ProductItemResponse> findByProductId(String productId) {
         var products = productItemRepository.findByProduct_Id(productId);
         return products.stream().map(productItemMapper::toProductItemResponse).toList();
     }
+
 
     @Override
     public PageResponse<ProductItemResponse> search(Integer page, String productName, Type type, String categoryName, String colorName, Integer size, Double minPrice, Double maxPrice) {
@@ -224,5 +235,63 @@ public class ProductItemServiceImpl implements ProductItemService {
             throw new RuntimeException("Invalid quantityOfSize JSON format", e);
         }
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public ProductItemResponse likeProduct(String id) {
+
+        JwtAuthenticationToken authentication =
+                (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+
+        String accountId = authentication.getToken().getClaimAsString("accountId");
+
+        UserResponse userResponse = userClient.getUserByAccountId(accountId).getResult();
+
+        ProductItem productItem = productItemRepository.findById(id).orElseThrow(() -> new NotFoundException("Product Item ID", id));
+
+        List<String> likes = productItem.getLikes();
+
+        if (likes == null){
+            likes = new ArrayList<>();
+        }
+
+        if (likes.contains(userResponse.getId())) {
+            return productItemMapper.toProductItemResponse(productItem);
+        } else {
+            likes.add(userResponse.getId());
+        }
+
+        productItem.setLikes(likes);
+        return productItemMapper.toProductItemResponse(productItemRepository.save(productItem));
+    }
+
+    @Override
+    public ProductItemResponse unlikeProduct(String id) {
+        JwtAuthenticationToken authentication =
+                (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+
+        String accountId = authentication.getToken().getClaimAsString("accountId");
+
+        UserResponse userResponse = userClient.getUserByAccountId(accountId).getResult();
+
+        ProductItem productItem = productItemRepository.findById(id).orElseThrow(() -> new NotFoundException("Product Item ID", id));
+
+        List<String> likes = productItem.getLikes();
+
+        if (likes == null){
+            likes = new ArrayList<>();
+        }
+
+        if (!likes.contains(userResponse.getId())) {
+            return productItemMapper.toProductItemResponse(productItem);
+        } else {
+            likes.remove(userResponse.getId());
+        }
+
+        productItem.setLikes(likes);
+        return productItemMapper.toProductItemResponse(productItemRepository.save(productItem));
+    }
+
+
 
 }

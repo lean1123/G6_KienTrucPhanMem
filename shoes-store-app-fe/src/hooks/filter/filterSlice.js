@@ -4,7 +4,7 @@ import productItemApi from '../../api/productItemApi';
 export const onSearch = createAsyncThunk(
 	'filter/onSearch',
 	async (
-		{ color, size, minPrice, maxPrice, productName },
+		{ color, size, minPrice, maxPrice, productName, categoryName },
 		{ rejectWithValue },
 	) => {
 		try {
@@ -14,6 +14,7 @@ export const onSearch = createAsyncThunk(
 				minPrice,
 				maxPrice,
 				productName,
+				categoryName,
 			});
 
 			console.log('response', response);
@@ -38,6 +39,7 @@ const filterSlice = createSlice({
 		minPrice: null,
 		maxPrice: null,
 		productName: null,
+		categoryName: null,
 		returnProducts: [],
 		error: null,
 		loading: false,
@@ -58,6 +60,10 @@ const filterSlice = createSlice({
 		setProductName: (state, action) => {
 			state.productName = action.payload;
 		},
+		setCategoryName: (state, action) => {
+			state.categoryName = action.payload;
+		},
+
 		filterInitialState: () => {
 			return {
 				color: null,
@@ -65,6 +71,7 @@ const filterSlice = createSlice({
 				minPrice: null,
 				maxPrice: null,
 				productName: null,
+				categoryName: null,
 				returnProducts: [],
 				error: null,
 				loading: false,
@@ -94,6 +101,7 @@ export const {
 	setMinPrice,
 	setMaxPrice,
 	setProductName,
+	setCategoryName,
 	filterInitialState,
 } = filterSlice.actions;
 export const filterReducer = filterSlice.reducer;

@@ -159,7 +159,7 @@ const AuthSlice = createSlice({
 				state.accessToken = action.payload.token;
 				state.userId = action.payload.userId;
 			})
-			.addCase(loginSocialCallback.rejected, (state, action) => {
+			.addCase(loginSocialCallback.rejected, (state) => {
 				state.accessToken = null;
 				state.userId = null;
 			});

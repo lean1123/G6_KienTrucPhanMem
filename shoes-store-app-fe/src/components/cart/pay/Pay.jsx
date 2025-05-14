@@ -35,7 +35,7 @@ const Pay = () => {
 
 	const { cartItems } = useSelector((state) => state.cart);
 	const { address } = useSelector((state) => state.userInfo);
-	const [selectedAddress, setSelectedAddress] = useState('');
+	const [selectedAddress, setSelectedAddress] = useState(address[0]?.id);
 	const [showModal, setShowModal] = useState(false);
 	const [vnpayUrl, setVnPayUrl] = useState('');
 
@@ -44,7 +44,7 @@ const Pay = () => {
 			try {
 				const result = await dispatch(fetchAddress());
 				const resultUnwrapped = unwrapResult(result);
-				if (resultUnwrapped?.length > 0) {
+				if (resultUnwrapped?.length > 0 || address?.length > 0) {
 					setSelectedAddress(resultUnwrapped[0]?.id);
 				} else {
 					navigation('/address');
@@ -57,7 +57,7 @@ const Pay = () => {
 			}
 		};
 		fetchAddressData();
-	}, [dispatch, address, navigation]);
+	}, [dispatch, navigation, address]);
 
 	const [isShow, setIsShow] = useState(false);
 	useEffect(() => {

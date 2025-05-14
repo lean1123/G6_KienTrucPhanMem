@@ -22,6 +22,14 @@ import java.util.List;
 public class CategoryController {
     CategoryService categoryService;
 
+    @GetMapping()
+    ApiResponse<List<CategoryResponse>> getAllCategories() {
+        log.info("Get all categories");
+        return ApiResponse.<List<CategoryResponse>>builder()
+                .result(categoryService.findAll())
+                .build();
+    }
+
     @GetMapping("/{id}")
     ApiResponse<CategoryResponse> getCategoryById(@PathVariable String id) {
         log.info("Get category with ID: {}", id);

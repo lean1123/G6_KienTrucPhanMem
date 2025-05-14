@@ -26,6 +26,10 @@ AdminAxiosClient.interceptors.request.use(
 				urlPattern: /^\/identity\/auth\/social-login\/callback/,
 				methods: ['GET'],
 			},
+			{
+				urlPattern: /^\/recommend/,
+				methods: ['GET'],
+			},
 		];
 
 		const isPublicEndpoint = publicEndpoints.some(
