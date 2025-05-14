@@ -59,14 +59,40 @@ const productItemApi = {
 		});
 	},
 
-	search: ({ color, size, minPrice, maxPrice, productName, page, pageSize }) => {
+	search: ({
+		color,
+		size,
+		minPrice,
+		maxPrice,
+		productName,
+		page,
+		pageSize,
+		categoryName,
+	}) => {
 		return AdminAxiosClient.get('/product/item/search', {
-			params: { color, size, minPrice, maxPrice, productName, page, pageSize },
+			params: {
+				colorName: color,
+				size,
+				minPrice,
+				maxPrice,
+				productName,
+				categoryName,
+				page,
+				pageSize,
+			},
 		});
 	},
 
 	likeProductItem: (productItemId) => {
 		const url = `/product/item/${productItemId}/like`;
+
+		return AdminAxiosClient.post(url, null, {
+			withCredentials: true,
+		});
+	},
+
+	unlikeProductItem: (productItemId) => {
+		const url = `/product/item/${productItemId}/unlike`;
 
 		return AdminAxiosClient.post(url, null, {
 			withCredentials: true,

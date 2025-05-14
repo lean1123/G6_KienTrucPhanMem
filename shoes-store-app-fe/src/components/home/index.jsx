@@ -4,31 +4,20 @@ import SliderBar from './SliderBar';
 import productItemApi from '../../api/productItemApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBannerShow } from '../../hooks/bannerStore';
+import recommendationApi from '../../api/recommendationApi';
 
 function HomePage() {
 	const { isBannerShow } = useSelector((state) => state.bannerShow);
 	const dispatch = useDispatch();
-
-	const [listRecentProducts, setListRecentProducts] = useState([]);
 	const [listNewProducts, setListNewProducts] = useState([]);
 	const [listTopSaleProducts, setListTopSaleProducts] = useState([]);
+	const [listRecommendationProducts, setListRecommendationProducts] = useState(
+		[],
+	);
+
+	const { user } = useSelector((state) => state.userInfo);
 
 	useEffect(() => {
-		const fetchRecentProducts = async () => {
-			try {
-				const response = await productItemApi.getRecentProducts();
-				if (!response.status === 200) {
-					throw new Error('Error fetching recent products');
-				}
-
-				console.log('response of list recent', response);
-
-				setListRecentProducts(response.data?.data);
-			} catch (error) {
-				console.error('Error fetching recent products: ', error);
-			}
-		};
-
 		const fetchNewProducts = async () => {
 			try {
 				const response = await productItemApi.getNewProductItems();
@@ -56,10 +45,36 @@ function HomePage() {
 			}
 		};
 
-		fetchRecentProducts();
 		fetchNewProducts();
 		fetchTopSaleProducts();
 	}, []);
+
+	useEffect(() => {
+		const fetchRecommendationProducts = async () => {
+			try {
+				const response = await recommendationApi.getRecommendationProducts(
+					user?.id,
+				);
+
+				if (response.status !== 200) {
+					throw new Error('Error fetching recommendation products');
+				}
+
+				if (response.data.code === 503) {
+					console.error(
+						'Error fetching recommendation products: ',
+						response.data.message,
+					);
+					return;
+				}
+				setListRecommendationProducts(response.data);
+			} catch (error) {
+				throw new Error('Error fetching recommendation products: ', error);
+			}
+		};
+
+		fetchRecommendationProducts();
+	}, [user?.id]);
 
 	const closePopup = () => {
 		dispatch(setBannerShow(false));
@@ -93,8 +108,8 @@ function HomePage() {
 			</div>
 			<div className='w-full flex flex-col items-center my-5'>
 				<ListProduct
-					items={listRecentProducts}
-					title='Danh sách sản phẩm đã xem'
+					items={listRecommendationProducts}
+					title='Có Thể Bạn Sẽ Thích'
 					path='/listRecentProducts'
 				/>
 			</div>

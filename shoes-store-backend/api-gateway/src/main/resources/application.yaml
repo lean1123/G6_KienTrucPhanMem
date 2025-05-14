@@ -71,6 +71,13 @@ resilience4j:
         slow-call-duration-threshold: 10s  # Giảm thời gian gọi chậm
         slow-call-rate-threshold: 50      # Tăng tỷ lệ chấp nhận cuộc gọi chậm
         waitDurationInOpenState: 10s
+      recommendationServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 15  # Tăng số cuộc gọi tối thiểu để tính tỷ lệ lỗi
+        slidingWindowSize: 20     # Tăng cửa sổ trượt để giảm tính nhạy cảm
+        slow-call-duration-threshold: 10s  # Giảm thời gian gọi chậm
+        slow-call-rate-threshold: 50      # Tăng tỷ lệ chấp nhận cuộc gọi chậm
+        waitDurationInOpenState: 10s
   timelimiter:
     instances:
       productServiceCircuitBreaker:
@@ -84,13 +91,15 @@ resilience4j:
       identityServiceCircuitBreaker:
         timeoutDuration: 30s
       userServiceCircuitBreaker:
-          timeoutDuration: 30s
+        timeoutDuration: 30s
       cartServiceCircuitBreaker:
         timeoutDuration: 30s
       notificationServiceCircuitBreaker:
         timeoutDuration: 30s
       reviewServiceCircuitBreaker:
-          timeoutDuration: 30s
+        timeoutDuration: 30s
+      recommendationServiceCircuitBreaker:
+        timeoutDuration: 30s
 
 
 #logging:
@@ -255,6 +264,21 @@ spring:
               args:
                 name: chatServiceCircuitBreaker
                 fallbackUri: forward:/fallback/chat
+        - id: recommendation-service
+          uri: lb://recommendation-service
+          predicates:
+            - Path=${app.api-prefix}/recommend/**
+          filters:
+            - StripPrefix=2
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+            - name: CircuitBreaker
+              args:
+                name: recommendationServiceCircuitBreaker
+                fallbackUri: forward:/fallback/recommendation
       httpclient:
         connect-timeout: 15000
         response-timeout: 120000ms

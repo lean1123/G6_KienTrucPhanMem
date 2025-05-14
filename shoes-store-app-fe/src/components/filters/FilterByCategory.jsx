@@ -1,32 +1,45 @@
-const scrollStyles = {
-	maxHeight: '300px',
-	overflowY: 'auto',
-};
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCategoryName } from '../../hooks/filter/filterSlice';
 
 function FilterByCategory() {
+	const dispatch = useDispatch();
+	const { category } = useSelector((state) => state.filter);
+	const [selectedCategory, setSelectedCategory] = useState(
+		category || 'All Category',
+	);
+
+	const categoryOptions = [
+		'All Category',
+		'Sport Shoes',
+		'Sneaker',
+		'Western Shoes',
+	];
+
+	useEffect(() => {
+		setSelectedCategory(category || 'All Category');
+	}, [category]);
+
+	const handleCategoryChange = (e) => {
+		const value = e.target.value;
+		setSelectedCategory(value);
+		dispatch(setCategoryName(value === 'All Category' ? null : value));
+	};
 	return (
-		<>
-			return{' '}
-			<div>
-				<h1 className='font-bold mt-4'>NỔI BẬT</h1>
-			</div>
-			<div
-				className='search-container bg-white flex flex-col items-start mt-3'
-				style={scrollStyles}
+		<div className='mb-2'>
+			<h2 className='mb-1 font-semibold'>Lọc theo danh mục</h2>
+			<select
+				className='px-4 py-2 border rounded-md w-full'
+				value={selectedCategory}
+				onChange={handleCategoryChange}
 			>
-				<button className='font-bold mb-3 text-s'>All Black</button>
-				<button className='font-bold mb-3 text-s'>All White</button>
-				<button className='font-bold mb-3 text-s'>Cổ cao</button>
-				<button className='font-bold mb-3 text-s'>Collab</button>
-				<button className='font-bold mb-3 text-s'>Đế cao </button>
-				<button className='font-bold mb-3 text-s'>Limited</button>
-				<button className='font-bold mb-3 text-s'>Luxury brand</button>
-				<button className='font-bold mb-3 text-s'>Phản quang</button>
-				<button className='font-bold mb-3 text-s'>Retro</button>
-				<button className='font-bold mb-3 text-s'>Vintage</button>
-				<button className='font-bold mb-3 text-s'>Cổ thấp</button>
-			</div>
-		</>
+				{categoryOptions.map((cate) => (
+					<option key={cate} value={cate}>
+						{cate === 'All Category' ? 'Tất cả' : cate}
+					</option>
+				))}
+			</select>
+		</div>
 	);
 }
 

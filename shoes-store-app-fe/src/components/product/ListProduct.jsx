@@ -8,12 +8,19 @@ function ListProduct({ items, title = '', path = '' }) {
 			{title && (
 				<p className='text-3xl text-black font-sans font-bold my-4'>{title}</p>
 			)}
-			<div className='grid grid-cols-5 gap-4'>
+			<div className='grid grid-cols-5 gap-4 px-10'>
+				{items?.length === 0 && (
+					<div className='col-span-5 flex justify-center items-center'>
+						<p className=' text-black font-sans italic my-4 text-center'>
+							Chưa có sản phẩm nào được hiển thị
+						</p>
+					</div>
+				)}
 				{items.map((item) => (
 					<ProductItem item={item} key={item.id} />
 				))}
 			</div>
-			{path && (
+			{path && items?.length > 0 && (
 				<Link href={path} underline='always' color='textPrimary' className='mt-4'>
 					<p className='text-base text-black font-semibold'>
 						Còn nhiều lắm , xem thêm
@@ -25,16 +32,7 @@ function ListProduct({ items, title = '', path = '' }) {
 }
 
 ListProduct.propTypes = {
-	items: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			image: PropTypes.string.isRequired,
-			name: PropTypes.string.isRequired,
-			sizes: PropTypes.array.isRequired,
-			colors: PropTypes.array.isRequired,
-			price: PropTypes.number.isRequired,
-		}),
-	).isRequired,
+	items: PropTypes.array.isRequired,
 	title: PropTypes.string,
 	path: PropTypes.string,
 };

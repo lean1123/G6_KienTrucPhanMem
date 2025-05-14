@@ -1,35 +1,53 @@
-import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSize } from '../../hooks/filter/filterSlice';
 
-function FilterBySize({ onChange }) {
+function FilterBySize() {
+	const { size } = useSelector((state) => state.filter);
+	const [selectedSize, setSelectedSize] = useState(size || 'All Size');
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		setSelectedSize(size || 'All Size');
+	}, [size]);
+
 	const handleSizeChange = (e) => {
-		onChange({ size: e.target.value });
+		const value = e.target.value;
+		setSelectedSize(value);
+		dispatch(setSize(value === 'All Size' ? null : value));
 	};
+
+	const sizeOptions = [
+		'All Size',
+		'35',
+		'36',
+		'37',
+		'38',
+		'39',
+		'40',
+		'41',
+		'42',
+		'43',
+		'44',
+		'45',
+	];
 
 	return (
 		<div className='mb-2'>
-			<h2 className='mb-1'>Lọc theo kích cỡ</h2>
+			<h2 className='mb-1 font-semibold'>Lọc theo kích cỡ</h2>
 			<select
 				className='px-4 py-2 border rounded-md w-full'
+				value={selectedSize}
 				onChange={handleSizeChange}
 			>
-				<option value='All Size'>Tất cả</option>
-				<option value='35'>35</option>
-				<option value='36'>36</option>
-				<option value='37'>37</option>
-				<option value='38'>38</option>
-				<option value='39'>39</option>
-				<option value='40'>40</option>
-				<option value='41'>41</option>
-				<option value='42'>42</option>
-				<option value='43'>43</option>
-				<option value='44'>44</option>
+				{sizeOptions.map((sz) => (
+					<option key={sz} value={sz}>
+						{sz === 'All Size' ? 'Tất cả' : sz}
+					</option>
+				))}
 			</select>
 		</div>
 	);
 }
-
-FilterBySize.propTypes = {
-	onChange: PropTypes.func.isRequired,
-};
 
 export default FilterBySize;

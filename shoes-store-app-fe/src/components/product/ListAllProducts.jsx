@@ -1,19 +1,14 @@
 import SearchSharpIcon from '@mui/icons-material/SearchSharp';
 import { Input } from '@mui/material';
-import { useEffect } from 'react';
+import { debounce } from 'lodash';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-	onSearch,
-	setColor,
-	setMaxPrice,
-	setMinPrice,
-	setProductName,
-	setSize,
-} from '../../hooks/filter/filterSlice';
+import { onSearch, setProductName } from '../../hooks/filter/filterSlice';
 import FilterByColor from '../filters/FilterByColor';
 import FilterByPrice from '../filters/FilterByPrice';
 import FilterBySize from '../filters/FilterBySize';
 import ListProduct from './ListProduct';
+import FilterByCategory from '../filters/FilterByCategory';
 
 function ListAllProducts() {
 	const dispatch = useDispatch();
@@ -25,59 +20,33 @@ function ListAllProducts() {
 		maxPrice,
 		productName,
 		returnProducts,
-		error,
-		loading,
+		categoryName,
 	} = useSelector((state) => state.filter);
+	const [productNameValue, setProductNameValue] = useState(productName || '');
 
 	useEffect(() => {
-		const fetchProductItemsByFilter = async () => {
-			await dispatch(onSearch({ color, size, minPrice, maxPrice, productName }));
+		const fetchProductItemsByFilter = () => {
+			dispatch(
+				onSearch({ color, size, minPrice, maxPrice, productName, categoryName }),
+			);
 		};
-		fetchProductItemsByFilter();
-	}, [dispatch, color, size, minPrice, maxPrice, productName]);
 
-	const handleProductNameChange = (newName) => {
-		if (newName.target.value) {
-			const productName = newName.target.value;
+		const debouncedFetch = debounce(fetchProductItemsByFilter, 800);
+		debouncedFetch();
 
-			dispatch(setProductName(productName.length > 0 ? productName : null));
-		}
-	};
+		return () => {
+			debouncedFetch.cancel();
+		};
+	}, [dispatch, color, size, minPrice, maxPrice, productName, categoryName]);
 
-	const handleSizeChange = (newSize) => {
-		if (newSize.size) {
-			if (newSize.size === 'All Size') {
-				console.log('newSize', newSize.size);
-
-				dispatch(setSize(null));
-				return;
-			}
-
-			dispatch(setSize(newSize.size));
-		}
-	};
-
-	const handleColorChange = (newColor) => {
-		if (newColor.color) {
-			if (newColor.color === 'All Color') {
-				dispatch(setColor(null));
-				return;
-			}
-
-			dispatch(setColor(newColor.color));
-		}
-	};
-
-	const handlePriceChange = (newPrice) => {
-		if (newPrice.minPrice) {
-			dispatch(setMinPrice(newPrice.minPrice));
-		} else {
-			dispatch(setMaxPrice(newPrice.maxPrice));
-		}
+	const handleProductNameChange = (e) => {
+		const value = e.target.value;
+		setProductNameValue(value);
+		dispatch(setProductName(value.trim() === '' ? null : value));
 	};
 
 	return (
-		<div className='topSale-container'>
+		<div className='topSale-container px-4'>
 			<div className='flex justify-center items-center mt-5'>
 				<div className='p-2 border rounded-md border-slate-800 shadow-md bg-slate-50'>
 					<SearchSharpIcon sx={{ cursor: 'pointer' }} />
@@ -85,6 +54,7 @@ function ListAllProducts() {
 						sx={{ paddingX: '10px' }}
 						placeholder='Nhập tên sản phẩm'
 						onChange={handleProductNameChange}
+						value={productNameValue}
 						disableUnderline={true}
 					/>
 				</div>
@@ -94,13 +64,12 @@ function ListAllProducts() {
 					className='w-1/5 bg-white ml-5 items-center text-base font-calibri font-semibold 
 						p-2 rounded-md shadow-md border h-fit'
 				>
-					<FilterBySize onChange={handleSizeChange} />
-					<FilterByColor onChange={handleColorChange} />
-					<FilterByPrice onChange={handlePriceChange} />
+					<FilterBySize />
+					<FilterByColor />
+					<FilterByCategory />
+					<FilterByPrice />
 				</div>
 				<div className='w-4/5 mb-4'>
-					{loading && <p>Loading...</p>}
-					{error && <p>{error.message || JSON.stringify(error)}</p>}
 					<ListProduct items={returnProducts} />
 				</div>
 			</div>

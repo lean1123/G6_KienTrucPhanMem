@@ -25,6 +25,12 @@ function ProductDetail() {
 	const { user } = useSelector((state) => state.userInfo);
 
 	useEffect(() => {
+		if (productItem && user) {
+			setIsLiked(productItem.likes?.includes(user.id));
+		}
+	}, [productItem, user]);
+
+	useEffect(() => {
 		if (productItem?.images?.length) {
 			setSelectedImage(productItem.images[0]);
 		}
@@ -34,12 +40,6 @@ function ProductDetail() {
 			setQuantity(productItem.quantityOfSize[0].quantity);
 		}
 	}, [productItem]);
-
-	useEffect(() => {
-		if (user) {
-			setIsLiked(true);
-		}
-	}, [user]);
 
 	const handleSizeSelect = (size) => {
 		setSelectedSize(size);
@@ -89,14 +89,20 @@ function ProductDetail() {
 
 	const handleLikeProduct = async () => {
 		try {
-			const result = await productItemApi.likeProductItem(productItem.id);
+			const response = await productItemApi.likeProductItem(productItem.id);
 
-			const data = unwrapResult(result);
-
-			if (data?.length > 0 || typeof data !== 'string') {
+			if (response?.status === 200) {
+				if (response.data.code === 503) {
+					enqueueSnackbar('Máy chủ tạm thời không khả dụng vui lòng thử lại sau', {
+						variant: 'error',
+					});
+					return;
+				}
 				enqueueSnackbar('Đã thêm vào danh sách sản phẩm yêu thích', {
 					variant: 'success',
 				});
+				setIsLiked(true);
+				productItem.likes = [...productItem.likes, user.id];
 				return;
 			}
 
@@ -113,16 +119,49 @@ function ProductDetail() {
 		}
 	};
 
+	const handleUnlikeProduct = async () => {
+		try {
+			const response = await productItemApi.unlikeProductItem(productItem.id);
+
+			if (response?.status === 200) {
+				if (response.data.code === 503) {
+					enqueueSnackbar('Máy chủ tạm thơi không khả dụng vui lòng thử lại sau', {
+						variant: 'error',
+					});
+					return;
+				}
+				enqueueSnackbar('Đã loại khỏi vào danh sách sản phẩm yêu thích', {
+					variant: 'success',
+				});
+				setIsLiked(false);
+				productItem.likes = productItem.likes.filter((item) => item !== user.id);
+				return;
+			}
+			enqueueSnackbar('Xóa khỏi danh sách yêu thích thất bại', {
+				variant: 'error',
+			});
+			return;
+		} catch (error) {
+			console.error('Error adding to cart:', error);
+			enqueueSnackbar('Xóa khỏi danh sách yêu thích thất bại', {
+				variant: 'error',
+			});
+			return;
+		}
+	};
+
+	const uniqueImages = productItem?.images
+		? Array.from(new Set(productItem.images))
+		: [];
+
 	return (
 		<div className='grid grid-cols-5 font-calibri py-10 gap-8'>
-			{/* LEFT - IMAGE PREVIEW (chiếm 3 cột) */}
 			<div className='col-span-3 flex flex-row justify-center'>
-				{/* Thumbnail Images */}
 				<div className='flex flex-col h-[550px] overflow-auto p-2 mr-4 gap-2'>
-					{productItem?.images.map((item, index) => (
+					{uniqueImages?.map((item, index) => (
 						<div
 							key={index}
-							className={`border rounded-lg p-1 cursor-pointer transition-transform duration-200 ${
+							className={`border rounded-lg p-1 cursor-pointer transition-transform duration-200 mb-1 ${
 								selectedImage === item
 									? 'ring-2 ring-orange-400 scale-105'
 									: 'hover:ring-1 hover:ring-orange-300 hover:scale-105'
@@ -210,11 +249,16 @@ function ProductDetail() {
 						THÊM VÀO GIỎ HÀNG
 					</button>
 					<button
-						className={`px-8 py-2 font-bold border border-orange-600 text-orange-600 `}
-						onClick={handleLikeProduct}
+						className={`px-8 py-2 font-bold border border-orange-600 text-orange-600 ${
+							isLiked ? 'bg-orange-600 text-white' : 'bg-white'
+						} hover:bg-slate-900 transition rounded-md shadow-md`}
+						onClick={!isLiked ? handleLikeProduct : handleUnlikeProduct}
 					>
 						{isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
 					</button>
+					<p className='text-sm text-gray-600'>
+						{productItem.likes?.length || 0} người đã thích sản phẩm này
+					</p>
 				</div>
 
 				{/* Sub Detail */}
@@ -232,6 +276,12 @@ function ProductDetail() {
 						content='Trường hợp lỗi từ Biti’s giao sai...'
 					/>
 					<SubProductDetail title='Đánh giá' content={productItem.product.rating} />
+					<SubProductDetail
+						title='Danh mục'
+						content={
+							productItem.product?.category?.name || 'Sản phẩm chưa có danh mục'
+						}
+					/>
 				</div>
 			</div>
 
