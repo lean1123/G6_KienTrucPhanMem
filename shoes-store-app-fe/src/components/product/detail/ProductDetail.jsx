@@ -23,6 +23,7 @@ function ProductDetail() {
 	const [showSizeChoosenGuid, setShowSizeChoosenGuid] = useState(false);
 	const [isLiked, setIsLiked] = useState(false);
 	const { user } = useSelector((state) => state.userInfo);
+	const [isZoomed, setIsZoomed] = useState(false);
 
 	useEffect(() => {
 		if (productItem && user) {
@@ -69,6 +70,10 @@ function ProductDetail() {
 			enqueueSnackbar('Thêm vào giỏ hàng thất bại', { variant: 'error' });
 			return;
 		}
+	};
+
+	const handleImageClick = () => {
+		setIsZoomed(true);
 	};
 
 	if (!productItem || productItem === null) {
@@ -183,6 +188,8 @@ function ProductDetail() {
 						className='w-full h-full object-cover transition-transform duration-300 hover:scale-105'
 						src={selectedImage}
 						alt='product large'
+						onClick={handleImageClick}
+						style={{ cursor: 'pointer' }}
 					/>
 				</div>
 			</div>
@@ -296,6 +303,24 @@ function ProductDetail() {
 						/>
 						<button
 							onClick={() => setShowSizeChoosenGuid(false)}
+							className='absolute top-4 right-4 bg-white text-black px-4 py-2 rounded shadow-lg hover:bg-red-500 hover:text-white transition'
+						>
+							Đóng
+						</button>
+					</div>
+				</div>
+			)}
+
+			{isZoomed && (
+				<div className='fixed inset-0 z-[999999] bg-gray-300 bg-opacity-70 flex justify-center items-center'>
+					<div className='relative w-full h-full'>
+						<img
+							src={selectedImage}
+							alt='Ảnh sản phẩm'
+							className='w-full h-full object-contain'
+						/>
+						<button
+							onClick={() => setIsZoomed(false)}
 							className='absolute top-4 right-4 bg-white text-black px-4 py-2 rounded shadow-lg hover:bg-red-500 hover:text-white transition'
 						>
 							Đóng

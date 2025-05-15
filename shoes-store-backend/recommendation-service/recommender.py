@@ -3,6 +3,8 @@ import joblib
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
+from utils.Util import build_text
+
 # Kết nối MongoDB
 MONGO_URI = "mongodb+srv://hhglorious:eDXWxIAwnWJkxBTH@cluster0.8sxd9.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(MONGO_URI)
@@ -15,15 +17,6 @@ tfidf_matrix = model_data["tfidf_matrix"]
 product_ids = model_data["product_ids"]
 vectorizer = model_data["vectorizer"]
 
-# Hàm trích xuất văn bản đặc trưng từ sản phẩm
-def build_text(prod):
-    product = prod.get("product", {})
-    name = product.get("name", "")
-    category = product.get("category", {}).get("name", "")
-    color = prod.get("color", {}).get("name", "")
-    type_ = product.get("type", "")  # MALE/FEMALE/UNISEX
-    price = prod.get("price", "")
-    return f"{name} {category} {color} {type_} {price}".strip()
 
 # Hàm gợi ý sản phẩm dựa vào sản phẩm user đã like
 def get_recommendations(user_id, top_n=5):

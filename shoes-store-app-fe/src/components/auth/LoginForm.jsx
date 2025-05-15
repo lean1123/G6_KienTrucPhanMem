@@ -45,8 +45,10 @@ function LoginForm() {
 			enqueueSnackbar('Đăng nhập thất bại', { variant: 'error' });
 			return;
 		} catch (error) {
-			console.log('Error: ', error);
-			enqueueSnackbar('Đăng nhập thất bại', { variant: 'error' });
+			console.error('Error in Login Form: ', error);
+			enqueueSnackbar(`Đăng nhập thất bại: ${error?.response?.data?.message}`, {
+				variant: 'error',
+			});
 			return;
 		}
 	};
@@ -114,9 +116,6 @@ function LoginForm() {
 							>
 								Đăng Nhập Với Google
 							</button>
-						</div>
-						<div className='flex justify-center text-sl mt-3 hover:text-red-500'>
-							<button>Bạn quên mật khẩu?</button>
 						</div>
 					</form>
 				</div>

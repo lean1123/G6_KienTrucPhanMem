@@ -61,11 +61,14 @@ function SignUpForm() {
 				return;
 			}
 
-			enqueueSnackbar('Đăng ký thất bại', { variant: 'error' });
+			enqueueSnackbar(`Đăng ký thất bại!`, { variant: 'error' });
 			return;
 		} catch (error) {
 			console.error('Failed to register:', error);
-			enqueueSnackbar('Đăng ký thất bại', { variant: 'error' });
+			enqueueSnackbar(
+				`Đăng ký thất bại: ${error?.response?.data?.message || 'Lỗi từ máy chủ'}`,
+				{ variant: 'error' },
+			);
 			return;
 		}
 	};
@@ -196,7 +199,6 @@ function SignUpForm() {
 								</div>
 								<div className='flex items-center'>
 									<input
-										checked
 										id='default-radio-2'
 										type='radio'
 										value='FEMALE'
