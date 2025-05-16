@@ -3,6 +3,7 @@ package ktpm17ctt.g6.orderservice.services.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
+import ktpm17ctt.g6.event.dto.NotificationEvent;
 import ktpm17ctt.g6.orderservice.dto.common.ApiResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.identity.AccountResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.payment.PaymentResponse;
@@ -19,7 +20,6 @@ import ktpm17ctt.g6.orderservice.dto.response.OrderResponse;
 import ktpm17ctt.g6.orderservice.entities.Order;
 import ktpm17ctt.g6.orderservice.entities.OrderStatus;
 import ktpm17ctt.g6.orderservice.entities.PaymentMethod;
-import ktpm17ctt.g6.orderservice.kafka.OrderEventProducer;
 import ktpm17ctt.g6.orderservice.mapper.OrderMapper;
 import ktpm17ctt.g6.orderservice.repositories.OrderRepository;
 import ktpm17ctt.g6.orderservice.repositories.httpClients.IdentityClient;
@@ -29,11 +29,13 @@ import ktpm17ctt.g6.orderservice.repositories.httpClients.UserClient;
 import ktpm17ctt.g6.orderservice.services.OrderDetailService;
 import ktpm17ctt.g6.orderservice.services.OrderService;
 import ktpm17ctt.g6.orderservice.util.GetIpAddress;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-//import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,10 +59,10 @@ public class OrderServiceImpl implements OrderService {
     private final UserClient userClient;
     private final ProductItemClient productItemClient;
     private final IdentityClient identityClient;
-    private final OrderEventProducer orderEventProducer;
     private final ObjectMapper objectMapper;
-//    KafkaTemplate<String, Object> kafkaTemplate;
-//    KafkaService kafkaService;
+
+    @Autowired
+    KafkaTemplate<String, Object> kafkaTemplate;
 
     @Value("${gateway.health.check.url}")
     private String GATEWAY_HEALTH_CHECK_URL;
@@ -88,6 +90,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         String userId = this.getUserIdFromEmail(email);
+        String name = this.getUserNameFromEmail(email);
 
         if (userId == null) {
             throw new Exception("User not exist in system");
@@ -156,7 +159,14 @@ public class OrderServiceImpl implements OrderService {
 
         log.info("Payment URL: {}", paymentUrl);
 
-        orderEventProducer.sendOrderSuccessEvent(email, userId); // Truyền cả email và userId
+        NotificationEvent notificationEvent = ktpm17ctt.g6.event.dto.NotificationEvent.builder()
+                .channel("Email")
+                .recipient(email)
+                .subject("Thông báo đặt hàng thành công")
+                .body("Hello! " + name + "!<br>Đơn hàng " + entity.getId() +" đã được đặt thành công")
+                .userId(userId)
+                .build();
+        kafkaTemplate.send("order_success_topic", notificationEvent);
         log.info("Sent order success event for order {} to user {}", entity.getId(), email);
 
 
@@ -409,6 +419,24 @@ public class OrderServiceImpl implements OrderService {
                             .build();
                 })
                 .toList();
+    }
+
+    private String getUserNameFromEmail(String email) throws  Exception{
+        ApiResponse<AccountResponse> accountResponse = identityClient.getAccountByEmail(email);
+
+        if(accountResponse.getResult() == null){
+            throw new NullPointerException("Account not found");
+        }
+
+        String accountId = accountResponse.getResult().getId();
+
+        ApiResponse<UserResponse> userResponse = userClient.getUserByAccountId(accountId);
+        if(userResponse.getResult() == null){
+            throw new NullPointerException("User not found");
+        }
+
+        String name= userResponse.getResult().getFirstName() + userResponse.getResult().getLastName();
+        return name;
     }
 
     @Transactional(rollbackFor = Exception.class)

@@ -1,5 +1,6 @@
 package ktpm17ctt.g6.identity.service.implement;
 
+import ktpm17ctt.g6.event.dto.NotificationEvent;
 import ktpm17ctt.g6.identity.dto.request.RegistrationRequest;
 import ktpm17ctt.g6.identity.dto.request.AccountUpdateRequest;
 import ktpm17ctt.g6.identity.dto.response.AccountResponse;
@@ -13,9 +14,11 @@ import ktpm17ctt.g6.identity.repository.RoleRepository;
 import ktpm17ctt.g6.identity.repository.AccountRepository;
 import ktpm17ctt.g6.identity.repository.httpClient.UserClient;
 import ktpm17ctt.g6.identity.service.AccountService;
+import org.springframework.kafka.core.KafkaTemplate;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,6 +38,9 @@ public class AccountServiceImpl implements AccountService {
     PasswordEncoder passwordEncoder;
     UserMapper userMapper;
     UserClient userClient;
+
+    @Autowired
+    KafkaTemplate<String, Object> kafkaTemplate;
 
 
     @Override
@@ -63,6 +69,19 @@ public class AccountServiceImpl implements AccountService {
         log.info("Created user profile: {}", userProfile);
         var accountCreationResponse = accountMapper.toAccountResponse(account);
         accountCreationResponse.setId(userProfile.getResult().getId());
+
+
+        NotificationEvent notificationEvent = ktpm17ctt.g6.event.dto.NotificationEvent.builder()
+                .channel("Email")
+                .recipient(request.getEmail())
+                .subject("Tạo tài khoản thành công")
+                .body("Chúc mừng bạn đã tạo tài khoản G6 SHOES SHOP thành công!")
+                .userId(accountCreationResponse.getId())
+                .build();
+        kafkaTemplate.send("signup_successful", notificationEvent);
+        log.info("tạo tài khoản thành công to user {}", accountCreationResponse.getId());
+
+
         return accountCreationResponse;
     }
 
