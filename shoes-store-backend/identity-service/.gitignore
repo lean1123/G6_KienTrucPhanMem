@@ -37,4 +37,5 @@ build/
 .env.properties
 
 .env
+.env.docker
 

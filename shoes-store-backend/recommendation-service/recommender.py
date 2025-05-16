@@ -1,3 +1,7 @@
+from dotenv import load_dotenv
+load_dotenv()
+import os
+
 from pymongo import MongoClient
 import joblib
 from sklearn.metrics.pairwise import cosine_similarity
@@ -6,7 +10,7 @@ import numpy as np
 from utils.Util import build_text
 
 # Kết nối MongoDB
-MONGO_URI = "mongodb+srv://hhglorious:eDXWxIAwnWJkxBTH@cluster0.8sxd9.mongodb.net/?retryWrites=true&w=majority"
+MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
 db = client["shoes-store"]
 product_items = db["product-item"]

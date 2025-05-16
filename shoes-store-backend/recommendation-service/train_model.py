@@ -1,10 +1,14 @@
+from dotenv import load_dotenv
+load_dotenv()
+import os
+
 from pymongo import MongoClient
 from sklearn.feature_extraction.text import TfidfVectorizer
 import joblib
 
 from utils.Util import build_text
 
-MONGO_URI = "mongodb+srv://hhglorious:eDXWxIAwnWJkxBTH@cluster0.8sxd9.mongodb.net/?retryWrites=true&w=majority"
+MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
 db = client["shoes-store"]
 product_items = list(db["product-item"].find({}))

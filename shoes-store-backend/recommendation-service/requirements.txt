@@ -3,3 +3,4 @@ pymongo
 scikit-learn
 py_eureka_client
 joblib
+python-dotenv

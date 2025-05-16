@@ -1,7 +1,7 @@
 /.metadata/
 .idea
 .project
-init-db.sql
+init-db.mysql.sql
 init.sql
 shoes-store-backend.iml
 .vscode

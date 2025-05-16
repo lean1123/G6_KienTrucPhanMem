@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+import os
 from flask import Flask, request, jsonify
 from recommender import get_recommendations
 import py_eureka_client.eureka_client as eureka_client
@@ -6,9 +9,9 @@ app = Flask(__name__)
 
 # Đăng ký Eureka
 eureka_client.init(
-    eureka_server="http://localhost:8761/eureka/",
+    eureka_server= os.getenv("EUREKA_URI"),
     app_name="recommendation-service",
-    instance_port=5000,
+    instance_port=5001,
     instance_host="localhost",
 )
 

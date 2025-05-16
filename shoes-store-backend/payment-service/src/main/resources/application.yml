@@ -46,7 +46,7 @@ frontend:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_URI}
   instance:
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 10

@@ -32,3 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 Dockerfile
+.envrc
+.envrc.docker
+
