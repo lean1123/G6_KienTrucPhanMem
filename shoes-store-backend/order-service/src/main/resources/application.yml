@@ -13,17 +13,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:9094
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    template:
-      default-topic: order_success_topic
-  jackson:
-    date-format: yyyy-MM-dd
-    serialization:
-      write-dates-as-timestamps: false
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
 
 
 server:

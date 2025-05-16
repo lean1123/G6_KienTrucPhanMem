@@ -45,6 +45,12 @@ spring:
                 token-uri: https://oauth2.googleapis.com/token
                 user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
 
+  kafka:
+    bootstrap-servers: localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
 jwt:
     signerKey: "1Tj5jmm5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
 
