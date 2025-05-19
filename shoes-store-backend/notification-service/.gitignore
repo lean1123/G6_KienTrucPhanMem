@@ -35,3 +35,4 @@ build/
 .envrc
 .envrc.docker
 .env
+.env.docker

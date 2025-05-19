@@ -9,7 +9,7 @@ spring:
     name: identity-service
   data:
     redis:
-      host: 127.0.0.1
+      host: ${SPRING_REDIS_HOST}
       port: 6379
       password: ""
       timeout: 6000ms
@@ -46,7 +46,7 @@ spring:
                 user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
 
   kafka:
-    bootstrap-servers: localhost:9094
+    bootstrap-servers: ${KAFKA_URL}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

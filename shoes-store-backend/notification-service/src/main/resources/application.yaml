@@ -12,13 +12,8 @@ spring:
   application:
     name: notification-service
 
-#  data:
-#    mongodb: mongodb+srv://phanngochuy9220172018:amit123@cluster0.x82shea.mongodb.net/notification-service?retryWrites=true&w=majority&appName=Cluster0
-#"mongodb+srv://phanngochuy9220172018:amit123@cluster0.x82shea.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-#      uri: mongodb://root:root@localhost:27017/notification-service?authSource=admin
-#       uri: mongodb://notification-user:secure-password@mongo:27017/notification-service?authSource=admin
   kafka:
-    bootstrap-servers: localhost:9094
+    bootstrap-servers: ${KAFKA_URL}
     consumer:
       group-id: notification-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -48,7 +43,7 @@ logging:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_URI}
   instance:
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 10

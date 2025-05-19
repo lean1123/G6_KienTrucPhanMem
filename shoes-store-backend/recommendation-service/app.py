@@ -1,3 +1,5 @@
+import socket
+
 from dotenv import load_dotenv
 load_dotenv()
 import os
@@ -7,12 +9,15 @@ import py_eureka_client.eureka_client as eureka_client
 
 app = Flask(__name__)
 
+
 # Đăng ký Eureka
 eureka_client.init(
-    eureka_server= os.getenv("EUREKA_URI"),
+    eureka_server=os.getenv("EUREKA_URI"),
     app_name="recommendation-service",
+    instance_host=os.getenv("INSTANCE_HOST"),
     instance_port=5001,
-    instance_host="localhost",
+    renewal_interval_in_secs=10,
+    duration_in_secs=30,
 )
 
 @app.route('/recommend', methods=['GET'])
@@ -46,4 +51,4 @@ def convert_mongo_id(doc):
         return doc
 
 if __name__ == "__main__":
-    app.run(port=5000)
+    app.run(host="0.0.0.0", port=5001)

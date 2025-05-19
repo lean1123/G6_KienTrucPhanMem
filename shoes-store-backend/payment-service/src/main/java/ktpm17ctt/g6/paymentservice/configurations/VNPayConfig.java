@@ -22,7 +22,8 @@ import java.security.NoSuchAlgorithmException;
 @Component
 public class VNPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8089/internal/payments/status";
+    @Value("${VNP_RETURN_URL:http://localhost:8089/internal/payments/status}")
+    private String VNP_RETURN_URL;
     @Value("${vnpay.vnp_TmnCode}")
     private String vnp_TmnCodeValue;
     @Value("${vnpay.vnp_secretKey}")
@@ -30,6 +31,7 @@ public class VNPayConfig {
 
     private static String vnp_TmnCode;
     private static String secretKey;
+    private static String returnUrl;
 
     /**
      * Gan gia tri cho vnp_TmnCode va secretKey ngay sau khi bean duoc tao
@@ -39,6 +41,7 @@ public class VNPayConfig {
     public void init() {
         vnp_TmnCode = vnp_TmnCodeValue;
         secretKey = vnp_secretKeyValue;
+        returnUrl = VNP_RETURN_URL;
     }
 
     public static String getVnpTmnCode() {
@@ -47,6 +50,10 @@ public class VNPayConfig {
 
     public static String getSecretKey() {
         return secretKey;
+    }
+
+    public static String getReturnUrl() {
+        return returnUrl;
     }
 
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 
-@FeignClient(name = "user-service", url = "http://localhost:8081/user/internal")
+@FeignClient(name = "user-service", url = "${USER_SERVICE_URL:http://localhost:8081/user/internal}")
 public interface UserFeignClient {
     @GetMapping("/users/get-user-by-email")
     ApiResponse<UserResponse> findByEmail(@RequestParam("email") String email);

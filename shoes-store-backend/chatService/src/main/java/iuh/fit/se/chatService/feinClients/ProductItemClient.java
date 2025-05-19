@@ -7,7 +7,7 @@ import iuh.fit.se.chatService.dtos.product.Type;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "product-service", url = "${PRODUCT_ITEM_URL:http://localhost:8082/product/internal}")
+@FeignClient(name = "product-service", url = "${PRODUCT_SERVICE_URL:http://localhost:8082/product/internal}")
 public interface ProductItemClient {
     @GetMapping("/item/search")
     ApiResponse<PageResponse<ProductItemResponse>> searchProductItems(@RequestParam(defaultValue = "1") int page,

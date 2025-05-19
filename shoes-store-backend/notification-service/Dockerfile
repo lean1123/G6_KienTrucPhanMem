@@ -9,8 +9,6 @@ COPY pom.xml .
 RUN ./mvnw dependency:go-offline
 
 COPY src ./src
-COPY .envrc .envrc
-
 
 RUN mvn clean package -DskipTests
 

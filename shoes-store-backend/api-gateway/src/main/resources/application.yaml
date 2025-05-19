@@ -4,7 +4,7 @@ server:
 app:
   api-prefix: /api/v1
   cors:
-    allowed-origins: "http://localhost:5173,http://localhost:5174,https://admin.myapp.com"
+    allowed-origins: "http://localhost:5173,http://localhost:5174,http://shoes-store-app-fe:80,http://shoes-store-app-fe:3000,http://localhost:3000,http://shoes-store-app-fe:3000"
 
 eureka:
   client:
@@ -114,7 +114,7 @@ spring:
     name: api-gateway
   data:
     redis:
-      host: 127.0.0.1
+      host: ${SPRING_REDIS_HOST}
       port: 6379
       password: ""
       timeout: 6000ms
@@ -267,7 +267,7 @@ spring:
         - id: recommendation-service
           uri: lb://recommendation-service
           predicates:
-            - Path=${app.api-prefix}/recommend/**
+            - Path=${app.api-prefix}/recommend
           filters:
             - StripPrefix=2
             - name: RequestRateLimiter

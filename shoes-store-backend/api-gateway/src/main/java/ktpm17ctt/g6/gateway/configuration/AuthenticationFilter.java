@@ -49,6 +49,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             "/chat/.*",
             "/recommend",
             "/recommend/.*",
+            "/internal/.*",
     };
 
 

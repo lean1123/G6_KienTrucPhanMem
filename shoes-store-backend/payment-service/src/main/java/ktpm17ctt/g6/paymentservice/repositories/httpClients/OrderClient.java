@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "order-service", url = "http://localhost:8088/internal/orders")
+@FeignClient(name = "order-service", url = "${ORDER_SERVICE_URL:http://localhost:8088/internal/orders}")
 public interface OrderClient {
     @GetMapping("/{id}")
     ResponseEntity<OrderResponse> getOrderById(@PathVariable String id);

@@ -61,25 +61,12 @@ public class OrderServiceImpl implements OrderService {
     private final IdentityClient identityClient;
     private final ObjectMapper objectMapper;
 
-    @Autowired
-    KafkaTemplate<String, Object> kafkaTemplate;
-
-    @Value("${gateway.health.check.url}")
-    private String GATEWAY_HEALTH_CHECK_URL;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public OrderResponse save(OrderCreationRequest request, HttpServletRequest req) throws Exception {
-        log.info("Gateway health check URL: {}", GATEWAY_HEALTH_CHECK_URL);
-
-        log.info("Gateway is healthy: {}", this.isGatewayHealthy(GATEWAY_HEALTH_CHECK_URL));
-
-//        check gateway health
-        if (!isGatewayHealthy(GATEWAY_HEALTH_CHECK_URL)) {
-            throw new Exception("Gateway is not ready!");
-        }
-
 //        Check user dat hang
         String email = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -166,7 +153,12 @@ public class OrderServiceImpl implements OrderService {
                 .body("Hello! " + name + "!<br>Đơn hàng " + entity.getId() +" đã được đặt thành công")
                 .userId(userId)
                 .build();
-        kafkaTemplate.send("order_success_topic", notificationEvent);
+        try {
+            kafkaTemplate.send("order_success_topic", notificationEvent);
+        }catch (Exception e){
+            log.error("Error while sending notification event", e);
+            throw new Exception("Error while sending notification event");
+        }
         log.info("Sent order success event for order {} to user {}", entity.getId(), email);
 
 
@@ -237,11 +229,6 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public OrderResponse cancelingOrder(String orderId, HttpServletRequest request) throws Exception {
-
-//        check gateway health
-        if (!isGatewayHealthy(GATEWAY_HEALTH_CHECK_URL)) {
-            throw new Exception("Gateway is not ready!");
-        }
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new Exception("Order not found"));
@@ -465,16 +452,6 @@ public class OrderServiceImpl implements OrderService {
                 .address(addressResponse)
                 .build();
 
-    }
-
-    private boolean isGatewayHealthy(String gatewayHealthUrl) {
-        RestTemplate restTemplate = new RestTemplate();
-        try {
-            ResponseEntity<String> response = restTemplate.getForEntity(gatewayHealthUrl, String.class);
-            return response.getStatusCode() == HttpStatus.OK;
-        } catch (Exception e) {
-            return false; // Nếu Gateway chết, timeout, lỗi 500,... thì coi như unhealthy
-        }
     }
 }
 

@@ -21,7 +21,7 @@
 
     <!-- Appender gửi log tới Logstash qua TCP -->
     <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>localhost:5000</destination> <!-- hoặc logstash:5000 nếu chạy Docker -->
+        <destination>logstash:5000</destination> <!-- hoặc logstash:5000 nếu chạy Docker -->
         <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
     </appender>
 

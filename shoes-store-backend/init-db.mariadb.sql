@@ -1,9 +1,12 @@
-CREATE DATABASE IF NOT EXISTS order_service;
-CREATE DATABASE IF NOT EXISTS payment_service;
+-- Tạo database nếu chưa tồn tại
+CREATE DATABASE IF NOT EXISTS cart_service;
+
 
 CREATE USER IF NOT EXISTS 'user'@'%' IDENTIFIED BY 'password';
 
-GRANT ALL PRIVILEGES ON order_service.* TO 'user'@'%';
-GRANT ALL PRIVILEGES ON payment_service.* TO 'user'@'%';
+-- Gán quyền cho user đối với từng database
+GRANT ALL PRIVILEGES ON cart_service.* TO 'user'@'%';
+
 
 FLUSH PRIVILEGES;
+

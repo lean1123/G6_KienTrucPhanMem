@@ -8,12 +8,13 @@ services:
     container_name: eureka-server
     depends_on:
       - logstash
-      - kafka-1
+      - kafka
       - zookeeper
       - mysql
       - redis
       - elasticsearch
       - kibana
+      - mariadb
     ports:
       - "8761:8761"
     networks:
@@ -29,6 +30,11 @@ services:
       - eureka-server
     env_file:
       - ./api-gateway/.envrc.docker
+    environment:
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - IDENTITY_SERVICE_URL=http://identity-service:8080/identity
+      - PRODUCT_SERVICE_URL=http://product-service:8082/product
     ports:
       - "8888:8888"
     networks:
@@ -45,8 +51,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6379
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - USER_SERVICE_URL=http://user-service:8081/user
     depends_on:
       - eureka-server
       - api-gateway
@@ -63,6 +70,8 @@ services:
       - "8081:8081"
     env_file:
       - /user-service/.env.docker
+    environment:
+      - IDENTITY_SERVICE_URL=http://identity-service:8080/identity/internal/accounts
     depends_on:
       - eureka-server
       - api-gateway
@@ -77,6 +86,8 @@ services:
     container_name: product-service
     env_file:
       - ./product-service/.env.docker
+    environment:
+      - USER_SERVICE_URL=http://user-service:8081/user/internal
     depends_on:
       - eureka-server
       - api-gateway
@@ -86,19 +97,21 @@ services:
       - backend
 
 
-#  notification-service:
-#    image: notification-service
-#    container_name: notification-service
-#    depends_on:
-#      - kafka-1
-#      - mongodb
-#    working_dir: /app
-#    command: [ "java", "-jar", "notification-service.jar" ]
-#    ports:
-#      - 8086:8086
-#    restart: on-failure
-#    networks:
-#        - backend
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    image: notification-service
+    container_name: notification-service
+    env_file:
+      - ./notification-service/.env.docker
+    depends_on:
+      - eureka-server
+      - api-gateway
+    ports:
+      - "8086:8086"
+    networks:
+        - backend
 
   order-service:
     build:
@@ -111,6 +124,11 @@ services:
       - api-gateway
     env_file:
       - ./order-service/.envrc.docker
+    environment:
+      - PRODUCT_SERVICE_URL=http://product-service:8082/product/internal
+      - USER_SERVICE_URL=http://user-service:8081/user/internal
+      - PAYMENT_SERVICE_URL=http://payment-service:8089/internal/payments
+      - IDENTITY_SERVICE_URL=http://identity-service:8080/identity/internal/accounts
     ports:
       - "8088:8088"
     networks:
@@ -124,6 +142,8 @@ services:
     container_name: chat-service
     env_file:
       - ./chatService/.envrc.docker
+    environment:
+      - PRODUCT_SERVICE_URL=http://product-service:8082/product/internal
     depends_on:
       - eureka-server
       - api-gateway
@@ -140,6 +160,8 @@ services:
     container_name: recommendation-service
     env_file:
       - ./recommendation-service/.env.docker
+    environment:
+      - INSTANCE_HOST=recommendation-service
     depends_on:
       - eureka-server
       - api-gateway
@@ -171,6 +193,10 @@ services:
     image: 'payment-service'
     env_file:
       - ./payment-service/.envrc.docker
+    environment:
+      - ORDER_SERVICE_URL=http://order-service:8088/internal/orders
+      - FRONTEND_URL=http://localhost:3000
+      - VNP_RETURN_URL=https://b552-2402-800-63f9-3105-b425-6dac-5bda-8a71.ngrok-free.app/api/internal/payments/status
     container_name: payment-service
     depends_on:
       - mysql
@@ -180,19 +206,37 @@ services:
       - "8089:8089"
     networks:
       - backend
+  cart-service:
+    build:
+      context: ./cart-service
+      dockerfile: Dockerfile
+    image: 'cart-service'
+    env_file:
+      - ./cart-service/.envrc.docker
+    environment:
+      - PRODUCT_SERVICE_URL=http://product-service:8082/product
+      - USER_SERVICE_URL=http://user-service:8081/user/internal
+    container_name: cart-service
+    depends_on:
+      - eureka-server
+      - api-gateway
+    ports:
+      - "8085:8085"
+    networks:
+      - backend
 
-#  mariadb:
-#    image: mariadb:10.11
-#    container_name: mariadb
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#    ports:
-#      - "3308:3306"
-#    volumes:
-#      - db_data:/var/lib/mysql
-#      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-#    networks:
-#      - backend
+  mariadb:
+    image: mariadb:10.11
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3308:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init-db.mariadb.sql:/docker-entrypoint-initdb.d/init-db.mariadb.sql:ro
+    networks:
+      - backend
 
   redis:
     image: redis:7.2
@@ -215,36 +259,24 @@ services:
     networks:
       - backend
 
-  kafka-1:
-    image: confluentinc/cp-kafka
+  kafka:
+    image: 'bitnami/kafka:latest'
     depends_on:
       - zookeeper
+    container_name: kafka
+    hostname: kafka
     ports:
-      - "9092:9092"
-    restart: on-failure
+      - '9094:9094'
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
-      KAFKA_NUM_PARTITIONS: 1
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
     networks:
       - backend
-
-#  mongodb:
-#    image: mongo:5
-#    container_name: mongo
-#    restart: always
-#    ports:
-#      - "27017:27017"
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: root
-#    networks:
-#      - backend
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.5
@@ -283,6 +315,22 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
+    networks:
+      - backend
+
+  shoes-store-app-fe:
+    build:
+      context: ../shoes-store-app-fe
+      dockerfile: Dockerfile
+    image: shoes-store-app-fe:latest
+    container_name: shoes-store-app-fe
+    depends_on:
+      - api-gateway
+      - eureka-server
+    ports:
+        - "3000:80"
+    env_file:
+      - ../shoes-store-app-fe/.env.docker
     networks:
       - backend
 

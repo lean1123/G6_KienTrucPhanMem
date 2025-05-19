@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "product-service", url = "${PRODUCT_ITEM_URL:http://localhost:8082/product/internal}")
+@FeignClient(name = "product-service", url = "${PRODUCT_SERVICE_URL:http://localhost:8082/product/internal}")
 public interface ProductItemClient {
     @GetMapping("/item/{id}")
     ApiResponse<ProductItemResponse> getProductItem(@PathVariable String id);
