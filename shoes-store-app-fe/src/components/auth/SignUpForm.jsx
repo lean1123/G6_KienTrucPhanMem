@@ -6,10 +6,13 @@ import { useNavigate } from 'react-router';
 import { register as registerAction } from '../../hooks/auth/authSlice';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { subYears } from 'date-fns';
 
 function SignUpForm() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+	const todayMinus10Years = subYears(new Date(), 10);
 
 	const SignUpSchema = yup.object().shape({
 		firstName: yup.string().required('Tên đầu là bắt buộc'),
@@ -26,7 +29,11 @@ function SignUpForm() {
 				'Số điện thoại hợp lệ phải có 10 chữ số: (vd: 0123456789)',
 			)
 			.required('Số điện thoại là bắt buộc'),
-		dob: yup.string().required('Ngày sinh là bắt buộc'),
+		dob: yup
+			.date()
+			.typeError('Ngày sinh không hợp lệ')
+			.required('Ngày sinh là bắt buộc')
+			.max(todayMinus10Years, 'Bạn phải từ 10 tuổi trở lên'),
 		gender: yup
 			.string()
 			.oneOf(['MALE', 'FEMALE'], 'Giới tính không hợp lệ')

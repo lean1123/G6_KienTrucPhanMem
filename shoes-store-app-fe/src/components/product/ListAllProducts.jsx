@@ -1,9 +1,13 @@
 import SearchSharpIcon from '@mui/icons-material/SearchSharp';
-import { Input } from '@mui/material';
+import { Input, Pagination } from '@mui/material';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { onSearch, setProductName } from '../../hooks/filter/filterSlice';
+import {
+	onSearch,
+	setCurrentPage,
+	setProductName,
+} from '../../hooks/filter/filterSlice';
 import FilterByColor from '../filters/FilterByColor';
 import FilterByPrice from '../filters/FilterByPrice';
 import FilterBySize from '../filters/FilterBySize';
@@ -21,13 +25,23 @@ function ListAllProducts() {
 		productName,
 		returnProducts,
 		categoryName,
+		page,
+		totalPage,
 	} = useSelector((state) => state.filter);
 	const [productNameValue, setProductNameValue] = useState(productName || '');
 
 	useEffect(() => {
 		const fetchProductItemsByFilter = () => {
 			dispatch(
-				onSearch({ color, size, minPrice, maxPrice, productName, categoryName }),
+				onSearch({
+					color,
+					size,
+					minPrice,
+					maxPrice,
+					productName,
+					categoryName,
+					page,
+				}),
 			);
 		};
 
@@ -37,7 +51,16 @@ function ListAllProducts() {
 		return () => {
 			debouncedFetch.cancel();
 		};
-	}, [dispatch, color, size, minPrice, maxPrice, productName, categoryName]);
+	}, [
+		dispatch,
+		color,
+		size,
+		minPrice,
+		maxPrice,
+		productName,
+		categoryName,
+		page,
+	]);
 
 	const handleProductNameChange = (e) => {
 		const value = e.target.value;
@@ -72,6 +95,14 @@ function ListAllProducts() {
 				<div className='w-4/5 mb-4'>
 					<ListProduct items={returnProducts} />
 				</div>
+			</div>
+			<div className='flex justify-center items-center mt-5'>
+				<Pagination
+					size='small'
+					count={totalPage}
+					page={page}
+					onChange={(e, p) => dispatch(setCurrentPage(p))}
+				/>
 			</div>
 		</div>
 	);

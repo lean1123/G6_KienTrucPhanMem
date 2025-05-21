@@ -25,3 +25,9 @@ dist-ssr
 
 .codegpt
 .early.coverage
+.env
+.env.*
+Dockerfile
+nginx.conf
+
+.gitignore

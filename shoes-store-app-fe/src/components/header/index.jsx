@@ -2,10 +2,11 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Box } from '@mui/material';
 import { useNavigate } from 'react-router';
 
+import CartButton from './CartButton';
 import NavigationButton from './NavigationButton';
 import './style.css';
 import UserButton from './UserButton';
-import CartButton from './CartButton';
+import CategoryNav from '../navHasDropBox/CategoryNav';
 
 function Header() {
 	const navigate = useNavigate();
@@ -39,11 +40,16 @@ function Header() {
 							</div>
 							<div className='hidden sm:flex justify-center items-center mx-auto'>
 								<div className='flex space-x-4 h-full items-center'>
-									<NavigationButton path='/products' title='TẤT CẢ SẢN PHẨM' />
-									<NavigationButton path='/about' title='VỀ CHÚNG TÔI' />
-									<NavigationButton path='/categories' title='DANH MỤC' />
-									<NavigationButton path='/categoryforBoy' title='NAM' />
-									<NavigationButton path='/categoryforGirl' title='NỮ' />
+									{[
+										{ path: '/products', title: 'TẤT CẢ SẢN PHẨM' },
+										{
+											path: '/about',
+											title: 'VỀ CHÚNG TÔI',
+										},
+									].map((item, i) => (
+										<NavigationButton key={i} path={item.path} title={item.title} />
+									))}
+									<CategoryNav />
 								</div>
 							</div>
 						</div>

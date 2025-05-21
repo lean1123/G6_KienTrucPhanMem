@@ -1,24 +1,44 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCategoryName } from '../../hooks/filter/filterSlice';
+import productItemApi from '../../api/productItemApi';
+import { useTranslation } from 'react-i18next';
 
 function FilterByCategory() {
+	const { t } = useTranslation();
 	const dispatch = useDispatch();
-	const { category } = useSelector((state) => state.filter);
+	const { categoryName } = useSelector((state) => state.filter);
 	const [selectedCategory, setSelectedCategory] = useState(
-		category || 'All Category',
+		categoryName || 'All Category',
 	);
 
-	const categoryOptions = [
-		'All Category',
-		'Sport Shoes',
-		'Sneaker',
-		'Western Shoes',
-	];
+	const [listCategories, setListCategories] = useState([]);
 
 	useEffect(() => {
-		setSelectedCategory(category || 'All Category');
-	}, [category]);
+		setSelectedCategory(categoryName || 'All Category');
+	}, [categoryName]);
+
+	useEffect(() => {
+		const fetchCategories = async () => {
+			try {
+				const response = await productItemApi.getAllCategories();
+				if (response.status !== 200) {
+					console.error('Failed to fetch colors');
+					return;
+				}
+				if (response.data.status === 503) {
+					console.error('Service Product unavailable');
+					return;
+				}
+
+				setListCategories(response.data.result);
+			} catch (error) {
+				throw new Error('Error fetching colors');
+			}
+		};
+
+		fetchCategories();
+	}, []);
 
 	const handleCategoryChange = (e) => {
 		const value = e.target.value;
@@ -33,9 +53,10 @@ function FilterByCategory() {
 				value={selectedCategory}
 				onChange={handleCategoryChange}
 			>
-				{categoryOptions.map((cate) => (
-					<option key={cate} value={cate}>
-						{cate === 'All Category' ? 'Tất cả' : cate}
+				<option value={'All Category'}>Tất cả</option>
+				{listCategories?.map((cate) => (
+					<option key={cate.id} value={cate.name}>
+						{t('category.' + cate.name)}
 					</option>
 				))}
 			</select>

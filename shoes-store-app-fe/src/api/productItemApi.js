@@ -98,6 +98,13 @@ const productItemApi = {
 			withCredentials: true,
 		});
 	},
+	getAllColors: () => {
+		return AdminAxiosClient.get('/product/external/colors');
+	},
+
+	getAllCategories: () => {
+		return AdminAxiosClient.get('/product/external/categories');
+	},
 };
 
 export default productItemApi;

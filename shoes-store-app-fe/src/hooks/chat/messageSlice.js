@@ -21,12 +21,15 @@ export const sendMessage = createAsyncThunk(
 				);
 			}
 
-			const { results, message } = response?.data;
+			console.log('response', response);
+
+			const { results, message, intent } = response?.data;
 
 			return {
 				results,
 				message,
 				isAI: true,
+				intent,
 			};
 		} catch (error) {
 			console.error('Error sending message:', error);

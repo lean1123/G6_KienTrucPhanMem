@@ -95,6 +95,36 @@ export const fetchOrderByUserId = createAsyncThunk(
 	},
 );
 
+export const updateUserInfo = createAsyncThunk(
+	'user/updateUserInfo',
+	async ({ userId, userData }, { rejectWithValue }) => {
+		try {
+			const response = await userApi.update(userId, userData);
+
+			if (response.status !== 200) {
+				console.error('Failed to update profile:', response);
+				return rejectWithValue(
+					`Failed to update profile. Status: ${response.status}`,
+				);
+			}
+
+			if (response.data?.status === 503) {
+				console.error('User Service is not available:', response);
+				return rejectWithValue(
+					'User Service is not available. Please try again later.',
+				);
+			}
+
+			return response.data;
+		} catch (error) {
+			console.error('Failed to update profile:', error);
+			return rejectWithValue(
+				`Failed to update profile: ${error?.response?.data?.message || 'Lỗi từ máy chủ'}`,
+			);
+		}
+	},
+);
+
 const userSlice = createSlice({
 	name: 'user',
 	initialState: {
@@ -162,6 +192,17 @@ const userSlice = createSlice({
 				state.orders = action.payload;
 			})
 			.addCase(fetchOrderByUserId.rejected, (state, action) => {
+				state.error = action.payload;
+			})
+			.addCase(updateUserInfo.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(updateUserInfo.fulfilled, (state, action) => {
+				state.status = 'succeeded';
+				state.user = action.payload;
+			})
+			.addCase(updateUserInfo.rejected, (state, action) => {
+				state.status = 'failed';
 				state.error = action.payload;
 			});
 	},

@@ -29,7 +29,7 @@ const userApi = {
 		}
 	},
 	update: async (id, userData) => {
-		return AdminAxiosClient.put(`/users/${id}`, userData, {
+		return AdminAxiosClient.put(`/user/${id}`, userData, {
 			headers: {
 				'Content-Type': 'multipart/form-data',
 			},

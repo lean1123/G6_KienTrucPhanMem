@@ -37,10 +37,10 @@ function AIResponse({ item }) {
 			</div>
 			<div className='bg-slate-100 flex flex-col justify-center items-center p-2 rounded-md shadow-md'>
 				<p className='text-sm mb-2'>{item.message}</p>
-				{item.results.length === 0 ? (
+				{item?.results?.length === 0 && item?.intent === 'search_product' ? (
 					<p className='text-sm italic mb-2'>{noResultMessage}</p>
 				) : (
-					item.results.map((product) => (
+					item?.results.map((product) => (
 						<Link
 							className='w-full h-full flex items-center border bg-white rounded-md shadow-md p-1 mb-1'
 							href={`/products/${product.id}`}

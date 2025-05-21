@@ -19,6 +19,7 @@ import ProtectedLayout from './middleware/ProtectLauout';
 import VNPayOrderResult from './components/cart/pay/VNPayOrderResult';
 import GoogleLoginCallBack from './components/auth/GoogleLoginCallBack';
 import ChatControll from './components/chat';
+import About from './components/about';
 
 function App() {
 	return (
@@ -34,6 +35,7 @@ function App() {
 					<Route path='/products' element={<ListAllProducts />} />
 					<Route path='/auth/google/callback' element={<GoogleLoginCallBack />} />
 					<Route path='/cart' element={<Cart />} />
+					<Route path='/about' element={<About />} />
 
 					<Route element={<ProtectedLayout />}>
 						<Route path='/pay' element={<Pay />} />

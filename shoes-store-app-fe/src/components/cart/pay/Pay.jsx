@@ -19,7 +19,7 @@ import {
 } from '../../../hooks/cart/cartSlice';
 import { createOrder, setOrder } from '../../../hooks/order/orderSlice';
 import { setProgress } from '../../../hooks/orderProgressStore';
-import { fetchAddress } from '../../../hooks/user/userSlice';
+import { fetchAddress, fetchUser } from '../../../hooks/user/userSlice';
 import PaymentDialog from './PaymentDialog';
 
 const schema = yup.object().shape({
@@ -35,16 +35,22 @@ const Pay = () => {
 
 	const { cartItems } = useSelector((state) => state.cart);
 	const { address } = useSelector((state) => state.userInfo);
-	const [selectedAddress, setSelectedAddress] = useState(address[0]?.id);
+	const [selectedAddress, setSelectedAddress] = useState('');
 	const [showModal, setShowModal] = useState(false);
 	const [vnpayUrl, setVnPayUrl] = useState('');
+	const { user } = useSelector((state) => state.userInfo);
+
+	useEffect(() => {
+		dispatch(fetchUser());
+	}, []);
 
 	useEffect(() => {
 		const fetchAddressData = async () => {
 			try {
 				const result = await dispatch(fetchAddress());
 				const resultUnwrapped = unwrapResult(result);
-				if (resultUnwrapped?.length > 0 || address?.length > 0) {
+
+				if (resultUnwrapped?.length > 0) {
 					setSelectedAddress(resultUnwrapped[0]?.id);
 				} else {
 					navigation('/address');
@@ -57,7 +63,7 @@ const Pay = () => {
 			}
 		};
 		fetchAddressData();
-	}, [dispatch, navigation, address]);
+	}, [dispatch, navigation]);
 
 	const [isShow, setIsShow] = useState(false);
 	useEffect(() => {
@@ -82,7 +88,7 @@ const Pay = () => {
 				quantity: item?.quantity,
 				size: item?.cartDetailPK?.size,
 			})),
-			addressId: selectedAddress,
+			addressId: '',
 		},
 		resolver: yupResolver(schema),
 	});
@@ -91,9 +97,30 @@ const Pay = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
+		reset,
 	} = form;
 
+	useEffect(() => {
+		if (selectedAddress) {
+			reset((prev) => ({
+				...prev,
+				addressId: selectedAddress,
+			}));
+		}
+	}, [selectedAddress, reset]);
+
 	const onSubmit = async (data) => {
+		if (
+			user.phone === null ||
+			user.phone === undefined ||
+			user.phone.length === 0
+		) {
+			enqueueSnackbar('Vui lòng cập nhật số điện thoại trước khi đặt hàng', {
+				variant: 'info',
+			});
+			navigation('/updateProfile');
+			return;
+		}
 		try {
 			const orderResult = await dispatch(createOrder(data));
 			const resultUnwrapped = unwrapResult(orderResult);

@@ -18,7 +18,6 @@ function FilterBySize() {
 	};
 
 	const sizeOptions = [
-		'All Size',
 		'35',
 		'36',
 		'37',
@@ -40,9 +39,10 @@ function FilterBySize() {
 				value={selectedSize}
 				onChange={handleSizeChange}
 			>
+				<option value={'All Size'}>Tất cả</option>
 				{sizeOptions.map((sz) => (
 					<option key={sz} value={sz}>
-						{sz === 'All Size' ? 'Tất cả' : sz}
+						{sz}
 					</option>
 				))}
 			</select>

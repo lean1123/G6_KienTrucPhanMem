@@ -3,9 +3,7 @@ import AuthAPI from './authApi';
 import { localStorageService } from '../service/localStorageService';
 
 const AdminAxiosClient = axios.create({
-	// baseURL: 'deployed API url',
-	// baseURL: 'https://lean1123.online/api',
-	baseURL: 'http://localhost:8888/api/v1',
+	baseURL: import.meta.env.VITE_API_URL,
 	headers: {
 		'Content-Type': 'application/json',
 	},

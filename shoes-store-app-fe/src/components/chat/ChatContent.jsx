@@ -16,7 +16,7 @@ function ChatContent() {
 
 	return (
 		<div className='overflow-y-scroll custom-scrollbar h-56 text-justify'>
-			{messages.length === 0 ? (
+			{messages?.length === 0 ? (
 				<div className='flex items-center mb-2 justify-start'>
 					<div className='flex items-center justify-center bg-slate-100 p-2 rounded-full shadow-md border mr-1'>
 						<Assistant sx={{ width: 14, height: 14, color: '#3b82f6' }} />
@@ -26,7 +26,7 @@ function ChatContent() {
 					</div>
 				</div>
 			) : (
-				messages.map((message, index) => {
+				messages?.map((message, index) => {
 					if (message.isAI) {
 						return <AIResponse key={index} item={message} />;
 					}

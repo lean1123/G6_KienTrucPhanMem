@@ -4,7 +4,7 @@ import productItemApi from '../../api/productItemApi';
 export const onSearch = createAsyncThunk(
 	'filter/onSearch',
 	async (
-		{ color, size, minPrice, maxPrice, productName, categoryName },
+		{ color, size, minPrice, maxPrice, productName, categoryName, page },
 		{ rejectWithValue },
 	) => {
 		try {
@@ -15,6 +15,7 @@ export const onSearch = createAsyncThunk(
 				maxPrice,
 				productName,
 				categoryName,
+				page,
 			});
 
 			console.log('response', response);
@@ -23,7 +24,7 @@ export const onSearch = createAsyncThunk(
 				return rejectWithValue('Failed to fetch product items by filter');
 			}
 
-			return response.data.result.data;
+			return response.data.result;
 		} catch (error) {
 			console.error('Error in get product items by filter:', error);
 			return rejectWithValue(error);
@@ -34,6 +35,8 @@ export const onSearch = createAsyncThunk(
 const filterSlice = createSlice({
 	name: 'filter',
 	initialState: {
+		page: 1,
+		totalPage: 1,
 		color: null,
 		size: null,
 		minPrice: null,
@@ -63,6 +66,12 @@ const filterSlice = createSlice({
 		setCategoryName: (state, action) => {
 			state.categoryName = action.payload;
 		},
+		setCurrentPage: (state, action) => {
+			state.page = action.payload;
+		},
+		setTotalPage: (state, action) => {
+			state.totalPage = action.payload;
+		},
 
 		filterInitialState: () => {
 			return {
@@ -86,7 +95,9 @@ const filterSlice = createSlice({
 			})
 			.addCase(onSearch.fulfilled, (state, action) => {
 				state.loading = false;
-				state.returnProducts = action.payload;
+
+				state.returnProducts = action.payload.data;
+				state.totalPage = action.payload.totalPages;
 			})
 			.addCase(onSearch.rejected, (state, action) => {
 				state.loading = false;
@@ -103,5 +114,7 @@ export const {
 	setProductName,
 	setCategoryName,
 	filterInitialState,
+	setCurrentPage,
+	setTotalPage,
 } = filterSlice.actions;
 export const filterReducer = filterSlice.reducer;

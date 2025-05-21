@@ -1,3 +1,4 @@
+import { West } from '@mui/icons-material';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
@@ -14,6 +15,29 @@ const resources = {
 				MOMO: 'Ví MoMo',
 				COD: 'Thanh toán khi nhận hàng',
 				CASH: 'Thanh toán khi nhận hàng',
+			},
+			color: {
+				White: 'Trắng',
+				Black: 'Đen',
+				Red: 'Đỏ',
+				Blue: 'Xanh dương',
+				Green: 'Xanh lá',
+				Yellow: 'Vàng',
+				Pink: 'Hồng',
+				Gray: 'Xám',
+				Orange: 'Cam',
+				Brown: 'Nâu',
+				Purple: 'Tím',
+				Beige: 'Beige',
+				Cyan: 'Xanh ngọc',
+				Magenta: 'Hồng đậm',
+				BLACK: 'Đen',
+				Dark_Blue: 'Xanh đậm',
+			},
+			category: {
+				'Sport Shoes': 'Giày thể thao',
+				'Western Shoes': 'Giày tây',
+				Sneaker: 'Giày sneaker',
 			},
 			// Bạn có thể thêm nhiều nhóm khác nữa
 		},
