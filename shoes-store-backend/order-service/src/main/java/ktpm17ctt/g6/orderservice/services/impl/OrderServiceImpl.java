@@ -453,5 +453,31 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
     }
+
+    @Override
+    public List<OrderResponse> getAllOrders() throws Exception {
+        return orderRepository.findAll()
+                .stream()
+                .map(order -> {
+                    AddressResponse addressResponse = null;
+                    try {
+                        addressResponse = userClient.getAddressById(order.getAddressId()).getResult();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    return OrderResponse.builder()
+                            .id(order.getId())
+                            .createdDate(order.getCreatedDate())
+                            .userId(order.getUserId())
+                            .paymentMethod(order.getPaymentMethod())
+                            .status(order.getStatus())
+                            .orderDetails(orderDetailService.findOrderDetailByOrder_Id(order.getId()))
+                            .total(order.getTotal())
+                            .address(addressResponse)
+                            .isPayed(order.isPayed())
+                            .build();
+                })
+                .toList();
+    }
 }
 

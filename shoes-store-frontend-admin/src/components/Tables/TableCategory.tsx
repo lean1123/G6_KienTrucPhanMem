@@ -55,7 +55,11 @@ const TableCategory = () => {
     try {
       const response = await categoryApi.delete(id);
       console.log(response);
-      if (response.status === 200) {
+      if (response.data.code === 400) {
+        enqueueSnackbar(response.data.message, { variant: "error" });
+        return;
+      }
+      if (response.data.code !== 400) {
         const newCategories = categories.filter(
           (category) => category.id !== id
         );

@@ -3,8 +3,10 @@ package ktpm17ctt.g6.product.service.implement;
 import ktpm17ctt.g6.product.dto.request.ColorRequest;
 import ktpm17ctt.g6.product.dto.response.ColorResponse;
 import ktpm17ctt.g6.product.entity.Color;
+import ktpm17ctt.g6.product.entity.Product;
 import ktpm17ctt.g6.product.mapper.ColorMapper;
 import ktpm17ctt.g6.product.repository.ColorRepository;
+import ktpm17ctt.g6.product.repository.ProductItemRepository;
 import ktpm17ctt.g6.product.service.ColorService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.util.Optional;
 public class ColorServiceImpl implements ColorService {
     ColorRepository colorRepository;
     ColorMapper colorMapper;
+    ProductItemRepository productItemRepository;
 
     @Override
     public ColorResponse save(ColorRequest colorRequest) {
@@ -43,8 +46,17 @@ public class ColorServiceImpl implements ColorService {
     }
 
     @Override
-    public void delete(String id) {
+    public boolean delete(String id) {
+        var color = colorRepository.findById(id);
+        if (color.isEmpty()) {
+            return false;
+        }
+        var products = productItemRepository.findByColor_Id(id);
+        if (!products.isEmpty()) {
+            return false;
+        }
         colorRepository.deleteById(id);
+        return true;
     }
 
     @Override

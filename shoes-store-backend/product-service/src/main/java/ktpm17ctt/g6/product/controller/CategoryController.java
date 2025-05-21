@@ -60,7 +60,13 @@ public class CategoryController {
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<Void> deleteCategory(@PathVariable String id) {
         log.info("Delete category with ID: {}", id);
-        categoryService.deleteById(id);
+        var result = categoryService.deleteById(id);
+        if (!result) {
+            return ApiResponse.<Void>builder()
+                    .code(400)
+                    .message("Category have products, cannot delete")
+                    .build();
+        }
         return ApiResponse.<Void>builder().build();
     }
 

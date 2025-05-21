@@ -18,7 +18,9 @@ public interface ProductItemMapper {
     @Mapping(target = "images", ignore = true)
     @Mapping(target = "quantityOfSize", ignore = true)
     ProductItem toProductItem(ProductItemRequest productItemRequest);
+    @Mapping(target = "isActive", source = "isActive")
     ProductItemResponse toProductItemResponse(ProductItem productItem);
+    @Mapping(target = "isActive", source = "isActive")
     ProductItemResponseHasLikes toProductItemResponseHasLikes(ProductItem productItem);
 
     @Named("mapQuantityOfSizeList")

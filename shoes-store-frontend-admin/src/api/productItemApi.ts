@@ -58,6 +58,10 @@ const productItemApi = {
       },
     });
   },
+
+  updateProductItemIsActive: (id: any, isActive: any) => {
+    return AdminAxiosClient.put(`/product/item/${id}/is-active?isActive=${isActive}`)
+  },
 };
 
 export default productItemApi;
