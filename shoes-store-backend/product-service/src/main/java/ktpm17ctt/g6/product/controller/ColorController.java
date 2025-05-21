@@ -44,7 +44,13 @@ public class ColorController {
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<String> deleteColor(@PathVariable String colorId) {
         log.info("Delete color with ID: {}", colorId);
-        colorService.delete(colorId);
+        var result = colorService.delete(colorId);
+        if (!result) {
+            return ApiResponse.<String>builder()
+                    .code(400)
+                    .message("Color has items, cannot delete")
+                    .build();
+        }
         return ApiResponse.<String>builder().result("Color has been deleted").build();
     }
 

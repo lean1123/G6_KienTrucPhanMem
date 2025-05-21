@@ -46,7 +46,13 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<Void> deleteProduct(@PathVariable String id) {
         log.info("Delete product with ID: {}", id);
-        productService.delete(id);
+        var result = productService.delete(id);
+        if (!result) {
+            return ApiResponse.<Void>builder()
+                    .code(404)
+                    .message("Product have items, cannot delete")
+                    .build();
+        }
         return ApiResponse.<Void>builder()
                 .build();
     }

@@ -3,18 +3,23 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import orderApi from "../../api/orderApi";
 
-interface Order {
+type Order = {
   id: string;
-  user: {
-    id: number;
-    firstName: string;
-    lastName: string;
-  };
-  totalPrice: number;
-  orderStatus: string;
+  total: number;
   createdDate: Date;
+  status: string;
+  userId: string;
   paymentMethod: string;
-}
+  paymentUrl: string;
+  address: {
+    id: string;
+    homeNumber: string;
+    ward: string;
+    district: string;
+    city: string;
+  };
+  payed: boolean;
+};
 
 // const orderData: Order[] = [
 // 	{
@@ -74,7 +79,7 @@ function TableOrder() {
     try {
       const response = await orderApi.getAll();
       console.log(response.data);
-      setOrderData(response.data.data);
+      setOrderData(response.data);
     } catch (error) {
       console.error("Failed to fetch order:", error);
     } finally {
@@ -93,6 +98,19 @@ function TableOrder() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatDate = (dateInput: Date | string) => {
+    const date = new Date(dateInput);
+    return date.toLocaleString("vi-VN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false, // dùng 24h
+    });
   };
 
   useEffect(() => {
@@ -129,7 +147,7 @@ function TableOrder() {
                 ID
               </th>
               <th className="min-w-[150px] py-2 px-4 font-medium text-black">
-                User
+                User ID
               </th>
               <th className="min-w-[150px] py-2 px-4 font-medium text-black">
                 Create at
@@ -147,72 +165,66 @@ function TableOrder() {
             </tr>
           </thead>
           <tbody>
-            {orderData.map((item, key) => (
-              <tr key={key}>
-                <td className="border-b border-[#eee] py-2 px-4 pl-9 xl:pl-11">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                    <p className="text-sm text-black">{item.id}</p>
-                  </div>
-                </td>
-                <td className="border-b border-[#eee] py-2 px-4">
-                  <p className="text-black dark:text-white">
-                    {item.user.firstName}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-2 px-4">
-                  <p className="text-black dark:text-white">
-                    {item.createdDate.toString()}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-2 px-4">
-                  <p className="text-black dark:text-white">
-                    {item.paymentMethod}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-2 px-4">
-                  <p className="text-black dark:text-white">
-                    ${item.totalPrice}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-2 px-4">
-                  <p className="text-black dark:text-white">
-                    {item.orderStatus}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-2 px-4">
-                  <div className="flex items-center space-x-3.5">
-                    {/* Add button */}
-                    <div className="relative group">
-                      <button
-                        className="hover:text-blue-500"
-                        onClick={() => navigate(`/admin/orders/${item.id}`)}
-                      >
-                        <VisibilityOutlined className="w-5 h-5" />
-                      </button>
-                      <span className="absolute opacity-0 group-hover:opacity-100 bg-black text-white text-xs rounded py-1 px-2 -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                        View detail
-                      </span>
+            {orderData &&
+              orderData.length > 0 &&
+              orderData.map((item, key) => (
+                <tr key={key}>
+                  <td className="border-b border-[#eee] py-2 px-4 pl-9 xl:pl-11">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                      <p className="text-black">{item.id}</p>
                     </div>
-
-                    {/* Edit button */}
-                    {item?.orderStatus === "PENDING" && (
+                  </td>
+                  <td className="border-b border-[#eee] py-2 px-4">
+                    <p className="text-black ">{item.userId}</p>
+                  </td>
+                  <td className="border-b border-[#eee] py-2 px-4">
+                    <p className="text-black ">
+                      {formatDate(item.createdDate)}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] py-2 px-4">
+                    <p className="text-black ">{item.paymentMethod}</p>
+                  </td>
+                  <td className="border-b border-[#eee] py-2 px-4">
+                    <p className="text-black ">{item.total}đ</p>
+                  </td>
+                  <td className="border-b border-[#eee] py-2 px-4">
+                    <p className="text-black ">{item.status}</p>
+                  </td>
+                  <td className="border-b border-[#eee] py-2 px-4">
+                    <div className="flex items-center space-x-3.5">
+                      {/* Add button */}
                       <div className="relative group">
                         <button
-                          className="hover:text-yellow-500"
-                          onClick={() =>
-                            navigate(`/admin/orders/${item.id}/edit`)
-                          }
+                          className="hover:text-blue-500"
+                          onClick={() => navigate(`/admin/orders/${item.id}`)}
                         >
-                          <EditOutlined className="w-5 h-5" />
+                          <VisibilityOutlined className="w-5 h-5" />
                         </button>
                         <span className="absolute opacity-0 group-hover:opacity-100 bg-black text-white text-xs rounded py-1 px-2 -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                          Edit
+                          View detail
                         </span>
                       </div>
-                    )}
 
-                    {/* Delete button */}
-                    {/* <div className='relative group'>
+                      {/* Edit button */}
+                      {item?.status === "PENDING" && (
+                        <div className="relative group">
+                          <button
+                            className="hover:text-yellow-500"
+                            onClick={() =>
+                              navigate(`/admin/orders/${item.id}/edit`)
+                            }
+                          >
+                            <EditOutlined className="w-5 h-5" />
+                          </button>
+                          <span className="absolute opacity-0 group-hover:opacity-100 bg-black text-white text-xs rounded py-1 px-2 -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                            Edit
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Delete button */}
+                      {/* <div className='relative group'>
 											<button className='hover:text-red-500'>
 												<DeleteForeverOutlined className='w-5 h-5' />
 											</button>
@@ -220,10 +232,10 @@ function TableOrder() {
 												Remove
 											</span>
 										</div> */}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                    </div>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

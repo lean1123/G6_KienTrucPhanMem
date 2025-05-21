@@ -5,6 +5,7 @@ import ktpm17ctt.g6.product.dto.response.CategoryResponse;
 import ktpm17ctt.g6.product.entity.Category;
 import ktpm17ctt.g6.product.mapper.CategoryMapper;
 import ktpm17ctt.g6.product.repository.CategoryRepository;
+import ktpm17ctt.g6.product.repository.ProductRepository;
 import ktpm17ctt.g6.product.service.CategoryService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
     CategoryRepository categoryRepository;
     CategoryMapper categoryMapper;
+    ProductRepository productRepository;
 
     @Override
     public Optional<CategoryResponse> findById(String id) {
@@ -53,8 +55,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteById(String id) {
+    public boolean deleteById(String id) {
+        var category = categoryRepository.findById(id);
+        if (category.isEmpty()) {
+            return false;
+        }
+        var products = productRepository.findByCategory_Id(id);
+        if (!products.isEmpty()) {
+            log.warn("Cannot delete category with ID: {} because it has products", id);
+            return false;
+        }
         categoryRepository.deleteById(id);
+        return true;
     }
 
     @Override

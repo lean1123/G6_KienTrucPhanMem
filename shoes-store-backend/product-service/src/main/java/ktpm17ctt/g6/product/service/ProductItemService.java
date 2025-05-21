@@ -33,4 +33,6 @@ public interface ProductItemService {
     ProductItemResponse likeProduct(String id);
 
     ProductItemResponse unlikeProduct(String id);
+
+    ProductItemResponse updateIsActive(String id, boolean isActive);
 }

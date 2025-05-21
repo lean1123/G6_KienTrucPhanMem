@@ -25,3 +25,6 @@ dist-ssr
 
 .codegpt
 .early.coverage
+
+.env
+.env.docker

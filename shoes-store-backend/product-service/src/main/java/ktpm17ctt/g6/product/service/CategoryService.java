@@ -10,7 +10,7 @@ public interface CategoryService {
     Optional<CategoryResponse> findById(String id);
     CategoryResponse save(CategoryRequest categoryRequest);
     CategoryResponse update(String id, CategoryRequest categoryRequest);
-    void deleteById(String id);
+    boolean deleteById(String id);
     List<CategoryResponse> findAll();
     List<CategoryResponse> search(String keyword);
 }

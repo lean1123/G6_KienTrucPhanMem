@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -63,4 +64,9 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getMyOrders());
     }
 
+    @GetMapping("")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<OrderResponse>> getAllOrders() throws Exception {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
 }

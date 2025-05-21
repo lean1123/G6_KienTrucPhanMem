@@ -39,7 +39,7 @@ public class ProductItemController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    ApiResponse<ProductItemResponse> updateProductItem(@PathVariable String id, @RequestBody @Valid ProductItemRequest productItemRequest) {
+    ApiResponse<ProductItemResponse> updateProductItem(@PathVariable String id, @ModelAttribute @Valid ProductItemRequest productItemRequest) {
         log.info("Update product item with ID: {}", id);
         ProductItemResponse productItemResponse = productItemService.update(id, productItemRequest);
         return ApiResponse.<ProductItemResponse>builder()
@@ -138,6 +138,16 @@ public class ProductItemController {
     ApiResponse<ProductItemResponse> unlikeProductItem(@PathVariable String id) {
         log.info("Unlike product item with ID: {}", id);
         ProductItemResponse productItemResponse = productItemService.unlikeProduct(id);
+        return ApiResponse.<ProductItemResponse>builder()
+                .result(productItemResponse)
+                .build();
+    }
+
+    @PutMapping("/{id}/is-active")
+    @PreAuthorize("hasRole('ADMIN')")
+    ApiResponse<ProductItemResponse> updateIsActive(@PathVariable String id, @RequestParam boolean isActive) {
+        log.info("Update isActive for product item with ID: {}", id);
+        ProductItemResponse productItemResponse = productItemService.updateIsActive(id, isActive);
         return ApiResponse.<ProductItemResponse>builder()
                 .result(productItemResponse)
                 .build();

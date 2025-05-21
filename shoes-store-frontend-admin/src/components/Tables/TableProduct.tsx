@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import {
   Add,
   DeleteForeverOutlined,
+  EditNote,
   VisibilityOutlined,
 } from "@mui/icons-material";
 import { EditOutlined } from "@ant-design/icons";
@@ -66,7 +67,12 @@ const TableProduct = () => {
   const handleDelete = async (id: any) => {
     setLoading(true);
     try {
-      await productApi.delete(id);
+      const response = await productApi.delete(id);
+      console.log(response.data);
+      if (response.data.code === 404) {
+        enqueueSnackbar(response.data.message, { variant: "error" });
+        return;
+      }
       fetchProduct();
       enqueueSnackbar("Delete product successfully", { variant: "success" });
     } catch (error) {
@@ -166,10 +172,10 @@ const TableProduct = () => {
                             navigate(`/products/${productItem.id}/list-item`)
                           }
                         >
-                          <VisibilityOutlined className="w-5 h-5" />
+                          <EditNote className="w-5 h-5" />
                         </button>
                         <span className="absolute opacity-0 group-hover:opacity-100 bg-black text-white text-xs rounded py-1 px-2 -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                          View item
+                          Edit item
                         </span>
                       </div>
 
@@ -199,7 +205,7 @@ const TableProduct = () => {
                           <EditOutlined className="w-5 h-5" />
                         </button>
                         <span className="absolute opacity-0 group-hover:opacity-100 bg-black text-white text-xs rounded py-1 px-2 -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                          Edit
+                          Edit info
                         </span>
                       </div>
 

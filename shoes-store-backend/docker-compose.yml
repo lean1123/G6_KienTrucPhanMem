@@ -196,7 +196,7 @@ services:
     environment:
       - ORDER_SERVICE_URL=http://order-service:8088/internal/orders
       - FRONTEND_URL=http://localhost:3000
-      - VNP_RETURN_URL=https://b552-2402-800-63f9-3105-b425-6dac-5bda-8a71.ngrok-free.app/api/internal/payments/status
+      - VNP_RETURN_URL=https://5fbd-2401-d800-2af3-eb5-a4a2-e6e7-b830-33fd.ngrok-free.app/api/internal/payments/status
     container_name: payment-service
     depends_on:
       - mysql

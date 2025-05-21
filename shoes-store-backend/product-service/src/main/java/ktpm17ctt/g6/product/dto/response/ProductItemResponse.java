@@ -1,5 +1,6 @@
 package ktpm17ctt.g6.product.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ktpm17ctt.g6.product.entity.QuantityOfSize;
 import ktpm17ctt.g6.product.entity.enums.Status;
 import lombok.*;
@@ -20,4 +21,6 @@ public class ProductItemResponse {
     List<QuantityOfSize> quantityOfSize;
     ProductResponse product;
     Status status;
+    @JsonProperty("isActive")
+    boolean isActive;
 }

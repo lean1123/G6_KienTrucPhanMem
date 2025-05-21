@@ -1,14 +1,28 @@
-import { useEffect, useRef, useState } from "react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
 import { enqueueSnackbar } from "notistack";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import colorApi from "../api/colorApi";
 import * as Yup from "yup";
 import productItemApi from "../api/productItemApi";
-import DragDropImageUploader from "../common/DragDropImageUploader";
 import Breadcrumb from "../components/Breadcrumbs/Breadcrumb";
-import colorApi from "../api/colorApi";
-import { Delete, PlusOne, PlusOneRounded, X } from "@mui/icons-material";
-import { PlusCircleTwoTone, PlusOutlined, XOutlined } from "@ant-design/icons";
+import DragDropImageUploader from "./DragDropImageUploader";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Delete, PlusOneRounded } from "@mui/icons-material";
+
+interface Product {
+  id?: string;
+  code: string;
+  name: string;
+  description: string;
+  category: {
+    id: string;
+    name: string;
+  };
+  type: string;
+  createdDate?: Date;
+  modifiedDate?: Date;
+  rating: number;
+}
 
 interface Color {
   id: string;
@@ -16,24 +30,40 @@ interface Color {
   code: string;
 }
 
-interface SizeQuantity {
+interface QuantityOfSize {
   size: number;
   quantity: number;
 }
+interface ProductItem {
+  id: string;
+  price: number;
+  images: string[];
+  color: Color;
+  quantityOfSize: QuantityOfSize[];
+  status: string;
+  product: Product;
+  isActive?: boolean;
+}
 
-// const listImages = [
-//   "https://product.hstatic.net/1000230642/product/giay-the-thao-nam-biti-s-dsm074500den-den-ld35m-color-den_976e670e055f496390b8ed30328f88b0_1024x1024.jpg",
-//   "https://product.hstatic.net/1000230642/product/giay-the-thao-nam-biti-s-dsm074500den-den-ld35m-color-den_976e670e055f496390b8ed30328f88b0_1024x1024.jpg",
-//   "https://product.hstatic.net/1000230642/product/giay-the-thao-nam-biti-s-dsm074500den-den-ld35m-color-den_976e670e055f496390b8ed30328f88b0_1024x1024.jpg",
-// ];
+interface Props {
+  productItem: ProductItem;
+  open: boolean;
+  onClose: () => void;
+  reloadData?: () => void;
+}
 
-export default function AddProductItem() {
+export default function EditItemForm({
+  productItem,
+  open,
+  onClose,
+  reloadData,
+}: Props) {
   const [images, setImages] = useState<File[]>([]);
   const { id } = useParams();
   const navigation = useNavigate();
   const [loading, setLoading] = useState(false);
   const [colors, setColors] = useState<Color[]>([]);
-  const [sizes, setSizes] = useState<SizeQuantity[]>([
+  const [sizes, setSizes] = useState<QuantityOfSize[]>([
     { size: 29, quantity: 1 },
   ]);
   const fetchColors = async () => {
@@ -46,6 +76,13 @@ export default function AddProductItem() {
   };
 
   useEffect(() => {
+    if (productItem) {
+      // setImages(productItem.images.map((image) => image));
+      setSizes(productItem.quantityOfSize);
+    }
+  }, [productItem]);
+
+  useEffect(() => {
     fetchColors();
   }, []);
 
@@ -54,9 +91,7 @@ export default function AddProductItem() {
       .min(1, "Price must be at least 1")
       .required("Price is required"),
     color: Yup.string().required("Color is required"),
-    listDetailImages: Yup.array()
-      .min(1, "At least one image is required")
-      .required("Images are required"),
+    listDetailImages: Yup.array(),
     sizes: Yup.array()
       .of(
         Yup.object().shape({
@@ -73,86 +108,79 @@ export default function AddProductItem() {
   });
 
   const initialValues = {
-    price: "",
-    color: "",
+    price: productItem.price || "",
+    color: productItem.color.id || "",
     listDetailImages: images,
-    sizes: sizes,
+    sizes: productItem.quantityOfSize || [],
     status: "IN_STOCK",
-    product: id,
+    product: productItem.product.id || id,
   };
 
   const isFirstSubmit = useRef(true);
 
   const handleSubmit = async (values: any) => {
-    // console.log("Form Data:", values);
     setLoading(true);
     try {
       const formData = new FormData();
       formData.append("price", values.price);
       formData.append("colorId", values.color);
       formData.append("status", values.status);
-      values.listDetailImages.forEach((image: any) => {
-        formData.append("images", image);
-      });
-      // images.forEach((image: string, index: number) => {
-      //   formData.append(`images[${index}]`, image);
-      // });
-      formData.append("quantityOfSize", JSON.stringify(values.sizes));
-      // values.sizes.forEach((item: any, index: number) => {
-      //   formData.append(`quantityOfSize[${index}].size`, item.size);
-      //   formData.append(`quantityOfSize[${index}].quantity`, item.quantity);
-      // });
-
       formData.append("productId", id as string);
+      formData.append("quantityOfSize", JSON.stringify(values.sizes));
 
-      const response = await productItemApi.addNewProductItem(formData);
+      // 🟡 Nếu có ảnh thì append, nếu không thì thêm ảnh rỗng để giữ format
+      if (values.listDetailImages.length > 0) {
+        values.listDetailImages.forEach((image: File) => {
+          formData.append("images", image);
+        });
+      } else {
+        // ⛔ Tùy backend, nếu yêu cầu luôn có `images`, bạn có thể append một field rỗng như:
+        formData.append("images", new Blob([]), "empty.jpg");
+      }
+
+      const response = await productItemApi.updateProductItem(
+        productItem.id,
+        formData
+      );
       if (response.status === 200) {
-        enqueueSnackbar("Product item added successfully!", {
+        enqueueSnackbar("Product item updated successfully!", {
           variant: "success",
         });
+        onClose();
+        reloadData && reloadData();
       }
-      console.log(
-        "Form Data:",
-        formData.forEach((value, key) => console.log(key, value))
-      );
     } catch (error: any) {
-      console.error("Failed to create product:", error);
-
-      // // Nếu BE trả về lỗi validation
-      // if (
-      //   error.response &&
-      //   error.response.data &&
-      //   error.response.data.code === 1008
-      // ) {
-      //   const serverErrors: { [key: string]: string } = {};
-      //   error.response.data.result.forEach((err: any) => {
-      //     const key = Object.keys(err)[0];
-      //     const message = err[key];
-      //     serverErrors[key] = message;
-
-      //     // 🔥 Dùng enqueueSnackbar luôn cho mỗi field lỗi
-      //     enqueueSnackbar(`${message}`, { variant: "error" });
-      //   });
-      //   console.log("serverErrors:", serverErrors);
-
-      //   // Set lỗi vào Formik để highlight input đỏ
-      //   // formik.setErrors(serverErrors);
-      // } else {
-      //   // Các lỗi khác (không phải validation)
-      // }
-      enqueueSnackbar("Failed to create product!", { variant: "error" });
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.code === 1008
+      ) {
+        const serverErrors: { [key: string]: string } = {};
+        error.response.data.result.forEach((err: any) => {
+          const key = Object.keys(err)[0];
+          const message = err[key];
+          serverErrors[key] = message;
+          enqueueSnackbar(`${message}`, { variant: "error" });
+        });
+      } else {
+        enqueueSnackbar("Failed to update product!", { variant: "error" });
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <>
-      <Breadcrumb pageName="Add Product Item" />
+    <div
+      className={`w-full h-full bg-gray-100 rounded-md ${
+        open ? "block" : "hidden"
+      }`}
+    >
       <DragDropImageUploader onImagesChange={setImages} />
-      <div className="p-3 rounded-md shadow-md mt-4 bg-white">
+      <div className="p-3 bg-white">
         <Formik
           initialValues={initialValues}
+          enableReinitialize={true}
           validationSchema={validationSchema}
           onSubmit={(values) => handleSubmit(values)}
         >
@@ -160,21 +188,6 @@ export default function AddProductItem() {
             useEffect(() => {
               setFieldValue("listDetailImages", images);
             }, [images, setFieldValue]);
-            useEffect(() => {
-              if (isSubmitting && Object.keys(errors).length > 0) {
-                if (!isFirstSubmit.current) {
-                  isFirstSubmit.current = true;
-                  return; // Bỏ qua lần mount đầu tiên
-                }
-
-                if (errors.listDetailImages) {
-                  enqueueSnackbar(errors.listDetailImages as string, {
-                    variant: "error",
-                  });
-                }
-              }
-            }, [errors, isSubmitting]);
-
             return (
               <Form>
                 <div className="grid grid-cols-12 gap-6">
@@ -305,31 +318,31 @@ export default function AddProductItem() {
                   </div>
 
                   {/* Submit & Back Buttons */}
-                  <div className="col-span-6">
+                  <div className="col-span-12">
                     <button
                       type="submit"
                       className="w-full bg-blue-500 text-white rounded-md p-2"
                       // onClick={() => handleSubmit(values)}
                       disabled={loading}
                     >
-                      {loading ? "Loading..." : "Add Product Item"}
+                      {loading ? "Loading..." : "Update"}
                     </button>
                   </div>
-                  <div className="col-span-6">
+                  {/* <div className="col-span-6">
                     <button
                       type="button"
                       onClick={() => navigation(-1)}
                       className="w-full bg-gray-500 text-white rounded-md p-2"
                     >
-                      Back
+                      Cancel
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               </Form>
             );
           }}
         </Formik>
       </div>
-    </>
+    </div>
   );
 }
