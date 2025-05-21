@@ -24,4 +24,6 @@ public interface OrderService {
 
     @Transactional(rollbackFor = Exception.class)
     OrderResponse updatePaymentStatusForOrder(String orderId, boolean isPayed) throws Exception;
+
+    List<OrderResponse> getAllOrders() throws Exception;
 }

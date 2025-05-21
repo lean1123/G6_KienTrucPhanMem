@@ -83,7 +83,11 @@ const TableColor = () => {
 
   const handleRemoveColor = async (id: any) => {
     try {
-      await colorApi.deleteColor(id);
+      const response = await colorApi.deleteColor(id);
+      if (response.data.code === 400) {
+        enqueueSnackbar(response.data.message, { variant: "error" });
+        return;
+      }
       fetchColor();
       enqueueSnackbar("Remove color successfully", { variant: "success" });
     } catch (error) {
@@ -127,7 +131,8 @@ const TableColor = () => {
             </tr>
           </thead>
           <tbody>
-            {colors && colors.length > 0 &&
+            {colors &&
+              colors.length > 0 &&
               colors.map((colorItem, key) => (
                 <tr key={key}>
                   <td className="border-b border-[#eee] py-2 px-4 pl-9 xl:pl-11">

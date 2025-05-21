@@ -4,10 +4,12 @@ import ktpm17ctt.g6.product.dto.request.ProductRequest;
 import ktpm17ctt.g6.product.dto.response.ProductResponse;
 import ktpm17ctt.g6.product.entity.Category;
 import ktpm17ctt.g6.product.entity.Product;
+import ktpm17ctt.g6.product.entity.ProductItem;
 import ktpm17ctt.g6.product.exception.NotFoundException;
 import ktpm17ctt.g6.product.mapper.CategoryMapper;
 import ktpm17ctt.g6.product.mapper.ProductMapper;
 import ktpm17ctt.g6.product.repository.CategoryRepository;
+import ktpm17ctt.g6.product.repository.ProductItemRepository;
 import ktpm17ctt.g6.product.repository.ProductRepository;
 import ktpm17ctt.g6.product.service.ProductService;
 import lombok.AccessLevel;
@@ -24,6 +26,7 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
     ProductRepository productRepository;
     CategoryRepository categoryRepository;
+    ProductItemRepository productItemRepository;
     ProductMapper productMapper;
     CategoryMapper categoryMapper;
 
@@ -54,8 +57,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void delete(String id) {
+    public boolean delete(String id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Product ID", id));
+        // Kiểm tra xem sản phẩm có tồn tại trong bảng ProductItem không
+        List<ProductItem> productItems = productItemRepository.findByProduct_Id(id);
+        if (!productItems.isEmpty()) {
+            // Nếu có sản phẩm trong bảng ProductItem, không xóa sản phẩm
+            return false;
+        }
+        // Nếu không có sản phẩm nào trong bảng ProductItem, xóa sản phẩm
+        // Xóa sản phẩm khỏi bảng ProductItem
         productRepository.deleteById(id);
+        return true;
     }
 
     @Override

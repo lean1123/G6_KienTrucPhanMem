@@ -9,12 +9,12 @@ import collectionApi from "../api/collectionApi";
 import productApi from "../api/productApi";
 import Breadcrumb from "../components/Breadcrumbs/Breadcrumb";
 
-interface Category {
+type Category = {
   id: string;
   name: string;
 }
 
-interface Product {
+type Product = {
   id?: string;
   name: string;
   description: string;
@@ -23,7 +23,7 @@ interface Product {
   type: string;
   createdDate?: Date;
   modifiedDate?: Date;
-}
+};
 
 function CreateProduct() {
   const navigate = useNavigate();
@@ -33,7 +33,6 @@ function CreateProduct() {
   const [categories, setCategories] = React.useState<Category[]>([]);
 
   const [productId, setProductId] = React.useState<String>("");
-  console.log("productId:", productId);
 
   const fetchCategories = async () => {
     setLoading(true);
@@ -49,15 +48,18 @@ function CreateProduct() {
   };
 
   const validationSchema = Yup.object({
-    name: Yup.string().required("Product name is required"),
-    description: Yup.string().required("Description is required"),
+    name: Yup.string()
+      .required("Product name is required")
+      .min(3, "Product name must be at least 3 characters")
+      .max(100, "Product name must be at most 100 characters"),
+    description: Yup.string(),
     category: Yup.object()
       .shape({
         id: Yup.string().required("Category is required"),
         name: Yup.string(),
       })
       .required("Category is required"),
-    gender: Yup.string().required("Gender is required"),
+    type: Yup.string().required("Type is required"),
   });
 
   const formik = useFormik({
@@ -89,8 +91,10 @@ function CreateProduct() {
       formData.append("type", values.type);
       formData.append("createdDate", new Date().toISOString());
       formData.append("modifiedDate", new Date().toISOString());
+
       const response = await productApi.addNew(formData);
       console.log(response);
+
       if (response.status === 200) {
         setSuccess(true);
         setProductId(response.data.result.id);
@@ -98,32 +102,9 @@ function CreateProduct() {
           variant: "success",
         });
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Failed to create product:", error);
-
-      // Nếu BE trả về lỗi validation
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.code === 1008
-      ) {
-        const serverErrors: { [key: string]: string } = {};
-        error.response.data.result.forEach((err: any) => {
-          const key = Object.keys(err)[0];
-          const message = err[key];
-          serverErrors[key] = message;
-
-          // 🔥 Dùng enqueueSnackbar luôn cho mỗi field lỗi
-          enqueueSnackbar(`${message}`, { variant: "error" });
-        });
-        console.log("serverErrors:", serverErrors);
-
-        // Set lỗi vào Formik để highlight input đỏ
-        formik.setErrors(serverErrors);
-      } else {
-        // Các lỗi khác (không phải validation)
-        enqueueSnackbar("Failed to create product!", { variant: "error" });
-      }
+      enqueueSnackbar("Failed to create product!", { variant: "error" });
     } finally {
       setLoading(false);
     }
@@ -167,10 +148,7 @@ function CreateProduct() {
         {/* Form to create a product */}
         <div className="col-span-9">
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              formik.handleSubmit();
-            }}
+            onSubmit={formik.handleSubmit}
             className="grid grid-cols-1 gap-4 p-6 rounded-md border border-gray-300 bg-white shadow-sm"
           >
             <h2 className="text-black text-xl font-semibold">
@@ -243,9 +221,9 @@ function CreateProduct() {
                   />
                 ))}
               </select>
-              {formik.touched.category && formik.errors.category ? (
+              {formik.touched.category && formik.errors.category?.id ? (
                 <p className="text-red-500 text-sm">
-                  {formik.errors.category.name}
+                  {formik.errors.category.id}
                 </p>
               ) : null}
             </div>
@@ -283,7 +261,7 @@ function CreateProduct() {
               <button
                 type="submit"
                 className="w-full bg-blue-500 text-white rounded-md py-2"
-                onClick={() => handleSubmit(formik.values)}
+                // onClick={() => handleSubmit(formik.values)}
                 disabled={loading || success}
               >
                 {loading ? "Loading..." : "Create Product"}

@@ -67,6 +67,7 @@ public class ProductItemServiceImpl implements ProductItemService {
         productItem.setQuantityOfSize(convertJsonToQuantityOfSize(productItemRequest.getQuantityOfSize()));
         productItem.setColor(colorRepository.findById(productItemRequest.getColorId()).get());
         productItem.setProduct(productRepository.findById(productItemRequest.getProductId()).get());
+        productItem.setActive(true);
         log.info("Saving productItem: {}", productItem);
         if (productItemRequest.getImages() != null && !productItemRequest.getImages().isEmpty()) {
             log.info("Product item: {}", productItem.getProduct().getId());
@@ -127,8 +128,6 @@ public class ProductItemServiceImpl implements ProductItemService {
             }
         }
 
-        productItem.setId(id);
-
         return productItemMapper.toProductItemResponse(productItemRepository.save(productItem));
     }
 
@@ -152,7 +151,10 @@ public class ProductItemServiceImpl implements ProductItemService {
 
     @Override
     public void delete(String id) {
-        productItemRepository.deleteById(id);
+//        productItemRepository.deleteById(id);
+        ProductItem productItem = productItemRepository.findById(id).orElseThrow(() -> new NotFoundException("Product Item ID", id));
+        productItem.setActive(false);
+        productItemRepository.save(productItem);
     }
 
     @Override
@@ -292,6 +294,12 @@ public class ProductItemServiceImpl implements ProductItemService {
         return productItemMapper.toProductItemResponse(productItemRepository.save(productItem));
     }
 
+    @Override
+    public ProductItemResponse updateIsActive(String id, boolean isActive) {
+        ProductItem productItem = productItemRepository.findById(id).orElseThrow(() -> new NotFoundException("Product Item ID", id));
+        productItem.setActive(isActive);
+        return productItemMapper.toProductItemResponse(productItemRepository.save(productItem));
+    }
 
 
 }

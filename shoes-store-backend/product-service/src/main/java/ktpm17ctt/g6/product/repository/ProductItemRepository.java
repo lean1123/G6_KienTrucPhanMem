@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface ProductItemRepository extends MongoRepository<ProductItem, String>, CustomProductItemRepository {
     List<ProductItem> findByProduct_Id(String productId);
+    List<ProductItem> findByColor_Id(String colorId);
 }

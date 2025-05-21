@@ -21,4 +21,5 @@ public class ProductItemResponseHasLikes {
     ProductResponse product;
     Status status;
     List<String> likes;
+    boolean isActive;
 }

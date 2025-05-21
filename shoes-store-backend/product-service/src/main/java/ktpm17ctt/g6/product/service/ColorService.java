@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface ColorService {
     ColorResponse save(ColorRequest colorRequest);
     ColorResponse update(String id, ColorRequest colorRequest);
-    void delete(String id);
+    boolean delete(String id);
     Optional<ColorResponse> findById(String id);
     List<ColorResponse> findAll();
     List<ColorResponse> search(String keyword);
