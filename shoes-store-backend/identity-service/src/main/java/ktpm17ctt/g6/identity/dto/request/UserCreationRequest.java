@@ -25,7 +25,7 @@ public class UserCreationRequest {
     @NotBlank(message = "Email is required")
     @Email(message = "Email is invalid")
     String email;
-    @DobConstraint(min = 10, message = "Invalid date of birth")
+    @DobConstraint(min = 10, message = "Date of birth is invalid")
     LocalDate dob;
     @NotBlank(message = "Phone number is required")
     String phone;

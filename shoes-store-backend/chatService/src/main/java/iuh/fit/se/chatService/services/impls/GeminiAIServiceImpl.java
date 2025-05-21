@@ -26,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -58,9 +59,23 @@ public class GeminiAIServiceImpl implements GeminiAIService {
             }
         }
 
-        List<ProductItemResponse> productItemResponses = productItemClient.searchProductItems(1, null, !intentDTO.getType().trim().isEmpty() ? Type.valueOf(intentDTO.getType()) : null, null, !intentDTO.getColor().trim().isEmpty() ? intentDTO.getColor() : null, !intentDTO.getSize().isEmpty() ? Integer.valueOf(intentDTO.getSize().get(0)) : null, intentDTO.getPriceMin() == 0 ? null : Double.valueOf(String.valueOf(intentDTO.getPriceMin())), intentDTO.getPriceMax() == 0 ? null : Double.valueOf(String.valueOf(intentDTO.getPriceMax()))).getResult().getData();
+        List<ProductItemResponse> productItemResponses = new ArrayList<>();
 
-        return AIResponse.builder().results(productItemResponses).message(intentDTO.getMessage()).build();
+        if (intentDTO.getIntent().equals("search_product")) {
+            productItemResponses = productItemClient.searchProductItems(1, null,
+                    !intentDTO.getType().trim().isEmpty() ? Type.valueOf(intentDTO.getType()) : null,
+                    intentDTO.getCategoryName().trim().isEmpty() ? null : intentDTO.getCategoryName(),
+                    !intentDTO.getColor().trim().isEmpty() ? intentDTO.getColor() : null,
+                    !intentDTO.getSize().isEmpty() ? Integer.valueOf(intentDTO.getSize().get(0)) : null,
+                    intentDTO.getPriceMin() == 0 ? null : Double.valueOf(String.valueOf(intentDTO.getPriceMin())),
+                    intentDTO.getPriceMax() == 0 ? null : Double.valueOf(String.valueOf(intentDTO.getPriceMax()))).getResult().getData();
+        }
+
+        return AIResponse.builder()
+                .results(productItemResponses)
+                .message(intentDTO.getMessage())
+                .intent(intentDTO.getIntent())
+                .build();
     }
 
     private SearchIntentDTO extractIntent(String userMessage) throws IOException {
@@ -93,7 +108,7 @@ public class GeminiAIServiceImpl implements GeminiAIService {
         return String.format("""
                  Bạn là một trợ lý AI giúp người dùng tìm kiếm giày và tư vấn chọn size.
                 Dưới đây là câu hỏi hoặc thông tin từ người dùng: "%s"
-                Bạn sẽ được cung cấp một ảnh hướng dẫn chọn size do hệ thống gửi kèm. Khi người dùng
+                Bạn sẽ được cung cấp câu hỏi của người dùng do hệ thống gửi kèm. Khi người dùng
                 đề cập đến việc chọn size (ví dụ: hỏi size phù hợp với chiều dài chân, size quốc tế, size
                 US/EU, cm, v.v.), hãy sử dụng thông tin từ ảnh đó để gợi ý size phù hợp nhất.
                 Trong trường hợp người dùng thông báo rằng sản phẩm mà bạn đã gợi hết hàng thì bạn nên
@@ -102,15 +117,16 @@ public class GeminiAIServiceImpl implements GeminiAIService {
                 dùng cần sự gợi ý chính xác nên hãy ưu tiên 1 size duy nhất
                 Hãy phân tích và trả về kết quả dưới dạng JSON CHÍNH XÁC theo định dạng sau (không ghi
                 thêm gì ngoài JSON):
-                { "intent": "search_product",
-                "color": "màu của sản phẩm", // ví dụ: “RED”, “WHITE”,...
-                "priceMax": số_nguyên,
-                "priceMin": số_nguyên,
-                "size": ["danh sách kích cỡ có thể gợi ý"], // Chú ý: chi hiển thị một size duy nhất, ví dụ:
-                [“41”], hoặc [] nếu khách hàng không có để cập tới
-                "type": "MALE" | "FEMALE" | "CHILDREN" | "",
-                "message": "Thông điệp hiển thị cho người dùng", "sizeResult": "Gợi ý size cụ thể nếu có, ví
-                dụ: 'Size 41'" }
+                { 
+                    "intent": "'search_product' hay 'assist'", // chú ý: 'search_product' nếu người dùng nhập có từ 'tìm' hoặc 'mua' hay tùy thuộc vào ngữ cảnh mà bạn phân tích
+                    "color": "màu của sản phẩm", // ví dụ: “RED”, “WHITE”,...
+                    "priceMax": số_nguyên,
+                    "priceMin": số_nguyên,
+                    "size": ["danh sách kích cỡ có thể gợi ý"], // Chú ý: chi hiển thị một size duy nhất, ví dụ: [“41”], hoặc [] nếu khách hàng không có để cập tới
+                    "type": "MALE" | "FEMALE" | "CHILDREN" | "",
+                    "message": "Thông điệp hiển thị cho người dùng", "sizeResult": "Gợi ý size cụ thể nếu có, ví dụ: 'Size 41'"
+                    "categoryName": "Chỉ gợi ý một trong 3 loại danh mục sau: 'Sport Shoes', 'Western Shoes' và 'Sneaker' hoặc '' nếu khách hàng không đề cập"
+                }
                 Lưu ý:
                 • Nếu người dùng không nói gì về size, để sizeResult là chuỗi rỗng "".
                 • Nếu không nói đến màu, để color là "".

@@ -20,4 +20,5 @@ public class SearchIntentDTO {
     private String type;
     private String message;
     private String sizeResult;
+    private String categoryName;
 }

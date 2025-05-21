@@ -27,7 +27,7 @@ public class RegistrationRequest {
     @NotBlank(message = "Last name is required")
     String lastName;
 
-    @DobConstraint(min = 12, message = "Date of birth is invalid")
+    @DobConstraint(min = 10, message = "Date of birth is invalid")
     LocalDate dob;
     @NotBlank(message = "Phone number is required")
     String phone;

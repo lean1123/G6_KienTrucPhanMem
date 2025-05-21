@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import ktpm17ctt.g6.user.dto.ApiResponse;
 import ktpm17ctt.g6.user.dto.request.AddressCreationRequest;
 import ktpm17ctt.g6.user.dto.request.UserRequest;
+import ktpm17ctt.g6.user.dto.request.UserUpdationRequest;
 import ktpm17ctt.g6.user.dto.response.AddressResponse;
 import ktpm17ctt.g6.user.dto.response.UserResponse;
 import ktpm17ctt.g6.user.entity.Address;
@@ -68,7 +69,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateById(@PathVariable String id, @Valid @ModelAttribute UserRequest userRequest, BindingResult bindingResult) {
+    public ResponseEntity<?> updateById(@PathVariable String id, @Valid @ModelAttribute UserUpdationRequest userRequest, BindingResult bindingResult) {
         Map<String, Object> response = new LinkedHashMap<>();
 
         if (bindingResult.hasErrors()) {
@@ -80,7 +81,7 @@ public class UserController {
             response.put("errors", errors);
         }
 
-        Optional<UserResponse> user = userService.updateInfo(id,userRequest);
+        Optional<UserResponse> user = userService.updateInfo(id, userRequest);
         if (user.isEmpty()) {
             response.put("status", HttpStatus.NOT_FOUND.value());
             response.put("message", "User not found");

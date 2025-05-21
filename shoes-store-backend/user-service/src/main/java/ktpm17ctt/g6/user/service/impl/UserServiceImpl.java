@@ -2,6 +2,7 @@ package ktpm17ctt.g6.user.service.impl;
 
 import ktpm17ctt.g6.user.dto.ApiResponse;
 import ktpm17ctt.g6.user.dto.request.UserRequest;
+import ktpm17ctt.g6.user.dto.request.UserUpdationRequest;
 import ktpm17ctt.g6.user.dto.response.UserResponse;
 import ktpm17ctt.g6.user.dto.response.identity.AccountResponse;
 import ktpm17ctt.g6.user.entity.User;
@@ -66,8 +67,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserResponse> updateInfo(String id, UserRequest userRequest) {
-        return Optional.empty();
+    @Transactional
+    public Optional<UserResponse> updateInfo(String id, UserUpdationRequest userRequest) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return Optional.empty();
+        }
+        String phone = user.getPhone();
+
+
+        if((phone == null || phone.isEmpty())){
+            if(userRepository.findByPhone(userRequest.getPhone()).isPresent()){
+                throw new IllegalArgumentException("Phone number is already in use");
+            }
+            phone = userRequest.getPhone();
+        }
+
+        User updateUser = User.builder()
+                .id(user.getId())
+                .accountId(user.getAccountId())
+                .firstName(userRequest.getFirstName())
+                .lastName(userRequest.getLastName())
+                .email(user.getEmail())
+                .phone(phone)
+                .dob(userRequest.getDob())
+                .avatar(user.getAvatar())
+                .gender(userRequest.getGender())
+                .build();
+
+        log.info("Updating user profile: {}", updateUser);
+        return Optional.of(userMapper.toUserResponse(userRepository.save(updateUser)));
     }
 
 

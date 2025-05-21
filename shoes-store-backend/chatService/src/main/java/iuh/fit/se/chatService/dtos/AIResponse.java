@@ -17,4 +17,5 @@ import java.util.List;
 public class AIResponse {
     List<ProductItemResponse> results;
     String message;
+    String intent;
 }

@@ -1,6 +1,7 @@
 package ktpm17ctt.g6.user.service;
 
 import ktpm17ctt.g6.user.dto.request.UserRequest;
+import ktpm17ctt.g6.user.dto.request.UserUpdationRequest;
 import ktpm17ctt.g6.user.dto.response.UserResponse;
 import ktpm17ctt.g6.user.entity.User;
 
@@ -20,7 +21,7 @@ public interface UserService {
 
     void deleteById(String id);
 
-    Optional<UserResponse> updateInfo(String id, UserRequest userRequest);
+    Optional<UserResponse> updateInfo(String id, UserUpdationRequest userRequest);
 
     Optional<UserResponse> getUserById(String id);
 

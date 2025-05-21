@@ -29,21 +29,15 @@ import ktpm17ctt.g6.orderservice.repositories.httpClients.UserClient;
 import ktpm17ctt.g6.orderservice.services.OrderDetailService;
 import ktpm17ctt.g6.orderservice.services.OrderService;
 import ktpm17ctt.g6.orderservice.util.GetIpAddress;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
 import java.util.List;
@@ -76,20 +70,24 @@ public class OrderServiceImpl implements OrderService {
             log.info("Email Logged: {}", email);
         }
 
-        String userId = this.getUserIdFromEmail(email);
-        String name = this.getUserNameFromEmail(email);
+        UserResponse userResponse = this.getUserResponseFromEmail(email);
+        String userId = userResponse.getId();
+        String name = userResponse.getFirstName() + " " + userResponse.getLastName();
 
-        if (userId == null) {
-            throw new Exception("User not exist in system");
+        String phone = userResponse.getPhone();
+
+        if (phone == null || phone.isEmpty()) {
+            log.warn("Phone number is empty");
+            throw new Exception("Phone number is empty");
         }
+
+
 
         AddressResponse addressResponse = userClient.getAddressById(request.getAddressId()).getResult();
 
 
         List<OrderDetailRequest> orderDetails = request.getOrderDetails();
         double total = this.getTotalPrice(orderDetails);
-
-        log.info("Total price: {}", total);
 
         Order entity = entity = Order.builder()
                 .total(total)
@@ -408,22 +406,20 @@ public class OrderServiceImpl implements OrderService {
                 .toList();
     }
 
-    private String getUserNameFromEmail(String email) throws  Exception{
+    private UserResponse getUserResponseFromEmail(String email) throws Exception {
         ApiResponse<AccountResponse> accountResponse = identityClient.getAccountByEmail(email);
 
-        if(accountResponse.getResult() == null){
+        if (accountResponse.getResult() == null) {
             throw new NullPointerException("Account not found");
         }
 
         String accountId = accountResponse.getResult().getId();
 
         ApiResponse<UserResponse> userResponse = userClient.getUserByAccountId(accountId);
-        if(userResponse.getResult() == null){
+        if (userResponse.getResult() == null) {
             throw new NullPointerException("User not found");
         }
-
-        String name= userResponse.getResult().getFirstName() + userResponse.getResult().getLastName();
-        return name;
+        return userResponse.getResult();
     }
 
     @Transactional(rollbackFor = Exception.class)
