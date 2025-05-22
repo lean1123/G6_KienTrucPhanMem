@@ -59,7 +59,7 @@ function ChatControll() {
 						<input
 							type='text'
 							placeholder='Nhập tin nhắn của bạn...'
-							className='border border-gray-300 p-2 pr-10 w-full rounded-full focus:outline-none'
+							className='border border-gray-300 p-2 pr-16 w-full rounded-full focus:outline-none'
 							value={message}
 							onChange={(e) => setMessage(e.target.value)}
 						/>

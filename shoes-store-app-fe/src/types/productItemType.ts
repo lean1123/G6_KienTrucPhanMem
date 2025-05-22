@@ -24,4 +24,6 @@ export interface ProductItemType {
 		rating: number;
 		createdDate: string;
 	};
+	likes: string[];
+	isActive: boolean;
 }

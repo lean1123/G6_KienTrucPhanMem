@@ -38,7 +38,7 @@ export const addToCart = createAsyncThunk(
 			return response.data;
 		} catch (error) {
 			console.error('Error adding item to cart:', error);
-			return rejectWithValue('Error adding item to cart');
+			return rejectWithValue(error);
 		}
 	},
 );

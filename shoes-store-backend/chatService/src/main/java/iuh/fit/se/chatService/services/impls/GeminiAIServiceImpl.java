@@ -118,7 +118,7 @@ public class GeminiAIServiceImpl implements GeminiAIService {
                 Hãy phân tích và trả về kết quả dưới dạng JSON CHÍNH XÁC theo định dạng sau (không ghi
                 thêm gì ngoài JSON):
                 { 
-                    "intent": "'search_product' hay 'assist'", // chú ý: 'search_product' nếu người dùng nhập có từ 'tìm' hoặc 'mua' hay tùy thuộc vào ngữ cảnh mà bạn phân tích
+                    "intent": "'search_product' hay 'assist'", // chú ý: 
                     "color": "màu của sản phẩm", // ví dụ: “RED”, “WHITE”,...
                     "priceMax": số_nguyên,
                     "priceMin": số_nguyên,
@@ -132,8 +132,7 @@ public class GeminiAIServiceImpl implements GeminiAIService {
                 • Nếu không nói đến màu, để color là "".
                 • Nếu không nhắc đến giá, đặt priceMin và priceMax là 0.
                 • message phải rõ ràng, dễ hiểu và phù hợp với nội dung phản hồi.
-                Ảnh hướng dẫn chọn size sẽ được cung cấp bên dưới(AI không cần yêu cầu ảnh, chỉ
-                cần sử dụng khi có thông tin cần thiết).
+                • 'search_product' nếu người dùng nhập có từ 'tìm' hoặc 'mua' còn lại là 'assist'
                 """, userMessage);
     }
 

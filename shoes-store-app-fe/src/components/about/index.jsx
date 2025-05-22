@@ -57,7 +57,7 @@ function About() {
 			{/* Sứ mệnh */}
 			<section className='bg-blue-50 py-16 px-4 text-center'>
 				<h1 className='text-4xl md:text-6xl font-bold mb-4'>
-					<span className='text-blue-950'>Sứ Mệnh Của</span>
+					<span className='text-blue-950'>Sứ Mệnh Của </span>
 					<span className='text-sky-400'>Len</span>
 					<span className='text-orange-400'>Dom</span>
 				</h1>

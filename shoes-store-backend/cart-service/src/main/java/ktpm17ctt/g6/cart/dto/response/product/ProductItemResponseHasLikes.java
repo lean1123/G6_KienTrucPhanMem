@@ -1,8 +1,6 @@
-package ktpm17ctt.g6.product.dto.response;
+package ktpm17ctt.g6.cart.dto.response.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import ktpm17ctt.g6.product.entity.QuantityOfSize;
-import ktpm17ctt.g6.product.entity.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

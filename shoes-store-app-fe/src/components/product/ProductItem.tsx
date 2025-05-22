@@ -10,8 +10,6 @@ type ProductItemProps = {
 };
 
 function ProductItem({ item }: ProductItemProps) {
-	const [isHeart, setIsHeart] = React.useState(false);
-
 	return (
 		<div
 			className='relative h-full w-full border-1 rounded-lg shadow-md overflow-hidden group 
@@ -24,22 +22,11 @@ function ProductItem({ item }: ProductItemProps) {
 				color='textPrimary'
 			>
 				<div className='relative z-20'>
-					<button
-						onClick={(e) => {
-							e.preventDefault();
-							setIsHeart((prev) => !prev);
-						}}
-						className='absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-2xl z-20'
-					>
-						<HeartOutlined
-							style={{ color: isHeart ? 'red' : 'grey' }}
-							className='z-20'
-						/>
-					</button>
-
-					<div className='absolute bg-green-500 text-white px-2 rounded-lg top-3 left-2'>
-						Mới
-					</div>
+					{item.isActive === false && (
+						<div className='absolute w-full bg-red-500 text-white px-2 rounded-lg top-3 left-2 font-calibri'>
+							Sản phẩm đã ngừng kinh doanh
+						</div>
+					)}
 					<img
 						src={item.images[0]}
 						alt={item?.product?.name}

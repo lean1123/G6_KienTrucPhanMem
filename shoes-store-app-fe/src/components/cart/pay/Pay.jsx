@@ -39,6 +39,7 @@ const Pay = () => {
 	const [showModal, setShowModal] = useState(false);
 	const [vnpayUrl, setVnPayUrl] = useState('');
 	const { user } = useSelector((state) => state.userInfo);
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		dispatch(fetchUser());
@@ -122,6 +123,7 @@ const Pay = () => {
 			return;
 		}
 		try {
+			setIsLoading(true);
 			const orderResult = await dispatch(createOrder(data));
 			const resultUnwrapped = unwrapResult(orderResult);
 			if (resultUnwrapped?.id && resultUnwrapped?.paymentMethod === 'VNPAY') {
@@ -140,14 +142,18 @@ const Pay = () => {
 				dispatch(setProgress('Thực hiện đặt hàng'));
 				return;
 			}
-			enqueueSnackbar('Đặt hàng thất bại', { variant: 'error' });
-			navigation('/orderFail');
+			enqueueSnackbar(`Đặt hàng thất bại: ${resultUnwrapped}`, {
+				variant: 'error',
+			});
 			return;
 		} catch (error) {
 			console.error('Error creating order:', error);
-			enqueueSnackbar('Đặt hàng thất bại', { variant: 'error' });
-			navigation('/orderFail');
+			enqueueSnackbar(`Đặt hàng thất bại!`, {
+				variant: 'error',
+			});
 			return;
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -229,7 +235,7 @@ const Pay = () => {
 
 						<input
 							type='submit'
-							value='Hoàn tất đơn hàng'
+							value={isLoading ? 'Đang xử lý đơn hàng...' : 'Hoàn tất đơn hàng'}
 							className='h-10 bg-blue-400 rounded-lg text-white w-2/4 my-2'
 						/>
 					</div>

@@ -10,6 +10,7 @@ import ktpm17ctt.g6.orderservice.dto.feinClient.payment.PaymentResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.payment.RefundResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemRequest;
 import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemResponse;
+import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemResponseHasLikes;
 import ktpm17ctt.g6.orderservice.dto.feinClient.product.QuantityOfSize;
 import ktpm17ctt.g6.orderservice.dto.feinClient.user.AddressResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.user.UserResponse;
@@ -280,7 +281,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDetailResponse> orderDetails = this.orderDetailService.findOrderDetailByOrder_Id(order.getId());
 
         for (OrderDetailResponse orderDetail : orderDetails) {
-            ProductItemResponse productItemResponse = productItemClient
+            ProductItemResponseHasLikes productItemResponse = productItemClient
                     .getProductItem(orderDetail.getProductItem().getId()).getResult();
 
             if (productItemResponse == null) {
@@ -362,7 +363,7 @@ public class OrderServiceImpl implements OrderService {
         double total = 0;
 
         for (OrderDetailRequest orderDetail : orderDetails) {
-            ProductItemResponse productItemResponse = productItemClient.getProductItem(orderDetail.getProductItemId()).getResult();
+            ProductItemResponseHasLikes productItemResponse = productItemClient.getProductItem(orderDetail.getProductItemId()).getResult();
 
             if (productItemResponse == null) {
                 throw new Exception("Product item not found");

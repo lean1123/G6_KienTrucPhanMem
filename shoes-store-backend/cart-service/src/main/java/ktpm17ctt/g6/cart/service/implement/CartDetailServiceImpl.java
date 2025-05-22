@@ -4,6 +4,7 @@ import ktpm17ctt.g6.cart.dto.request.CartDetailRequest;
 import ktpm17ctt.g6.cart.dto.response.ApiResponse;
 import ktpm17ctt.g6.cart.dto.response.CartDetailResponse;
 import ktpm17ctt.g6.cart.dto.response.product.ProductItemResponse;
+import ktpm17ctt.g6.cart.dto.response.product.ProductItemResponseHasLikes;
 import ktpm17ctt.g6.cart.enties.CartDetail;
 import ktpm17ctt.g6.cart.enties.CartDetailPK;
 import ktpm17ctt.g6.cart.repository.CartDetailRepository;
@@ -65,7 +66,7 @@ public class CartDetailServiceImpl implements CartDetailService {
     @Transactional
     public Optional<CartDetail> updateQuantity(CartDetailPK cartDetailPK, int newQuantity) {
         Optional<CartDetail> cartDetail = cartDetailRepository.findById(cartDetailPK);
-        ApiResponse<ProductItemResponse> productResponse = productFeignClient.getProductItemById(cartDetailPK.getProductItemId());
+        ApiResponse<ProductItemResponseHasLikes> productResponse = productFeignClient.getProductItemById(cartDetailPK.getProductItemId());
         if (productResponse == null || productResponse.getResult() == null) {
             throw new RuntimeException("Failed to fetch product details from product-service");
         }

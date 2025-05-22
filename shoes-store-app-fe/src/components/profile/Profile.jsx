@@ -1,6 +1,6 @@
 import CancelIcon from '@mui/icons-material/Cancel';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchMyOrders } from '../../hooks/order/orderSlice';
@@ -16,6 +16,7 @@ function Profile() {
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.userInfo);
 	const { orders } = useSelector((state) => state.order);
+	const [cancelingId, setCancelingid] = useState(null);
 
 	useEffect(() => {
 		dispatch(fetchUser());
@@ -26,6 +27,7 @@ function Profile() {
 
 	const handleCancelOrder = async (orderId) => {
 		try {
+			setCancelingid(orderId);
 			const response = await orderApi.cancleOrder(orderId);
 			if (response.status !== 200) {
 				console.error('Failed to cancel order');
@@ -46,6 +48,7 @@ function Profile() {
 			});
 			return;
 		} finally {
+			setCancelingid(null);
 			dispatch(fetchMyOrders());
 		}
 	};
@@ -162,7 +165,7 @@ function Profile() {
 											>
 												<VisibilityIcon />
 											</button>
-											{order.status === 'PENDING' && (
+											{order.status === 'PENDING' && cancelingId !== order.id && (
 												<button
 													title='Hủy đơn hàng'
 													className='text-red-600 hover:text-red-800'
@@ -170,6 +173,9 @@ function Profile() {
 												>
 													<CancelIcon />
 												</button>
+											)}
+											{cancelingId === order.id && (
+												<span className='text-red-600 font-calibri'>Đang hủy...</span>
 											)}
 										</td>
 									</tr>

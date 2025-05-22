@@ -3,6 +3,7 @@ package ktpm17ctt.g6.orderservice.services.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemRequest;
 import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemResponse;
+import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemResponseHasLikes;
 import ktpm17ctt.g6.orderservice.dto.feinClient.product.QuantityOfSize;
 import ktpm17ctt.g6.orderservice.dto.request.OrderDetailRequest;
 import ktpm17ctt.g6.orderservice.dto.response.OrderDetailResponse;
@@ -39,11 +40,15 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Override
     public OrderDetailResponse save(OrderDetailRequest request, Order order) throws Exception {
 
-        ProductItemResponse productItemResponse = productItemClient.getProductItem(request.getProductItemId())
+        ProductItemResponseHasLikes productItemResponse = productItemClient.getProductItem(request.getProductItemId())
                 .getResult();
 
         if (productItemResponse == null) {
             throw new Exception("Product item not found");
+        }
+
+        if(!productItemResponse.isActive()){
+            throw new Exception("Product item is not active");
         }
 
 

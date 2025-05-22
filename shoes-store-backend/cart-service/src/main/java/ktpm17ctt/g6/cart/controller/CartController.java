@@ -8,6 +8,7 @@ import ktpm17ctt.g6.cart.dto.request.CartDetailRequest;
 import ktpm17ctt.g6.cart.dto.request.DeleteCartDetailRequest;
 import ktpm17ctt.g6.cart.dto.response.*;
 import ktpm17ctt.g6.cart.dto.response.product.ProductItemResponse;
+import ktpm17ctt.g6.cart.dto.response.product.ProductItemResponseHasLikes;
 import ktpm17ctt.g6.cart.dto.response.product.QuantityOfSize;
 import ktpm17ctt.g6.cart.enties.Cart;
 import ktpm17ctt.g6.cart.enties.CartDetail;
@@ -108,7 +109,14 @@ public class CartController {
 
         for (CartDetail cartDetail : cartDetails) {
             String productItemId = cartDetail.getProductItemId();
-            ProductItemResponse productItemResponse = productFeignClient.getProductItemById(cartDetail.getProductItemId()).getResult();
+            ProductItemResponseHasLikes productItemResponse = productFeignClient.getProductItemById(cartDetail.getProductItemId()).getResult();
+
+            if (!productItemResponse.isActive()){
+                response.put("status", HttpStatus.BAD_REQUEST.value());
+                response.put("data", "Product item is not active");
+                return ResponseEntity.badRequest().body(response);
+            }
+
                     cartDetailResponses.add(CartDetailResponse.builder()
                     .cartDetailPK(cartDetail.getCartDetailPK())
                     .productItem(productItemResponse)
@@ -148,7 +156,7 @@ public class CartController {
 
         int size = cartDetailRequest.getSize();
         // Kiểm tra productItemId
-        ApiResponse<ProductItemResponse> productItemResponseApiResponse =
+        ApiResponse<ProductItemResponseHasLikes> productItemResponseApiResponse =
                 productFeignClient.getProductItemById(cartDetailRequest.getProductItemId());
         if (productItemResponseApiResponse == null || productItemResponseApiResponse.getResult() == null) {
             response.put("status", HttpStatus.BAD_REQUEST.value());
@@ -157,7 +165,7 @@ public class CartController {
         }
 
         // Kiểm tra size có trong quantityOfSize không
-        ProductItemResponse productItem = productItemResponseApiResponse.getResult();
+        ProductItemResponseHasLikes productItem = productItemResponseApiResponse.getResult();
         List<QuantityOfSize> quantityOfSize = productItem.getQuantityOfSize();
         if (quantityOfSize == null || quantityOfSize.isEmpty()) {
             response.put("status", HttpStatus.BAD_REQUEST.value());
@@ -412,13 +420,13 @@ public class CartController {
 
     private void handleCarDetail(List<CartDetail> cartDetails, CartDetailRequest cartDetailRequest, HttpSession httpSession, int size) throws IllegalArgumentException {
         // Kiểm tra productItemId
-        ApiResponse<ProductItemResponse> productItemResponseApiResponse = productFeignClient.getProductItemById(cartDetailRequest.getProductItemId());
+        ApiResponse<ProductItemResponseHasLikes> productItemResponseApiResponse = productFeignClient.getProductItemById(cartDetailRequest.getProductItemId());
         if (productItemResponseApiResponse == null || productItemResponseApiResponse.getResult() == null) {
             throw new IllegalArgumentException("ProductItem not found");
         }
 
         // Kiểm tra size có trong quantityOfSize không
-        ProductItemResponse productItem = productItemResponseApiResponse.getResult();
+        ProductItemResponseHasLikes productItem = productItemResponseApiResponse.getResult();
         List<QuantityOfSize> quantityOfSize = productItem.getQuantityOfSize();
         if (quantityOfSize == null || quantityOfSize.isEmpty()) {
             throw new IllegalArgumentException("No sizes available for productItemId " + cartDetailRequest.getProductItemId());

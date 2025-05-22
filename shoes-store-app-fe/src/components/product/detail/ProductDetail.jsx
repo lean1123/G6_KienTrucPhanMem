@@ -11,11 +11,13 @@ import { formatCurrency } from '../../../utils/formatPrice';
 import './Style.css';
 import SubProductDetail from './SubProductDetail';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { useTranslation } from 'react-i18next';
 
 function ProductDetail() {
 	const params = useParams();
 	const dispatch = useDispatch();
 	const { isLoading, productItem } = useProductItem(params.id);
+	const { t } = useTranslation();
 
 	const [selectedImage, setSelectedImage] = useState(null);
 	const [selectedSize, setSelectedSize] = useState(null);
@@ -67,7 +69,12 @@ function ProductDetail() {
 			return;
 		} catch (error) {
 			console.error('Error adding to cart:', error);
-			enqueueSnackbar('Thêm vào giỏ hàng thất bại', { variant: 'error' });
+			enqueueSnackbar(
+				`Có lỗi xảy ra: ${t(`errors.${error?.response?.data?.data}`) || 'Vui lòng thử lại'}`,
+				{
+					variant: 'error',
+				},
+			);
 			return;
 		}
 	};
@@ -198,6 +205,11 @@ function ProductDetail() {
 			<div className='col-span-2'>
 				<h2 className='text-3xl font-extrabold text-slate-900 mb-4'>
 					{productItem?.product.name}
+					{productItem?.isActive === false && (
+						<span className='text-red-500 text-3xl font-extrabold ml-2'>
+							Đã ngừng kinh doanh
+						</span>
+					)}
 				</h2>
 
 				<div className='flex items-center mb-4'>

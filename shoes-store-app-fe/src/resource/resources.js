@@ -39,6 +39,9 @@ const resources = {
 				'Western Shoes': 'Giày tây',
 				Sneaker: 'Giày sneaker',
 			},
+			errors: {
+				'Product item is not active': 'Sản phẩm không khả dụng',
+			},
 			// Bạn có thể thêm nhiều nhóm khác nữa
 		},
 	},

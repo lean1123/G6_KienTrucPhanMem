@@ -6,6 +6,7 @@ import ktpm17ctt.g6.product.dto.PageResponse;
 import ktpm17ctt.g6.product.dto.request.ProductItemRequest;
 import ktpm17ctt.g6.product.dto.request.ProductItemUpdationRequest;
 import ktpm17ctt.g6.product.dto.response.ProductItemResponse;
+import ktpm17ctt.g6.product.dto.response.ProductItemResponseHasLikes;
 import ktpm17ctt.g6.product.entity.enums.Type;
 import ktpm17ctt.g6.product.service.ProductItemService;
 import lombok.AccessLevel;
@@ -25,10 +26,10 @@ public class ProductItemInternalController {
     ProductItemService productItemService;
 
     @GetMapping("/{id}")
-    ApiResponse<ProductItemResponse> getProductItem(@PathVariable String id) {
+    ApiResponse<ProductItemResponseHasLikes> getProductItem(@PathVariable String id) {
         log.info("Get product item with ID: {}", id);
-        return ApiResponse.<ProductItemResponse>builder()
-                .result(productItemService.findById(id).orElse(null))
+        return ApiResponse.<ProductItemResponseHasLikes>builder()
+                .result(productItemService.findProdItemHasLikeById(id).orElse(null))
                 .build();
     }
 
