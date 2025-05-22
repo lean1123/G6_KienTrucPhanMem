@@ -22,7 +22,7 @@ function ProductItem({ item }: ProductItemProps) {
 				color='textPrimary'
 			>
 				<div className='relative z-20'>
-					{item.isActive === false && (
+					{item?.isActive === false && (
 						<div className='absolute w-full bg-red-500 text-white px-2 rounded-lg top-3 left-2 font-calibri'>
 							Sản phẩm đã ngừng kinh doanh
 						</div>

@@ -13,6 +13,9 @@ public interface UserClient {
     @GetMapping("/users/get-user-by-email")
     ApiResponse<UserResponse> getUserByEmail(@RequestParam String email);
 
+    @GetMapping("/users/{userId}")
+    ApiResponse<UserResponse> getUserProfile(@PathVariable String userId);
+
     @GetMapping("/users/get-user-by-account-id")
     ApiResponse<UserResponse> getUserByAccountId(@RequestParam String accountId);
     @GetMapping("/users/get-address-by-id/{addressId}")

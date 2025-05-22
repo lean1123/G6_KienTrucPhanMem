@@ -148,7 +148,7 @@ function Profile() {
 										<td className='p-2'>{order.total} đ</td>
 										<td className='p-2'>{t(`payment.${order.paymentMethod}`)}</td>
 										<td
-											className={`p-2 ${order.status != 'CANCELLED' ? 'text-green-600' : 'text-red-600'}`}
+											className={`p-2 ${order.status === 'PENDING' || order.status === 'ACCEPTED' ? 'text-green-600' : 'text-red-600'}`}
 										>
 											{t(`status.${order.status}`)}
 										</td>

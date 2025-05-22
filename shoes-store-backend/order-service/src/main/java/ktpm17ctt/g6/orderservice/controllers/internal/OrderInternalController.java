@@ -2,6 +2,7 @@ package ktpm17ctt.g6.orderservice.controllers.internal;
 
 import ktpm17ctt.g6.orderservice.dto.response.OrderResponse;
 import ktpm17ctt.g6.orderservice.services.OrderService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/internal/orders")
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrderInternalController {
     OrderService orderService;
 

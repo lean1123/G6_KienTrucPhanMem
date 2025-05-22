@@ -62,7 +62,8 @@ public class GeminiAIServiceImpl implements GeminiAIService {
         List<ProductItemResponse> productItemResponses = new ArrayList<>();
 
         if (intentDTO.getIntent().equals("search_product")) {
-            productItemResponses = productItemClient.searchProductItems(1, null,
+            productItemResponses = productItemClient.searchProductItems(1,
+                    intentDTO.getProductName().trim().isEmpty() ? null : intentDTO.getProductName(),
                     !intentDTO.getType().trim().isEmpty() ? Type.valueOf(intentDTO.getType()) : null,
                     intentDTO.getCategoryName().trim().isEmpty() ? null : intentDTO.getCategoryName(),
                     !intentDTO.getColor().trim().isEmpty() ? intentDTO.getColor() : null,
@@ -125,7 +126,8 @@ public class GeminiAIServiceImpl implements GeminiAIService {
                     "size": ["danh sách kích cỡ có thể gợi ý"], // Chú ý: chi hiển thị một size duy nhất, ví dụ: [“41”], hoặc [] nếu khách hàng không có để cập tới
                     "type": "MALE" | "FEMALE" | "CHILDREN" | "",
                     "message": "Thông điệp hiển thị cho người dùng", "sizeResult": "Gợi ý size cụ thể nếu có, ví dụ: 'Size 41'"
-                    "categoryName": "Chỉ gợi ý một trong 3 loại danh mục sau: 'Sport Shoes', 'Western Shoes' và 'Sneaker' hoặc '' nếu khách hàng không đề cập"
+                    "categoryName": "Chỉ gợi ý một trong 3 loại danh mục sau: 'Sport Shoes', 'Western Shoes' và 'Sneaker' hoặc '' nếu khách hàng không đề cập",
+                    "productName": "tên sản phẩm mà khách hàng đã đề cập đến trong câu hỏi của họ hoặc '' nếu không có tên sản phẩm nào được đề cập"
                 }
                 Lưu ý:
                 • Nếu người dùng không nói gì về size, để sizeResult là chuỗi rỗng "".

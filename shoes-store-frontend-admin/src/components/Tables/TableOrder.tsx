@@ -2,6 +2,7 @@ import { EditOutlined, VisibilityOutlined } from "@mui/icons-material";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import orderApi from "../../api/orderApi";
+import { enqueueSnackbar } from "notistack";
 
 type Order = {
   id: string;
@@ -90,9 +91,9 @@ function TableOrder() {
   const filterOrder = async () => {
     setLoading(true);
     try {
-      const response = await orderApi.search(keyword);
+      const response = await orderApi.getOrderById(keyword);
       console.log(response.data);
-      setOrderData(response.data.data);
+      setOrderData([response.data]);
     } catch (error) {
       console.error("Failed to fetch order:", error);
     } finally {
@@ -124,7 +125,7 @@ function TableOrder() {
           <input
             type="text"
             className="w-full border border-gray-300 rounded-md py-2 px-4"
-            placeholder="Search order..."
+            placeholder="Please enter order ID"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
           />
@@ -135,6 +136,15 @@ function TableOrder() {
             }}
           >
             Search
+          </button>
+          <button
+            className="bg-black text-white px-8 py-2 rounded-md"
+            onClick={() => {
+              setKeyword("");
+              fetchOrder();
+            }}
+          >
+            Reset
           </button>
         </div>
       </div>
@@ -147,7 +157,7 @@ function TableOrder() {
                 ID
               </th>
               <th className="min-w-[150px] py-2 px-4 font-medium text-black">
-                User ID
+                User
               </th>
               <th className="min-w-[150px] py-2 px-4 font-medium text-black">
                 Create at
@@ -175,7 +185,9 @@ function TableOrder() {
                     </div>
                   </td>
                   <td className="border-b border-[#eee] py-2 px-4">
-                    <p className="text-black ">{item.userId}</p>
+                    <p className="text-black ">
+                      {item.user.firstName + " " + item.user.lastName}
+                    </p>
                   </td>
                   <td className="border-b border-[#eee] py-2 px-4">
                     <p className="text-black ">
@@ -189,7 +201,79 @@ function TableOrder() {
                     <p className="text-black ">{item.total}đ</p>
                   </td>
                   <td className="border-b border-[#eee] py-2 px-4">
-                    <p className="text-black ">{item.status}</p>
+                    {/* <p className="text-black ">{item.status}</p> */}
+                    <select
+                      name="status"
+                      value={item.status}
+                      onChange={async (e) => {
+                        const status = e.target.value;
+                        try {
+                          const response = await orderApi.updateStatusForOrder(
+                            item.id,
+                            status
+                          );
+
+                          if (response.status !== 200) {
+                            enqueueSnackbar("Update status failed", {
+                              variant: "error",
+                            });
+                            return;
+                          }
+
+                          if (response.data.status === 503) {
+                            enqueueSnackbar(
+                              "Update status failed cause order service is unavailable",
+                              {
+                                variant: "error",
+                              }
+                            );
+                            return;
+                          }
+
+                          enqueueSnackbar("Update status successfully", {
+                            variant: "success",
+                          });
+                          fetchOrder();
+                          return;
+                        } catch (error) {
+                          console.error("Failed to update status:", error);
+                          enqueueSnackbar(
+                            `Update status failed: "Internal Error"
+                            `,
+                            {
+                              variant: "error",
+                            }
+                          );
+                          return;
+                        }
+                      }}
+                      className="border border-gray-300 rounded-md py-2 px-4"
+                    >
+                      <option value="PENDING">PENDING</option>
+                      <option value="ACCEPTED" className="text-green-600">
+                        ACCEPTED
+                      </option>
+                      <option value="SHIPPING" className="text-green-600">
+                        SHIPPING
+                      </option>
+                      <option value="REJECTED" className="text-red-600">
+                        REJECTED
+                      </option>
+                      <option
+                        value="CANCELLED"
+                        className="text-red-600"
+                        disabled
+                      >
+                        CANCELLED
+                      </option>
+                      <option
+                        value="PAYMENT_FAILED"
+                        className="text-red-600"
+                        disabled
+                      >
+                        PAYMENT_FAILED
+                      </option>
+                    </select>
                   </td>
                   <td className="border-b border-[#eee] py-2 px-4">
                     <div className="flex items-center space-x-3.5">

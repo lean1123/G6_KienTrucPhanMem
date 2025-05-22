@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import ktpm17ctt.g6.orderservice.dto.request.OrderCreationRequest;
 import ktpm17ctt.g6.orderservice.dto.response.OrderResponse;
+import ktpm17ctt.g6.orderservice.dto.response.OrderResponseHasUser;
 import ktpm17ctt.g6.orderservice.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -59,14 +60,26 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findById(id));
     }
 
+    @GetMapping("/get-order-by-id-has-user/{id}")
+    public  ResponseEntity<OrderResponseHasUser> getOrderHasUserById(@PathVariable String id) throws Exception {
+        return ResponseEntity.ok(orderService.findOrderHasUserById(id).get());
+    }
+
     @GetMapping("/get-my-orders")
     public ResponseEntity<List<OrderResponse>> getMyOrders() throws Exception {
         return ResponseEntity.ok(orderService.getMyOrders());
     }
 
+    @PutMapping("/update-order-status/{orderId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> updateOrderStatus(@PathVariable String orderId, @RequestParam String status, HttpServletRequest request) throws Exception {
+        return ResponseEntity.ok(orderService.updateStatusForOrder(orderId, status, request));
+    }
+
+
     @GetMapping("")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<OrderResponse>> getAllOrders() throws Exception {
+    public ResponseEntity<List<OrderResponseHasUser>> getAllOrders() throws Exception {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 }

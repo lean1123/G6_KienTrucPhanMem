@@ -9,7 +9,6 @@ import ktpm17ctt.g6.orderservice.dto.feinClient.identity.AccountResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.payment.PaymentResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.payment.RefundResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemRequest;
-import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemResponse;
 import ktpm17ctt.g6.orderservice.dto.feinClient.product.ProductItemResponseHasLikes;
 import ktpm17ctt.g6.orderservice.dto.feinClient.product.QuantityOfSize;
 import ktpm17ctt.g6.orderservice.dto.feinClient.user.AddressResponse;
@@ -18,6 +17,7 @@ import ktpm17ctt.g6.orderservice.dto.request.OrderCreationRequest;
 import ktpm17ctt.g6.orderservice.dto.request.OrderDetailRequest;
 import ktpm17ctt.g6.orderservice.dto.response.OrderDetailResponse;
 import ktpm17ctt.g6.orderservice.dto.response.OrderResponse;
+import ktpm17ctt.g6.orderservice.dto.response.OrderResponseHasUser;
 import ktpm17ctt.g6.orderservice.entities.Order;
 import ktpm17ctt.g6.orderservice.entities.OrderStatus;
 import ktpm17ctt.g6.orderservice.entities.PaymentMethod;
@@ -42,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -112,6 +113,21 @@ public class OrderServiceImpl implements OrderService {
 
 
         if (entity.getPaymentMethod().toString().equalsIgnoreCase(PaymentMethod.CASH.toString())) {
+
+            NotificationEvent notificationEvent = ktpm17ctt.g6.event.dto.NotificationEvent.builder()
+                    .channel("Email")
+                    .recipient(email)
+                    .subject("Thông báo đặt hàng thành công")
+                    .body("Hello! " + name + "!<br>Đơn hàng " + entity.getId() +" đã được đặt thành công")
+                    .userId(userId)
+                    .build();
+            try {
+                kafkaTemplate.send("order_success_topic", notificationEvent);
+            }catch (Exception e){
+                log.error("Error while sending notification event", e);
+                throw new Exception("Error while sending notification event");
+            }
+            log.info("Sent order success event for order {} to user {}", entity.getId(), email);
 
 
             return OrderResponse.builder()
@@ -452,7 +468,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponse> getAllOrders() throws Exception {
+    public List<OrderResponseHasUser> getAllOrders() throws Exception {
         return orderRepository.findAll()
                 .stream()
                 .map(order -> {
@@ -462,10 +478,10 @@ public class OrderServiceImpl implements OrderService {
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                    return OrderResponse.builder()
+                    return OrderResponseHasUser.builder()
                             .id(order.getId())
                             .createdDate(order.getCreatedDate())
-                            .userId(order.getUserId())
+                            .user(this.userClient.getUserProfile(order.getUserId()).getResult())
                             .paymentMethod(order.getPaymentMethod())
                             .status(order.getStatus())
                             .orderDetails(orderDetailService.findOrderDetailByOrder_Id(order.getId()))
@@ -476,5 +492,88 @@ public class OrderServiceImpl implements OrderService {
                 })
                 .toList();
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public OrderResponse updateStatusForOrder(String orderId, String status, HttpServletRequest request) throws Exception {
+        Order matchedOrder = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        OrderStatus newStatus;
+        try {
+            newStatus = OrderStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid order status: " + status);
+        }
+
+        boolean isCancelling = newStatus.equals(OrderStatus.REJECTED) || newStatus.equals(OrderStatus.CANCELLED);
+        boolean isNotAlreadyCancelled = !matchedOrder.getStatus().equals(OrderStatus.REJECTED) &&
+                !matchedOrder.getStatus().equals(OrderStatus.CANCELLED);
+        boolean isAlreadyCancelled = matchedOrder.getStatus().equals(OrderStatus.REJECTED) ||
+                matchedOrder.getStatus().equals(OrderStatus.CANCELLED);
+
+        if(isAlreadyCancelled) {
+            throw new RuntimeException("Order is already cancelled or rejected");
+        }
+
+        if (isCancelling && isNotAlreadyCancelled) {
+            try {
+                this.cancelingOrder(orderId, request);
+            } catch (Exception e) {
+                throw new RuntimeException("Canceling order failed", e);
+            }
+        }
+
+        matchedOrder.setStatus(newStatus);
+        Order updatedOrder = orderRepository.save(matchedOrder);
+
+        // Lấy thông tin address an toàn (có thể bị lỗi nếu service user chết)
+        AddressResponse address = null;
+        try {
+            address = userClient.getAddressById(updatedOrder.getAddressId()).getResult();
+        } catch (Exception ex) {
+            // Logging hoặc fallback tùy theo yêu cầu hệ thống
+            throw new RuntimeException("Error while getting address information", ex);
+        }
+
+        return OrderResponse.builder()
+                .status(updatedOrder.getStatus())
+                .createdDate(updatedOrder.getCreatedDate())
+                .userId(updatedOrder.getUserId())
+                .paymentMethod(updatedOrder.getPaymentMethod())
+                .total(updatedOrder.getTotal())
+                .orderDetails(orderDetailService.findOrderDetailByOrder_Id(updatedOrder.getId()))
+                .address(address)
+                .isPayed(updatedOrder.isPayed())
+                .id(updatedOrder.getId())
+                .build();
+    }
+
+    @Override
+    public Optional<OrderResponseHasUser> findOrderHasUserById(String orderId) {
+        return orderRepository.findById(orderId)
+                .map(order -> {
+                    AddressResponse addressResponse = null;
+                    try {
+                        addressResponse = userClient.getAddressById(order.getAddressId()).getResult();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    return OrderResponseHasUser.builder()
+                            .id(order.getId())
+                            .createdDate(order.getCreatedDate())
+                            .user(this.userClient.getUserProfile(order.getUserId()).getResult())
+                            .paymentMethod(order.getPaymentMethod())
+                            .status(order.getStatus())
+                            .orderDetails(orderDetailService.findOrderDetailByOrder_Id(order.getId()))
+                            .total(order.getTotal())
+                            .address(addressResponse)
+                            .isPayed(order.isPayed())
+                            .build();
+                });
+    }
+
+
+
 }
 

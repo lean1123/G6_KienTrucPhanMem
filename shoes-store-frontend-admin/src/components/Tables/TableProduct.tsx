@@ -95,7 +95,7 @@ const TableProduct = () => {
           <input
             type="text"
             className="w-full border border-gray-300 rounded-md py-2 px-4"
-            placeholder="Search product..."
+            placeholder="Search by name..."
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
           />

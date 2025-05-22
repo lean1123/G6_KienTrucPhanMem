@@ -9,6 +9,8 @@ const resources = {
 				PENDING: 'Đang chờ',
 				SUCCESS: 'Thành công',
 				CANCELLED: 'Đã hủy',
+				REJECTED: 'Đã bị từ chối',
+				ACCEPTED: 'Đã chấp nhận',
 			},
 			payment: {
 				VNPAY: 'Ví VNPAY',
@@ -51,6 +53,8 @@ const resources = {
 				PENDING: 'Pending',
 				SUCCESS: 'Success',
 				CANCELLED: 'Cancelled',
+				REJECTED: 'Rejected',
+				ACCEPTED: 'Accepted',
 			},
 			payment: {
 				VNPAY: 'VNPAY Wallet',
