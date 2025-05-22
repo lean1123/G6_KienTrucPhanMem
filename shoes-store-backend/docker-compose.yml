@@ -332,6 +332,22 @@ services:
     networks:
       - backend
 
+  shoes-store-frontend-admin:
+    build:
+      context: ../shoes-store-frontend-admin
+      dockerfile: Dockerfile
+    image: shoes-store-frontend-admin:latest
+    container_name: shoes-store-frontend-admin
+    depends_on:
+      - api-gateway
+      - eureka-server
+    ports:
+      - "3001:80"
+    env_file:
+      - ../shoes-store-frontend-admin/.env.docker
+    networks:
+      - backend
+
 networks:
   backend:
     driver: bridge

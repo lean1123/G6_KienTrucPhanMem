@@ -23,6 +23,9 @@ const colorApi = {
   deleteColor: (id: string) => {
     return AdminAxiosClient.delete(prefix + `/colors/${id}`);
   },
+  getBrandById: (id: string) => {
+    return AdminAxiosClient.get(prefix + `/brands/${id}`);
+  },
 };
 
 export default colorApi;

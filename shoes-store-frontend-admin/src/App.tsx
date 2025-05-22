@@ -29,7 +29,9 @@ import OrderDetail from "./pages/OrderDetail";
 import UserDetail from "./pages/UserDetail";
 
 function App() {
-  const { isAuthenticated, isLoading } = useSelector((state: any) => state.auth);
+  const { isAuthenticated, isLoading } = useSelector(
+    (state: any) => state.auth
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -58,9 +60,7 @@ function App() {
       {/* Public Routes */}
       <Route
         path="/login"
-        element={
-          isAuthenticated ? <Navigate to="/" replace /> : <LoginForm />
-        }
+        element={isAuthenticated ? <Navigate to="/" replace /> : <LoginForm />}
       />
 
       {/* Protected Routes */}

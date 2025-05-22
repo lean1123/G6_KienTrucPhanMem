@@ -4,7 +4,7 @@ server:
 app:
   api-prefix: /api/v1
   cors:
-    allowed-origins: "http://localhost:5173,http://localhost:5174,http://shoes-store-app-fe:80,http://shoes-store-app-fe:3000,http://localhost:3000,http://shoes-store-app-fe:3000"
+    allowed-origins: "http://localhost:5173,http://localhost:5174,http://shoes-store-app-fe:80,http://shoes-store-app-fe:3000,http://localhost:3000,http://shoes-store-app-fe:3000,http://localhost:3001,http://shoes-store-frontend-admin:3000"
 
 eureka:
   client:

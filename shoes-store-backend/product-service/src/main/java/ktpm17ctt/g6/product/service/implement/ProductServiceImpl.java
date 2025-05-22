@@ -53,6 +53,13 @@ public class ProductServiceImpl implements ProductService {
         product.setId(id);
         product.setCode(db.getCode());
         productRepository.save(product);
+
+        //        update product item
+        List<ProductItem> productItems = productItemRepository.findByProduct_Id(id);
+        for (ProductItem productItem : productItems) {
+            productItem.setProduct(product);
+            productItemRepository.save(productItem);
+        }
         return productMapper.toProductResponse(product);
     }
 
