@@ -20,6 +20,10 @@ type Order = {
     city: string;
   };
   payed: boolean;
+  user: {
+    firstName: string;
+    lastName: string;
+  };
 };
 
 // const orderData: Order[] = [
