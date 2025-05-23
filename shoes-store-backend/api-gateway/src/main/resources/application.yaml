@@ -4,33 +4,46 @@ server:
 app:
   api-prefix: /api/v1
   cors:
-    allowed-origins: "http://localhost:5173, https://admin.myapp.com"
+    allowed-origins: "http://localhost:5173,http://localhost:5174,http://shoes-store-app-fe:80,http://shoes-store-app-fe:3000,http://localhost:3000,http://shoes-store-app-fe:3000,http://localhost:3001,http://shoes-store-frontend-admin:3000"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI}
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
 
 resilience4j:
   circuitbreaker:
     instances:
       identityServiceCircuitBreaker:
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 5
-        slidingWindowSize: 10
-        waitDurationInOpenState: 10s
+        failureRateThreshold: 60
+        minimumNumberOfCalls: 15
+        slidingWindowSize: 30
+        waitDurationInOpenState: 20s
+        slow-call-duration-threshold: 20s
+        slow-call-rate-threshold: 60
       userServiceCircuitBreaker:
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 5
-        slidingWindowSize: 10
+        failureRateThreshold: 70
+        minimumNumberOfCalls: 15
+        slidingWindowSize: 20
         waitDurationInOpenState: 10s
       productServiceCircuitBreaker:
-        failureRateThreshold: 90
+        failureRateThreshold: 70
         minimumNumberOfCalls: 20
         slidingWindowSize: 100
-        waitDurationInOpenState: 30s
-        slow-call-duration-threshold: 120s
-        slow-call-rate-threshold: 95
+        waitDurationInOpenState: 20s
+        slow-call-duration-threshold: 15s
+        slow-call-rate-threshold: 70
       orderServiceCircuitBreaker:
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 5
-        slidingWindowSize: 10
-        waitDurationInOpenState: 10s
+          failureRateThreshold: 50
+          minimumNumberOfCalls: 15  # Tăng số cuộc gọi tối thiểu để tính tỷ lệ lỗi
+          slidingWindowSize: 20     # Tăng cửa sổ trượt để giảm tính nhạy cảm
+          slow-call-duration-threshold: 10s  # Giảm thời gian gọi chậm
+          slow-call-rate-threshold: 50      # Tăng tỷ lệ chấp nhận cuộc gọi chậm
+          waitDurationInOpenState: 10s
       paymentServiceCircuitBreaker:
         failureRateThreshold: 50
         minimumNumberOfCalls: 5
@@ -42,25 +55,58 @@ resilience4j:
         slidingWindowSize: 10
         waitDurationInOpenState: 10s
       notificationServiceCircuitBreaker:
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 5
-        slidingWindowSize: 10
+        failureRateThreshold: 70
+        minimumNumberOfCalls: 10
+        slidingWindowSize: 20
         waitDurationInOpenState: 10s
       reviewServiceCircuitBreaker:
         failureRateThreshold: 50
         minimumNumberOfCalls: 5
         slidingWindowSize: 10
         waitDurationInOpenState: 10s
+      chatServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 15  # Tăng số cuộc gọi tối thiểu để tính tỷ lệ lỗi
+        slidingWindowSize: 20     # Tăng cửa sổ trượt để giảm tính nhạy cảm
+        slow-call-duration-threshold: 10s  # Giảm thời gian gọi chậm
+        slow-call-rate-threshold: 50      # Tăng tỷ lệ chấp nhận cuộc gọi chậm
+        waitDurationInOpenState: 10s
+      recommendationServiceCircuitBreaker:
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 15  # Tăng số cuộc gọi tối thiểu để tính tỷ lệ lỗi
+        slidingWindowSize: 20     # Tăng cửa sổ trượt để giảm tính nhạy cảm
+        slow-call-duration-threshold: 10s  # Giảm thời gian gọi chậm
+        slow-call-rate-threshold: 50      # Tăng tỷ lệ chấp nhận cuộc gọi chậm
+        waitDurationInOpenState: 10s
   timelimiter:
     instances:
       productServiceCircuitBreaker:
-        timeoutDuration: 20s
+        timeoutDuration: 30s
+      orderServiceCircuitBreaker:
+        timeoutDuration: 30s
+      paymentServiceCircuitBreaker:
+        timeoutDuration: 30s
+      chatServiceCircuitBreaker:
+        timeoutDuration: 30s
+      identityServiceCircuitBreaker:
+        timeoutDuration: 30s
+      userServiceCircuitBreaker:
+        timeoutDuration: 30s
+      cartServiceCircuitBreaker:
+        timeoutDuration: 30s
+      notificationServiceCircuitBreaker:
+        timeoutDuration: 30s
+      reviewServiceCircuitBreaker:
+        timeoutDuration: 30s
+      recommendationServiceCircuitBreaker:
+        timeoutDuration: 30s
 
-logging:
-  level:
-    ROOT: INFO
-    org.springframework.cloud.gateway: DEBUG
-    io.github.resilience4j.circuitbreaker: DEBUG
+
+#logging:
+#  level:
+#    ROOT: INFO
+#    org.springframework.cloud.gateway: DEBUG
+#    io.github.resilience4j.circuitbreaker: DEBUG
 
 
 spring:
@@ -68,7 +114,7 @@ spring:
     name: api-gateway
   data:
     redis:
-      host: 127.0.0.1
+      host: ${SPRING_REDIS_HOST}
       port: 6379
       password: ""
       timeout: 6000ms
@@ -77,17 +123,28 @@ spring:
     gateway:
       routes:
         - id: identity-service
-          uri: http://localhost:8080
+          uri: lb://identity-service
           predicates:
             - Path=${app.api-prefix}/identity/**
           filters:
             - StripPrefix=2
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+#            - name: Retry
+#              args:
+#                retries: 3
+#                backoff:
+#                firstBackoff: 100ms
+#                maxBackoff: 500ms
             - name: CircuitBreaker
               args:
                 name: identityServiceCircuitBreaker
                 fallbackUri: forward:/fallback/identity
         - id: user-service
-          uri: http://localhost:8081
+          uri: lb://user-service
           predicates:
             - Path=${app.api-prefix}/user/**
           filters:
@@ -103,7 +160,7 @@ spring:
                 fallbackUri: forward:/fallback/user
 
         - id: product-service
-          uri: http://localhost:8082
+          uri: lb://product-service
           predicates:
             - Path=${app.api-prefix}/product/**
           filters:
@@ -118,9 +175,9 @@ spring:
                 name: productServiceCircuitBreaker
                 fallbackUri: forward:/fallback/product
         - id: order-service
-          uri: http://localhost:8083
+          uri: lb://order-service
           predicates:
-            - Path=${app.api-prefix}/order/**
+            - Path=${app.api-prefix}/orders/**
           filters:
             - StripPrefix=2
             - name: RequestRateLimiter
@@ -131,11 +188,11 @@ spring:
             - name: CircuitBreaker
               args:
                 name: orderServiceCircuitBreaker
-                fallbackUri: forward:/fallback/order
+                fallbackUri: forward:/fallback/orders
         - id: payment-service
-          uri: http://localhost:8084
+          uri: lb://payment-service
           predicates:
-            - Path=${app.api-prefix}/payment/**
+            - Path=${app.api-prefix}/payments/**
           filters:
             - StripPrefix=2
             - name: RequestRateLimiter
@@ -146,9 +203,9 @@ spring:
             - name: CircuitBreaker
               args:
                 name: paymentServiceCircuitBreaker
-                fallbackUri: forward:/fallback/payment
+                fallbackUri: forward:/fallback/payments
         - id: cart-service
-          uri: http://localhost:8085
+          uri: lb://cart-service
           predicates:
             - Path=${app.api-prefix}/cart/**
           filters:
@@ -163,7 +220,7 @@ spring:
                 name: cartServiceCircuitBreaker
                 fallbackUri: forward:/fallback/cart
         - id: notification-service
-          uri: http://localhost:8086
+          uri: lb://notification-service
           predicates:
             - Path=${app.api-prefix}/notification/**
           filters:
@@ -178,7 +235,7 @@ spring:
                 name: notificationServiceCircuitBreaker
                 fallbackUri: forward:/fallback/notification
         - id: review-service
-          uri: http://localhost:8087
+          uri: lb://review-service
           predicates:
             - Path=${app.api-prefix}/review/**
           filters:
@@ -192,7 +249,45 @@ spring:
               args:
                 name: reviewServiceCircuitBreaker
                 fallbackUri: forward:/fallback/review
-
+        - id: chat-service
+          uri: lb://chat-service
+          predicates:
+            - Path=${app.api-prefix}/chat/**
+          filters:
+            - StripPrefix=2
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+            - name: CircuitBreaker
+              args:
+                name: chatServiceCircuitBreaker
+                fallbackUri: forward:/fallback/chat
+        - id: recommendation-service
+          uri: lb://recommendation-service
+          predicates:
+            - Path=${app.api-prefix}/recommend
+          filters:
+            - StripPrefix=2
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+            - name: CircuitBreaker
+              args:
+                name: recommendationServiceCircuitBreaker
+                fallbackUri: forward:/fallback/recommendation
       httpclient:
         connect-timeout: 15000
         response-timeout: 120000ms
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info # expose những endpoint này (hoặc dùng "*" để mở hết)
+  endpoint:
+    health:
+      show-details: always

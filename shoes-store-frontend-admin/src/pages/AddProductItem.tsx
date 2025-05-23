@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate, useParams } from "react-router-dom";
@@ -57,14 +57,19 @@ export default function AddProductItem() {
     listDetailImages: Yup.array()
       .min(1, "At least one image is required")
       .required("Images are required"),
-    sizes: Yup.array().of(
-      Yup.object().shape({
-        size: Yup.string().required("Size is required"),
-        quantity: Yup.number()
-          .min(1, "Quantity must be at least 1")
-          .required("Quantity is required"),
-      })
-    ),
+    sizes: Yup.array()
+      .of(
+        Yup.object().shape({
+          size: Yup.string().required("Size is required"),
+          quantity: Yup.number()
+            .min(1, "Quantity must be at least 1")
+            .required("Quantity is required"),
+        })
+      )
+      .test("unique-size", "Sizes must be unique", (sizes) => {
+        const sizeValues = sizes?.map((s) => s.size);
+        return sizeValues?.length === new Set(sizeValues).size;
+      }),
   });
 
   const initialValues = {
@@ -75,6 +80,8 @@ export default function AddProductItem() {
     status: "IN_STOCK",
     product: id,
   };
+
+  const isFirstSubmit = useRef(true);
 
   const handleSubmit = async (values: any) => {
     // console.log("Form Data:", values);
@@ -108,8 +115,32 @@ export default function AddProductItem() {
         "Form Data:",
         formData.forEach((value, key) => console.log(key, value))
       );
-    } catch (error) {
-      enqueueSnackbar("Failed to add product item!", { variant: "error" });
+    } catch (error: any) {
+      console.error("Failed to create product:", error);
+
+      // // Nếu BE trả về lỗi validation
+      // if (
+      //   error.response &&
+      //   error.response.data &&
+      //   error.response.data.code === 1008
+      // ) {
+      //   const serverErrors: { [key: string]: string } = {};
+      //   error.response.data.result.forEach((err: any) => {
+      //     const key = Object.keys(err)[0];
+      //     const message = err[key];
+      //     serverErrors[key] = message;
+
+      //     // 🔥 Dùng enqueueSnackbar luôn cho mỗi field lỗi
+      //     enqueueSnackbar(`${message}`, { variant: "error" });
+      //   });
+      //   console.log("serverErrors:", serverErrors);
+
+      //   // Set lỗi vào Formik để highlight input đỏ
+      //   // formik.setErrors(serverErrors);
+      // } else {
+      //   // Các lỗi khác (không phải validation)
+      // }
+      enqueueSnackbar("Failed to create product!", { variant: "error" });
     } finally {
       setLoading(false);
     }
@@ -125,10 +156,25 @@ export default function AddProductItem() {
           validationSchema={validationSchema}
           onSubmit={(values) => handleSubmit(values)}
         >
-          {({ setFieldValue, values }) => {
+          {({ setFieldValue, values, isSubmitting, errors }) => {
             useEffect(() => {
               setFieldValue("listDetailImages", images);
             }, [images, setFieldValue]);
+            useEffect(() => {
+              if (isSubmitting && Object.keys(errors).length > 0) {
+                if (!isFirstSubmit.current) {
+                  isFirstSubmit.current = true;
+                  return; // Bỏ qua lần mount đầu tiên
+                }
+
+                if (errors.listDetailImages) {
+                  enqueueSnackbar(errors.listDetailImages as string, {
+                    variant: "error",
+                  });
+                }
+              }
+            }, [errors, isSubmitting]);
+
             return (
               <Form>
                 <div className="grid grid-cols-12 gap-6">
@@ -186,11 +232,22 @@ export default function AddProductItem() {
                             <option value="" disabled>
                               Select Size
                             </option>
-                            {[29, 30, 31, 32, 33, 34, 35, 36].map((size) => (
-                              <option key={size} value={size}>
-                                {size}
-                              </option>
-                            ))}
+                            {[35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45].map(
+                              (size) => {
+                                const isSelected = values.sizes.some(
+                                  (s, i2) => s.size === size && i2 !== index
+                                );
+                                return (
+                                  <option
+                                    key={size}
+                                    value={size}
+                                    disabled={isSelected}
+                                  >
+                                    {size}
+                                  </option>
+                                );
+                              }
+                            )}
                           </Field>
                           <ErrorMessage
                             name={`sizes[${index}].size`}
@@ -252,7 +309,8 @@ export default function AddProductItem() {
                     <button
                       type="submit"
                       className="w-full bg-blue-500 text-white rounded-md p-2"
-                      onClick={() => handleSubmit(values)}
+                      // onClick={() => handleSubmit(values)}
+                      disabled={loading}
                     >
                       {loading ? "Loading..." : "Add Product Item"}
                     </button>

@@ -1,9 +1,9 @@
 package ktpm17ctt.g6.product.exception;
 
 
-import jakarta.validation.ConstraintViolation;
 import ktpm17ctt.g6.product.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
@@ -42,6 +42,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiResponse> handleNotFoundException(NotFoundException ex) {
+        ApiResponse response = new ApiResponse();
+        response.setCode(404);
+        response.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+
     @ExceptionHandler(value = AccessDeniedException.class)
     ResponseEntity<ApiResponse> handlingAccessDeniedException(AccessDeniedException exception) {
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
@@ -53,76 +62,31 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-//    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-//    ResponseEntity<ApiResponse> handlingValidation(MethodArgumentNotValidException exception) {
-//        String enumKey = exception.getFieldError().getDefaultMessage();
-//
-//        ErrorCode errorCode = ErrorCode.INVALID_KEY;
-//        Map<String, Object> attributes = null;
-//        try {
-//            errorCode = ErrorCode.valueOf(enumKey);
-//
-//            var constraintViolation =
-//                    exception.getBindingResult().getAllErrors().getFirst().unwrap(ConstraintViolation.class);
-//
-//            attributes = constraintViolation.getConstraintDescriptor().getAttributes();
-//
-//            log.info(attributes.toString());
-//
-//        } catch (IllegalArgumentException e) {
-//
-//        }
-//
-//        ApiResponse apiResponse = new ApiResponse();
-//
-//        apiResponse.setCode(errorCode.getCode());
-//        apiResponse.setMessage(
-//                Objects.nonNull(attributes)
-//                        ? mapAttribute(errorCode.getMessage(), attributes)
-//                        : errorCode.getMessage());
-//
-//        return ResponseEntity.badRequest().body(apiResponse);
-//    }
-
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse> handlingValidation(MethodArgumentNotValidException exception) {
-        List<Map<String, Object>> errorList = new ArrayList<>();
+        List<Map<String, String>> errors = new ArrayList<>();
 
         for (ObjectError error : exception.getBindingResult().getAllErrors()) {
-            Map<String, Object> errorDetails = new HashMap<>();
+            Map<String, String> errorDetails = new HashMap<>();
 
-            // Lấy key lỗi từ annotation message
-            String enumKey = error.getDefaultMessage();
-            ErrorCode errorCode = ErrorCode.INVALID_KEY;
-            Map<String, Object> attributes = null;
-
-            try {
-                errorCode = ErrorCode.valueOf(enumKey);
-
-                var constraintViolation = error.unwrap(ConstraintViolation.class);
-                attributes = constraintViolation.getConstraintDescriptor().getAttributes();
-                log.info(attributes.toString());
-            } catch (IllegalArgumentException e) {
-                // Nếu lỗi không khớp enum, giữ INVALID_KEY
+            // Lấy field bị lỗi nếu có
+            if (error instanceof FieldError fieldError) {
+                errorDetails.put(fieldError.getField(), fieldError.getDefaultMessage());
+            } else {
+                errorDetails.put("global", error.getDefaultMessage());
             }
 
-            // Thêm thông tin lỗi vào danh sách
-            errorDetails.put("field", error instanceof FieldError ? ((FieldError) error).getField() : "global");
-            errorDetails.put("code", errorCode.getCode());
-            errorDetails.put("message",
-                    Objects.nonNull(attributes) ? mapAttribute(errorCode.getMessage(), attributes) : errorCode.getMessage());
-
-            errorList.add(errorDetails);
+            errors.add(errorDetails);
         }
 
-        // Tạo API Response chứa danh sách lỗi
         ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setCode(ErrorCode.INVALID_KEY.getCode()); // Mã lỗi chung cho validation
+        apiResponse.setCode(1008); // Mã lỗi chung cho validation
         apiResponse.setMessage("Validation failed");
-        apiResponse.setResult(errorList); // Trả về danh sách lỗi
+        apiResponse.setResult(errors); // Trả về danh sách lỗi
 
         return ResponseEntity.badRequest().body(apiResponse);
     }
+
 
     private String mapAttribute(String message, Map<String, Object> attributes) {
         String minValue = String.valueOf(attributes.get(MIN_ATTRIBUTE));

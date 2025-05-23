@@ -1,0 +1,29 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /user
+
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: ${POSTGRESQL_URL}
+    driverClassName: org.postgresql.Driver
+    username: ${POSTGRESQL_USER}
+    password: ${POSTGRESQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI}
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30

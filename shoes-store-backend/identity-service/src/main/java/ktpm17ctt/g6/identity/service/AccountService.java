@@ -14,4 +14,6 @@ public interface AccountService {
     List<AccountResponse> getAccounts();
     AccountResponse getAccount(String accountId);
     void changePassword(String accountId, String newPassword);
+
+    AccountResponse getAccountByEmail(String email);
 }

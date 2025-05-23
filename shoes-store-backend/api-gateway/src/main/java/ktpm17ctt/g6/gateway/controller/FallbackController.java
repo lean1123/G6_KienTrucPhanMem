@@ -36,7 +36,7 @@ public class FallbackController {
                 .build();
     }
 
-    @RequestMapping("/order")
+    @RequestMapping("/orders")
     public ApiResponse orderFallback() {
         return ApiResponse.builder()
                 .code(HttpStatus.SERVICE_UNAVAILABLE.value())
@@ -44,7 +44,7 @@ public class FallbackController {
                 .build();
     }
 
-    @RequestMapping("/payment")
+    @RequestMapping("/payments")
     public ApiResponse paymentFallback() {
         return ApiResponse.builder()
                 .code(HttpStatus.SERVICE_UNAVAILABLE.value())
@@ -73,6 +73,22 @@ public class FallbackController {
         return ApiResponse.builder()
                 .code(HttpStatus.SERVICE_UNAVAILABLE.value())
                 .message("Review Service is temporarily unavailable. Please try again later.")
+                .build();
+    }
+
+    @RequestMapping("/chat")
+    public ApiResponse chatFallback() {
+        return ApiResponse.builder()
+                .code(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .message("Chat Service is temporarily unavailable. Please try again later.")
+                .build();
+    }
+
+    @RequestMapping("/recommendation")
+    public ApiResponse recommendationFallback() {
+        return ApiResponse.builder()
+                .code(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .message("Recommendation Service is temporarily unavailable. Please try again later.")
                 .build();
     }
 }

@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: cart-service
+  datasource:
+    url: ${MARIADB_URL}
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: ${USERNAME}
+    password: ${PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+  security:
+    user:
+      name: user
+      password: ""
+server:
+  port: 8085
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI}
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30

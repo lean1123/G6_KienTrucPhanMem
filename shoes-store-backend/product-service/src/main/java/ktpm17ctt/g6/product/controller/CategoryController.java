@@ -23,9 +23,9 @@ public class CategoryController {
     CategoryService categoryService;
 
 
-
     @GetMapping("/{id}")
     ApiResponse<CategoryResponse> getCategoryById(@PathVariable String id) {
+        log.info("Get category with ID: {}", id);
         return ApiResponse.<CategoryResponse>builder()
                 .result(categoryService.findById(id).orElse(null))
                 .build();
@@ -34,6 +34,7 @@ public class CategoryController {
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest request) {
+        log.info("Create new category: {}", request.getName());
         return ApiResponse.<CategoryResponse>builder()
                 .result(categoryService.save(request))
                 .build();
@@ -42,6 +43,7 @@ public class CategoryController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<CategoryResponse> updateCategory(@PathVariable @Valid String id, @RequestBody @Valid CategoryRequest request) {
+        log.info("Update category with ID: {}", id);
         return ApiResponse.<CategoryResponse>builder()
                 .result(categoryService.update(id, request))
                 .build();
@@ -50,13 +52,21 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<Void> deleteCategory(@PathVariable String id) {
-        categoryService.deleteById(id);
+        log.info("Delete category with ID: {}", id);
+        var result = categoryService.deleteById(id);
+        if (!result) {
+            return ApiResponse.<Void>builder()
+                    .code(400)
+                    .message("Category have products, cannot delete")
+                    .build();
+        }
         return ApiResponse.<Void>builder().build();
     }
 
     @GetMapping("/search")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<List<CategoryResponse>> searchCategory(@RequestParam String keyword) {
+        log.info("Search category with keyword: {}", keyword);
         return ApiResponse.<List<CategoryResponse>>builder()
                 .result(categoryService.search(keyword))
                 .build();

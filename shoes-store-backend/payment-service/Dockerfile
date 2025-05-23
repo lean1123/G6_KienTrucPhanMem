@@ -3,8 +3,10 @@ WORKDIR /app
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
+COPY .envrc .
 RUN ./mvnw dependency:go-offline
 COPY src ./src
+COPY .envrc .envrc
 
 RUN mvn clean package -DskipTests
 FROM openjdk:17-jdk-slim

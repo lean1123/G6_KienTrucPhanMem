@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 
-@FeignClient(name = "payment-service", url = "${PAYMENT_URL:http://localhost:8089}/internal/payments")
+@FeignClient(name = "payment-service", url = "${PAYMENT_SERVICE_URL:http://localhost:8089/internal/payments}")
 public interface PaymentClient {
     @PostMapping("/create")
     ResponseEntity<PaymentResponse> createNewPayment(@RequestParam(required = true) String orderId,
@@ -28,7 +28,7 @@ public interface PaymentClient {
             @RequestParam String transDate,
             @RequestParam String ipAddress,
             @RequestParam String transactionNo
-    ) throws IOException;
+    ) throws IOException, Exception;
 
     @GetMapping("/{orderId}")
     ResponseEntity<PaymentResponse> getPaymentByOrderId(@PathVariable String orderId);

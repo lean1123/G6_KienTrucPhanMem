@@ -13,4 +13,7 @@ import java.util.Date;
 public class AuthenticationResponse {
     String token;
     Date expiryTime;
+    String refreshToken;
+    Date refreshTokenExpiryTime;
+    String role;
 }

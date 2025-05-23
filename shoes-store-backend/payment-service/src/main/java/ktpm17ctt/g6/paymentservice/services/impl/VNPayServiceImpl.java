@@ -5,11 +5,12 @@ import ktpm17ctt.g6.event.dto.PaymentUrlCreationReq;
 import ktpm17ctt.g6.event.dto.PaymentUrlResponse;
 import ktpm17ctt.g6.paymentservice.configurations.VNPayConfig;
 import ktpm17ctt.g6.paymentservice.dtos.responses.PaymentResponse;
+import ktpm17ctt.g6.paymentservice.repositories.httpClients.OrderClient;
 import ktpm17ctt.g6.paymentservice.services.VNPayService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
+//import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -28,7 +29,8 @@ import java.util.*;
 @FieldDefaults(makeFinal = true)
 @Slf4j
 public class VNPayServiceImpl implements VNPayService {
-    KafkaTemplate<String, PaymentUrlResponse> kafkaTemplate;
+//    KafkaTemplate<String, PaymentUrlResponse> kafkaTemplate;
+    OrderClient orderClient;
 
     @Override
     public String getPaymentUrl(String orderId, String total, String ipAddress, String bankCode, String language) throws Exception {
@@ -59,7 +61,7 @@ public class VNPayServiceImpl implements VNPayService {
         } else {
             vnp_Params.put("vnp_Locale", "vn");
         }
-        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
+        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.getReturnUrl());
         vnp_Params.put("vnp_IpAddr", ipAddress);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
@@ -103,15 +105,15 @@ public class VNPayServiceImpl implements VNPayService {
                 .paymentUrl(paymentUrl)
                 .build();
 
-        kafkaTemplate.send("payment-response", paymentUrlResponse)
-                .whenComplete((result, ex) -> {
-                    if (ex != null) {
-                        log.error("Failed to send Kafka message", ex);
-                        throw new RuntimeException("Payment service unavailable. Please try again.");
-                    } else {
-                        log.info("Kafka message sent successfully: {}", result.getProducerRecord().value());
-                    }
-                });
+//        kafkaTemplate.send("payment-response", paymentUrlResponse)
+//                .whenComplete((result, ex) -> {
+//                    if (ex != null) {
+//                        log.error("Failed to send Kafka message", ex);
+//                        throw new RuntimeException("Payment service unavailable. Please try again.");
+//                    } else {
+//                        log.info("Kafka message sent successfully: {}", result.getProducerRecord().value());
+//                    }
+//                });
 
         return paymentUrl;
     }
@@ -168,6 +170,8 @@ public class VNPayServiceImpl implements VNPayService {
             response.append(output);
         }
         in.close();
+
+
 
         return response.toString();
     }
@@ -255,6 +259,9 @@ public class VNPayServiceImpl implements VNPayService {
         in.close();
         log.info("Response : {}", response.toString());
         log.info("VNP Response Code : {}", vnp_ResponseCode);
+
+
+
         return response.toString();
     }
 }

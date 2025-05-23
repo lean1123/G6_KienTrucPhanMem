@@ -51,7 +51,7 @@ function DragDropImageUploader({ onImagesChange }: DragDropImageUploaderProps) {
   }
 
   return (
-    <div className="p-3 shadow-md rounded-md overflow-hidden bg-white">
+    <div className="p-3 rounded-md overflow-hidden bg-white">
       <div className="text-left">
         <p className="font-bold text-black">List Image</p>
       </div>

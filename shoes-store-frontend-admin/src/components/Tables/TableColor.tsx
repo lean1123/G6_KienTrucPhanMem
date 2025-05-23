@@ -55,6 +55,9 @@ const TableColor = () => {
       const response = await colorApi.getAllColors();
       console.log(response.data.result);
       setColors(response.data.result);
+      if (response.data.code === 503) {
+        enqueueSnackbar(response.data.message, { variant: "error" });
+      }
     } catch (error) {
       console.error("Failed to fetch color:", error);
     } finally {
@@ -68,6 +71,9 @@ const TableColor = () => {
       const response = await colorApi.searchColors(keyword);
       console.log(response.data.result);
       setColors(response.data.result);
+      if (response.data.code === 503) {
+        enqueueSnackbar(response.data.message, { variant: "error" });
+      }
     } catch (error) {
       console.error("Failed to fetch color:", error);
     } finally {
@@ -77,7 +83,11 @@ const TableColor = () => {
 
   const handleRemoveColor = async (id: any) => {
     try {
-      await colorApi.deleteColor(id);
+      const response = await colorApi.deleteColor(id);
+      if (response.data.code === 400) {
+        enqueueSnackbar(response.data.message, { variant: "error" });
+        return;
+      }
       fetchColor();
       enqueueSnackbar("Remove color successfully", { variant: "success" });
     } catch (error) {
@@ -122,6 +132,7 @@ const TableColor = () => {
           </thead>
           <tbody>
             {colors &&
+              colors.length > 0 &&
               colors.map((colorItem, key) => (
                 <tr key={key}>
                   <td className="border-b border-[#eee] py-2 px-4 pl-9 xl:pl-11">

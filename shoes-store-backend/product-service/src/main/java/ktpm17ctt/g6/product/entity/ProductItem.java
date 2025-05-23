@@ -1,5 +1,6 @@
 package ktpm17ctt.g6.product.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ktpm17ctt.g6.product.entity.enums.Status;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -31,4 +32,15 @@ public class ProductItem {
     Product product;
     @Field("status")
     Status status;
+    @Field("likes")
+    List<String> likes;
+    @Field("isActive")
+    @JsonProperty("isActive")
+    boolean isActive;
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+
 }

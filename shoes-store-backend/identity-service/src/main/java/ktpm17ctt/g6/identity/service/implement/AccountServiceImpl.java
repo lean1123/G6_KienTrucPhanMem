@@ -1,5 +1,6 @@
 package ktpm17ctt.g6.identity.service.implement;
 
+import ktpm17ctt.g6.event.dto.NotificationEvent;
 import ktpm17ctt.g6.identity.dto.request.RegistrationRequest;
 import ktpm17ctt.g6.identity.dto.request.AccountUpdateRequest;
 import ktpm17ctt.g6.identity.dto.response.AccountResponse;
@@ -11,12 +12,14 @@ import ktpm17ctt.g6.identity.mapper.UserMapper;
 import ktpm17ctt.g6.identity.mapper.AccountMapper;
 import ktpm17ctt.g6.identity.repository.RoleRepository;
 import ktpm17ctt.g6.identity.repository.AccountRepository;
+import ktpm17ctt.g6.identity.repository.httpClient.UserClient;
 import ktpm17ctt.g6.identity.service.AccountService;
+import org.springframework.kafka.core.KafkaTemplate;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,10 @@ public class AccountServiceImpl implements AccountService {
     AccountMapper accountMapper;
     PasswordEncoder passwordEncoder;
     UserMapper userMapper;
+    UserClient userClient;
+
+    @Autowired
+    KafkaTemplate<String, Object> kafkaTemplate;
 
 
     @Override
@@ -51,13 +58,30 @@ public class AccountServiceImpl implements AccountService {
 
         account = accountRepository.save(account);
 
+        log.info("Registration request for account: {}", request);
+
         var userCreationRequest = userMapper.toUserCreationRequest(request);
         userCreationRequest.setAccountId(account.getId());
-//        connect to profile service
-//        profileClient.create(profileCreationRequest);
 
+        log.info("User creation request: {}", userCreationRequest);
+//        connect to profile service
+        var userProfile = userClient.createProfile(userCreationRequest);
+        log.info("Created user profile: {}", userProfile);
         var accountCreationResponse = accountMapper.toAccountResponse(account);
-        accountCreationResponse.setId(account.getId());
+        accountCreationResponse.setId(userProfile.getResult().getId());
+
+
+        NotificationEvent notificationEvent = ktpm17ctt.g6.event.dto.NotificationEvent.builder()
+                .channel("Email")
+                .recipient(request.getEmail())
+                .subject("Tạo tài khoản thành công")
+                .body("Chúc mừng bạn đã tạo tài khoản G6 SHOES SHOP thành công!")
+                .userId(accountCreationResponse.getId())
+                .build();
+        kafkaTemplate.send("signup_successful", notificationEvent);
+        log.info("tạo tài khoản thành công to user {}", accountCreationResponse.getId());
+
+
         return accountCreationResponse;
     }
 
@@ -105,5 +129,11 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         account.setPassword(passwordEncoder.encode(newPassword));
         accountRepository.save(account);
+    }
+
+    @Override
+    public AccountResponse getAccountByEmail(String email) {
+        Account account = accountRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return accountMapper.toAccountResponse(account);
     }
 }

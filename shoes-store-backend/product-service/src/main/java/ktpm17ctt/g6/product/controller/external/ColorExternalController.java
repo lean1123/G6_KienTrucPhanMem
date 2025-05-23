@@ -24,6 +24,7 @@ public class ColorExternalController {
     //    public endpoints
     @GetMapping
     ApiResponse<List<ColorResponse>> getColors() {
+        log.info("Get all colors");
         return ApiResponse.<List<ColorResponse>>builder()
                 .result(colorService.findAll())
                 .build();

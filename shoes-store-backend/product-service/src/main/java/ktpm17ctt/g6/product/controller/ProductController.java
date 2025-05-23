@@ -25,7 +25,7 @@ public class ProductController {
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<ProductResponse> createProduct(@RequestBody @Valid ProductRequest productRequest) {
-        log.info("Create product");
+        log.info("Create new product : {}", productRequest.getName());
         ProductResponse productResponse = productService.save(productRequest);
         return ApiResponse.<ProductResponse>builder()
                 .result(productResponse)
@@ -35,7 +35,7 @@ public class ProductController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<ProductResponse> updateProduct(@PathVariable String id, @RequestBody @Valid ProductRequest productRequest) {
-        log.info("Update product");
+        log.info("Update product with ID: {}", id);
         ProductResponse productResponse = productService.update(id, productRequest);
         return ApiResponse.<ProductResponse>builder()
                 .result(productResponse)
@@ -45,15 +45,21 @@ public class ProductController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<Void> deleteProduct(@PathVariable String id) {
-        log.info("Delete product");
-        productService.delete(id);
+        log.info("Delete product with ID: {}", id);
+        var result = productService.delete(id);
+        if (!result) {
+            return ApiResponse.<Void>builder()
+                    .code(404)
+                    .message("Product have items, cannot delete")
+                    .build();
+        }
         return ApiResponse.<Void>builder()
                 .build();
     }
 
     @GetMapping("/{id}")
     ApiResponse<ProductResponse> getProduct(@PathVariable String id) {
-        log.info("Get product");
+        log.info("Get product with ID: {}", id);
         ProductResponse productResponse = productService.findById(id).orElse(null);
         return ApiResponse.<ProductResponse>builder()
                 .result(productResponse)
@@ -70,7 +76,7 @@ public class ProductController {
 
     @GetMapping("/search")
     ApiResponse<List<ProductResponse>> searchProducts(@RequestParam String keyword) {
-        log.info("Search products");
+        log.info("Search products with keyword: {}", keyword);
         return ApiResponse.<List<ProductResponse>>builder()
                 .result(productService.search(keyword))
                 .build();

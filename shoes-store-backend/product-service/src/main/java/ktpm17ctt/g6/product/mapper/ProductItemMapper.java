@@ -2,6 +2,7 @@ package ktpm17ctt.g6.product.mapper;
 
 import ktpm17ctt.g6.product.dto.request.ProductItemRequest;
 import ktpm17ctt.g6.product.dto.response.ProductItemResponse;
+import ktpm17ctt.g6.product.dto.response.ProductItemResponseHasLikes;
 import ktpm17ctt.g6.product.entity.ProductItem;
 import ktpm17ctt.g6.product.entity.QuantityOfSize;
 import org.mapstruct.Mapper;
@@ -17,7 +18,10 @@ public interface ProductItemMapper {
     @Mapping(target = "images", ignore = true)
     @Mapping(target = "quantityOfSize", ignore = true)
     ProductItem toProductItem(ProductItemRequest productItemRequest);
+    @Mapping(target = "isActive", source = "isActive")
     ProductItemResponse toProductItemResponse(ProductItem productItem);
+    @Mapping(target = "isActive", source = "isActive")
+    ProductItemResponseHasLikes toProductItemResponseHasLikes(ProductItem productItem);
 
     @Named("mapQuantityOfSizeList")
     static List<QuantityOfSize> mapQuantityOfSizeList(List<QuantityOfSize> quantityOfSizeList) {

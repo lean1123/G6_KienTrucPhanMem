@@ -21,6 +21,7 @@ public class SecurityConfig {
             "/internal/users/**",
             "/internal/items/**",
             "/internal/payments/**",
+            "/internal/orders/**",
     };
 
     private final CustomJwtDecoder customJwtDecoder;
@@ -32,7 +33,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorizeRequests ->
-                authorizeRequests.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                authorizeRequests.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated());
         http.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(jwt -> jwt
                 .decoder(customJwtDecoder)

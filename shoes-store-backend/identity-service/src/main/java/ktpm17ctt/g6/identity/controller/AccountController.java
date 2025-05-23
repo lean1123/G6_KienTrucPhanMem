@@ -25,6 +25,7 @@ public class AccountController {
 
     @PostMapping("/registration")
     ApiResponse<AccountResponse> createUser(@RequestBody @Valid RegistrationRequest request) {
+        log.info("User registration request: {}", request.getEmail());
         return ApiResponse.<AccountResponse>builder()
                 .result(accountService.createAccount(request))
                 .build();
@@ -33,6 +34,7 @@ public class AccountController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<List<AccountResponse>> getAccounts() {
+        log.info("Get all accounts");
         return ApiResponse.<List<AccountResponse>>builder()
                 .result(accountService.getAccounts())
                 .build();
@@ -41,6 +43,7 @@ public class AccountController {
     @GetMapping("/{accountId}")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<AccountResponse> getAccount(@PathVariable("accountId") String accountId) {
+        log.info("Get account with ID: {}", accountId);
         return ApiResponse.<AccountResponse>builder()
                 .result(accountService.getAccount(accountId))
                 .build();
@@ -48,6 +51,7 @@ public class AccountController {
 
     @GetMapping("/my-account")
     ApiResponse<AccountResponse> getMyInfo() {
+        log.info("Get my account information");
         return ApiResponse.<AccountResponse>builder()
                 .result(accountService.getMyInfo())
                 .build();
@@ -56,6 +60,7 @@ public class AccountController {
     @DeleteMapping("/{accountId}")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<String> deleteAccount(@PathVariable String accountId) {
+        log.info("Deleted account with ID: {}", accountId);
         accountService.deleteAccount(accountId);
         return ApiResponse.<String>builder().result("User has been deleted").build();
     }
@@ -63,6 +68,7 @@ public class AccountController {
     @PutMapping("/{accountId}")
     @PreAuthorize("hasRole('ADMIN')")
     ApiResponse<AccountResponse> updateAccount(@PathVariable String accountId, @RequestBody @Valid AccountUpdateRequest request) {
+        log.info("Update account with ID: {}", accountId);
         return ApiResponse.<AccountResponse>builder()
                 .result(accountService.updateAccount(accountId, request))
                 .build();
@@ -70,6 +76,7 @@ public class AccountController {
 
     @PatchMapping("/{accountId}/change-password")
     ApiResponse<String> changePassword(@PathVariable String accountId, @RequestBody String newPassword) {
+        log.info("Change password for account with ID: {}", accountId);
         accountService.changePassword(accountId, newPassword);
         return ApiResponse.<String>builder().result("Password has been changed").build();
     }

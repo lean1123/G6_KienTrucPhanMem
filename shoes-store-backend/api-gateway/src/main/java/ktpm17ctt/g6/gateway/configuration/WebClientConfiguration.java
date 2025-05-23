@@ -22,10 +22,15 @@ public class WebClientConfiguration {
     @Value("#{'${app.cors.allowed-origins:*}'.split(',')}")
     private List<String> allowedOrigins;
 
+    @Value("${IDENTITY_SERVICE_URL:http://localhost:8080/identity}")
+    private String identityServiceUrl;
+    @Value("${PRODUCT_SERVICE_URL:http://localhost:8082/product}")
+    private String productServiceUrl;
+
     @Bean
     WebClient identityWebClient() {
         return WebClient.builder()
-                .baseUrl("http://localhost:8080/identity")
+                .baseUrl(identityServiceUrl)
                 .exchangeStrategies(ExchangeStrategies.builder()
                         .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024))
                         .build())
@@ -38,7 +43,7 @@ public class WebClientConfiguration {
     @Bean
     WebClient productWebClient() {
         return WebClient.builder()
-                .baseUrl("http://localhost:8082/product")
+                .baseUrl(productServiceUrl)
                 .exchangeStrategies(ExchangeStrategies.builder()
                         .codecs(configure -> configure.defaultCodecs().maxInMemorySize(16 * 1024 * 1024))
                         .build())

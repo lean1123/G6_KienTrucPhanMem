@@ -9,12 +9,12 @@ import collectionApi from "../api/collectionApi";
 import productApi from "../api/productApi";
 import Breadcrumb from "../components/Breadcrumbs/Breadcrumb";
 
-interface Category {
+type Category = {
   id: string;
   name: string;
 }
 
-interface Product {
+type Product = {
   id?: string;
   name: string;
   description: string;
@@ -23,7 +23,7 @@ interface Product {
   type: string;
   createdDate?: Date;
   modifiedDate?: Date;
-}
+};
 
 function CreateProduct() {
   const navigate = useNavigate();
@@ -33,7 +33,6 @@ function CreateProduct() {
   const [categories, setCategories] = React.useState<Category[]>([]);
 
   const [productId, setProductId] = React.useState<String>("");
-  console.log("productId:", productId);
 
   const fetchCategories = async () => {
     setLoading(true);
@@ -49,15 +48,18 @@ function CreateProduct() {
   };
 
   const validationSchema = Yup.object({
-    name: Yup.string().required("Product name is required"),
-    description: Yup.string().required("Description is required"),
+    name: Yup.string()
+      .required("Product name is required")
+      .min(3, "Product name must be at least 3 characters")
+      .max(100, "Product name must be at most 100 characters"),
+    description: Yup.string(),
     category: Yup.object()
       .shape({
         id: Yup.string().required("Category is required"),
         name: Yup.string(),
       })
       .required("Category is required"),
-    gender: Yup.string().required("Gender is required"),
+    type: Yup.string().required("Type is required"),
   });
 
   const formik = useFormik({
@@ -66,7 +68,7 @@ function CreateProduct() {
       description: "",
       rating: 0,
       category: { id: "", name: "" },
-      type: "",
+      type: "MALE",
     },
     validationSchema,
     onSubmit: (values) => {
@@ -89,8 +91,10 @@ function CreateProduct() {
       formData.append("type", values.type);
       formData.append("createdDate", new Date().toISOString());
       formData.append("modifiedDate", new Date().toISOString());
+
       const response = await productApi.addNew(formData);
       console.log(response);
+
       if (response.status === 200) {
         setSuccess(true);
         setProductId(response.data.result.id);
@@ -144,10 +148,7 @@ function CreateProduct() {
         {/* Form to create a product */}
         <div className="col-span-9">
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              formik.handleSubmit();
-            }}
+            onSubmit={formik.handleSubmit}
             className="grid grid-cols-1 gap-4 p-6 rounded-md border border-gray-300 bg-white shadow-sm"
           >
             <h2 className="text-black text-xl font-semibold">
@@ -172,7 +173,7 @@ function CreateProduct() {
               ) : null}
             </div>
 
-            <div>
+            {/* <div>
               <label className="text-black" htmlFor="description">
                 Description
               </label>
@@ -189,7 +190,7 @@ function CreateProduct() {
                   {formik.errors.description}
                 </p>
               ) : null}
-            </div>
+            </div> */}
 
             <div>
               <label className="text-black" htmlFor="category">
@@ -211,7 +212,7 @@ function CreateProduct() {
                 }}
                 onBlur={formik.handleBlur}
               >
-                <option value="" label="Select category" />
+                {/* <option value="" label="Select category" /> */}
                 {categories.map((category) => (
                   <option
                     key={category.id}
@@ -220,9 +221,9 @@ function CreateProduct() {
                   />
                 ))}
               </select>
-              {formik.touched.category && formik.errors.category ? (
+              {formik.touched.category && formik.errors.category?.id ? (
                 <p className="text-red-500 text-sm">
-                  {formik.errors.category.name}
+                  {formik.errors.category.id}
                 </p>
               ) : null}
             </div>
@@ -239,7 +240,7 @@ function CreateProduct() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
-                <option value="" label="Select type" />
+                {/* <option value="" label="Select type" /> */}
                 <option value="MALE" label="Male" />
                 <option value="FEMALE" label="Female" />
                 <option value="CHILDREN" label="Children" />
@@ -260,7 +261,7 @@ function CreateProduct() {
               <button
                 type="submit"
                 className="w-full bg-blue-500 text-white rounded-md py-2"
-                onClick={() => handleSubmit(formik.values)}
+                // onClick={() => handleSubmit(formik.values)}
                 disabled={loading || success}
               >
                 {loading ? "Loading..." : "Create Product"}

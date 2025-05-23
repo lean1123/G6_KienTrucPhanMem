@@ -2,19 +2,29 @@ import { EditOutlined, VisibilityOutlined } from "@mui/icons-material";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import orderApi from "../../api/orderApi";
+import { enqueueSnackbar } from "notistack";
 
-interface Order {
+type Order = {
   id: string;
+  total: number;
+  createdDate: Date;
+  status: string;
+  userId: string;
+  paymentMethod: string;
+  paymentUrl: string;
+  address: {
+    id: string;
+    homeNumber: string;
+    ward: string;
+    district: string;
+    city: string;
+  };
+  payed: boolean;
   user: {
-    id: number;
     firstName: string;
     lastName: string;
   };
-  totalPrice: number;
-  orderStatus: string;
-  createdDate: Date;
-  paymentMethod: string;
-}
+};
 
 // const orderData: Order[] = [
 // 	{
@@ -74,7 +84,7 @@ function TableOrder() {
     try {
       const response = await orderApi.getAll();
       console.log(response.data);
-      setOrderData(response.data.data);
+      setOrderData(response.data);
     } catch (error) {
       console.error("Failed to fetch order:", error);
     } finally {
@@ -85,14 +95,27 @@ function TableOrder() {
   const filterOrder = async () => {
     setLoading(true);
     try {
-      const response = await orderApi.search(keyword);
+      const response = await orderApi.getOrderById(keyword);
       console.log(response.data);
-      setOrderData(response.data.data);
+      setOrderData([response.data]);
     } catch (error) {
       console.error("Failed to fetch order:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatDate = (dateInput: Date | string) => {
+    const date = new Date(dateInput);
+    return date.toLocaleString("vi-VN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false, // dùng 24h
+    });
   };
 
   useEffect(() => {
@@ -106,7 +129,7 @@ function TableOrder() {
           <input
             type="text"
             className="w-full border border-gray-300 rounded-md py-2 px-4"
-            placeholder="Search order..."
+            placeholder="Please enter order ID"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
           />
@@ -117,6 +140,15 @@ function TableOrder() {
             }}
           >
             Search
+          </button>
+          <button
+            className="bg-black text-white px-8 py-2 rounded-md"
+            onClick={() => {
+              setKeyword("");
+              fetchOrder();
+            }}
+          >
+            Reset
           </button>
         </div>
       </div>
@@ -147,72 +179,140 @@ function TableOrder() {
             </tr>
           </thead>
           <tbody>
-            {orderData.map((item, key) => (
-              <tr key={key}>
-                <td className="border-b border-[#eee] py-2 px-4 pl-9 xl:pl-11">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                    <p className="text-sm text-black">{item.id}</p>
-                  </div>
-                </td>
-                <td className="border-b border-[#eee] py-2 px-4">
-                  <p className="text-black dark:text-white">
-                    {item.user.firstName}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-2 px-4">
-                  <p className="text-black dark:text-white">
-                    {item.createdDate.toString()}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-2 px-4">
-                  <p className="text-black dark:text-white">
-                    {item.paymentMethod}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-2 px-4">
-                  <p className="text-black dark:text-white">
-                    ${item.totalPrice}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-2 px-4">
-                  <p className="text-black dark:text-white">
-                    {item.orderStatus}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-2 px-4">
-                  <div className="flex items-center space-x-3.5">
-                    {/* Add button */}
-                    <div className="relative group">
-                      <button
-                        className="hover:text-blue-500"
-                        onClick={() => navigate(`/admin/orders/${item.id}`)}
-                      >
-                        <VisibilityOutlined className="w-5 h-5" />
-                      </button>
-                      <span className="absolute opacity-0 group-hover:opacity-100 bg-black text-white text-xs rounded py-1 px-2 -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                        View detail
-                      </span>
+            {orderData &&
+              orderData.length > 0 &&
+              orderData.map((item, key) => (
+                <tr key={key}>
+                  <td className="border-b border-[#eee] py-2 px-4 pl-9 xl:pl-11">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                      <p className="text-black">{item.id}</p>
                     </div>
+                  </td>
+                  <td className="border-b border-[#eee] py-2 px-4">
+                    <p className="text-black ">
+                      {item.user.firstName + " " + item.user.lastName}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] py-2 px-4">
+                    <p className="text-black ">
+                      {formatDate(item.createdDate)}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] py-2 px-4">
+                    <p className="text-black ">{item.paymentMethod}</p>
+                  </td>
+                  <td className="border-b border-[#eee] py-2 px-4">
+                    <p className="text-black ">{item.total}đ</p>
+                  </td>
+                  <td className="border-b border-[#eee] py-2 px-4">
+                    {/* <p className="text-black ">{item.status}</p> */}
+                    <select
+                      name="status"
+                      value={item.status}
+                      onChange={async (e) => {
+                        const status = e.target.value;
+                        try {
+                          const response = await orderApi.updateStatusForOrder(
+                            item.id,
+                            status
+                          );
 
-                    {/* Edit button */}
-                    {item?.orderStatus === "PENDING" && (
+                          if (response.status !== 200) {
+                            enqueueSnackbar("Update status failed", {
+                              variant: "error",
+                            });
+                            return;
+                          }
+
+                          if (response.data.status === 503) {
+                            enqueueSnackbar(
+                              "Update status failed cause order service is unavailable",
+                              {
+                                variant: "error",
+                              }
+                            );
+                            return;
+                          }
+
+                          enqueueSnackbar("Update status successfully", {
+                            variant: "success",
+                          });
+                          fetchOrder();
+                          return;
+                        } catch (error) {
+                          console.error("Failed to update status:", error);
+                          enqueueSnackbar(
+                            `Update status failed: "Internal Error"
+                            `,
+                            {
+                              variant: "error",
+                            }
+                          );
+                          return;
+                        }
+                      }}
+                      className="border border-gray-300 rounded-md py-2 px-4"
+                    >
+                      <option value="PENDING">PENDING</option>
+                      <option value="ACCEPTED" className="text-green-600">
+                        ACCEPTED
+                      </option>
+                      <option value="SHIPPING" className="text-green-600">
+                        SHIPPING
+                      </option>
+                      <option value="REJECTED" className="text-red-600">
+                        REJECTED
+                      </option>
+                      <option
+                        value="CANCELLED"
+                        className="text-red-600"
+                        disabled
+                      >
+                        CANCELLED
+                      </option>
+                      <option
+                        value="PAYMENT_FAILED"
+                        className="text-red-600"
+                        disabled
+                      >
+                        PAYMENT_FAILED
+                      </option>
+                    </select>
+                  </td>
+                  <td className="border-b border-[#eee] py-2 px-4">
+                    <div className="flex items-center space-x-3.5">
+                      {/* Add button */}
                       <div className="relative group">
                         <button
-                          className="hover:text-yellow-500"
-                          onClick={() =>
-                            navigate(`/admin/orders/${item.id}/edit`)
-                          }
+                          className="hover:text-blue-500"
+                          onClick={() => navigate(`/admin/orders/${item.id}`)}
                         >
-                          <EditOutlined className="w-5 h-5" />
+                          <VisibilityOutlined className="w-5 h-5" />
                         </button>
                         <span className="absolute opacity-0 group-hover:opacity-100 bg-black text-white text-xs rounded py-1 px-2 -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                          Edit
+                          View detail
                         </span>
                       </div>
-                    )}
 
-                    {/* Delete button */}
-                    {/* <div className='relative group'>
+                      {/* Edit button */}
+                      {item?.status === "PENDING" && (
+                        <div className="relative group">
+                          <button
+                            className="hover:text-yellow-500"
+                            onClick={() =>
+                              navigate(`/admin/orders/${item.id}/edit`)
+                            }
+                          >
+                            <EditOutlined className="w-5 h-5" />
+                          </button>
+                          <span className="absolute opacity-0 group-hover:opacity-100 bg-black text-white text-xs rounded py-1 px-2 -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                            Edit
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Delete button */}
+                      {/* <div className='relative group'>
 											<button className='hover:text-red-500'>
 												<DeleteForeverOutlined className='w-5 h-5' />
 											</button>
@@ -220,10 +320,10 @@ function TableOrder() {
 												Remove
 											</span>
 										</div> */}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                    </div>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

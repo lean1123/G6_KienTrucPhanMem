@@ -1,2 +1,7 @@
-.idea/
-docker-compose.yml
+/.metadata/
+.idea
+.project
+init-db.mysql.sql
+init.sql
+shoes-store-backend.iml
+.vscode

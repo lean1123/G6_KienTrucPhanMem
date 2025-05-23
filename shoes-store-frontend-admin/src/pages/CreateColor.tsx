@@ -33,9 +33,29 @@ function CreateColor() {
       if (response.status === 200) {
         enqueueSnackbar("Color created successfully!", { variant: "success" });
       }
-    } catch (error) {
-      console.error("Failed to create Color:", error);
-      enqueueSnackbar("Failed to create Color", { variant: "error" });
+    } catch (error: any) {
+      console.error("Failed to create product:", error);
+
+      // Nếu BE trả về lỗi validation
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.code === 1008
+      ) {
+        const serverErrors: { [key: string]: string } = {};
+        error.response.data.result.forEach((err: any) => {
+          const key = Object.keys(err)[0];
+          const message = err[key];
+          serverErrors[key] = message;
+
+          // 🔥 Dùng enqueueSnackbar luôn cho mỗi field lỗi
+          enqueueSnackbar(`${message}`, { variant: "error" });
+        });
+        console.log("serverErrors:", serverErrors);
+      } else {
+        // Các lỗi khác (không phải validation)
+        enqueueSnackbar("Failed to create color!", { variant: "error" });
+      }
     } finally {
       setLoading(false);
     }

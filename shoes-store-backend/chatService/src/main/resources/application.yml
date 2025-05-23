@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: chat-service
+
+server:
+  port: 8090
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI}
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+
+gemini:
+  api:
+    key: ${GEMINI_AI_KEY}
+
+

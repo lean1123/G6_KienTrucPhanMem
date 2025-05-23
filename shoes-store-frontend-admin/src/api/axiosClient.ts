@@ -7,7 +7,7 @@ interface PublicEndpoint {
 }
 
 const AdminAxiosClient = axios.create({
-  baseURL: "http://localhost:8888/api/v1",
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -16,6 +16,11 @@ const AdminAxiosClient = axios.create({
 const getToken = () => {
   const token = localStorage.getItem("accessToken");
   return token ? token : "";
+};
+
+const getRefreshToken = () => {
+  const refreshToken = localStorage.getItem("refreshToken");
+  return refreshToken ? refreshToken : "";
 };
 
 AdminAxiosClient.interceptors.request.use(
@@ -67,21 +72,20 @@ AdminAxiosClient.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      let token = getToken();
+      let refreshToken = getRefreshToken();
 
-      if (token) {
+      if (refreshToken) {
         try {
-          const accesstoken = localStorage.getItem("accessToken");
-          const refreshedToken = await AuthAPI.refreshToken(
-            accesstoken as string
-          );
+          const refreshResponse = await AuthAPI.refreshToken(refreshToken);
 
-          console.log("refreshedToken in admin axios: ", refreshedToken);
-          if (refreshedToken.status !== 200) {
+          console.log("refreshedToken in admin axios: ", refreshResponse);
+          if (refreshResponse.status !== 200) {
             return Promise.reject(error);
           }
-          token = await refreshedToken.data.result.token;
+          let token = await refreshResponse.data.result.token;
           localStorage.setItem("accessToken", token);
+          let newRefreshToken = await refreshResponse.data.result.refreshToken;
+          localStorage.setItem("refreshToken", newRefreshToken);
           originalRequest.headers.Authorization = `Bearer ${token}`;
 
           return AdminAxiosClient(originalRequest);

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -21,6 +23,7 @@ import java.time.Instant;
 public class Product {
     @MongoId
     String id;
+    String code;
     String name;
     String description;
     double rating;
@@ -28,6 +31,8 @@ public class Product {
     Type type;
     @Field("category")
     Category category;
+    @CreatedDate()
     Instant createdDate;
+    @LastModifiedDate()
     Instant modifiedDate;
 }

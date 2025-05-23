@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+.env.propertities
+.env.properties
+
+.env
+.env.docker
+
