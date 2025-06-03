@@ -12,4 +12,4 @@ This is an e-commerce website for showing and selling shoes online. It has a rol
 
 ## Video Demo
 
-[![Video demo](https://res.cloudinary.com/lean1123/image/upload/v1748927998/z6630115930855_b50720c65c3e645d3cc50dc76fccce4d_tquo7z.jpg)](https://www.youtube.com/watch?v=aXoljEuj4UQ)
+[![Watch the video](https://img.youtube.com/vi/aXoljEuj4UQ/0.jpg)](https://www.youtube.com/watch?v=aXoljEuj4UQ)
